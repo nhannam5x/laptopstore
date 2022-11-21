@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/CustomerBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/BillDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/ProductDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/BillBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/CategoryBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/ProductBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Supplier.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/BilldetailBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/SupplierBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Discount.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/AccountBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/TeacherManegement.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/StaffDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/SupplierDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Product.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Bill.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/BilldetailDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Billdetail.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Category.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/ConnectMysql/MySQLConnect.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Customer.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/AccountDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/StaffBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/BUS/DiscountBUS.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/CategoryDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Staff.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DTO/Account.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/DiscountDAO.java</file>
+            <file>file:/C:/Users/donha/Documents/NetBeansProjects/Store/src/DAO/CustomerDAO.java</file>
+        </group>
+    </open-files>
+</project-private>
