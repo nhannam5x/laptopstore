@@ -86,7 +86,7 @@ public class SupplierBUS {
 
     
     
-    public ArrayList<Supplier> getList() throws ClassNotFoundException {
+    public ArrayList<Supplier> getList() {
         
         return sup;
     }

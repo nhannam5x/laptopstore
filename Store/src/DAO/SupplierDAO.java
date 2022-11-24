@@ -22,7 +22,7 @@ public class SupplierDAO {
     }
     public ArrayList<Supplier> list() throws ClassNotFoundException
     {
-        ArrayList<Supplier> Supplier = new ArrayList<>();
+        ArrayList<Supplier> supplier = new ArrayList<>();
         try {
            
             String sql = "SELECT * FROM supplier ";
@@ -34,7 +34,7 @@ public class SupplierDAO {
                 String address = rs.getString("address");
                 int status = rs.getInt("status");
                 Supplier s = new Supplier(supplierID, supplierName, address, status);
-                Supplier.add(s);
+                supplier.add(s);
             }
             rs.close();
             mySQL.disConnect();
@@ -43,7 +43,7 @@ public class SupplierDAO {
             Logger.getLogger(SupplierDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return Supplier;
+        return supplier;
     }
 
     public void set(Supplier s) throws ClassNotFoundException {

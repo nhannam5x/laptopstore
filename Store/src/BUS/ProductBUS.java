@@ -86,7 +86,7 @@ public class ProductBUS {
 
     
     
-    public ArrayList<Product> getList() throws ClassNotFoundException {
+    public ArrayList<Product> getList() {
         
         return pro;
     }

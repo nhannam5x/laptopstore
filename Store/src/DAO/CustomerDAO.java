@@ -33,9 +33,9 @@ public class CustomerDAO {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 String email = rs.getString("email");
-                int phone = rs.getInt("phone");
+                String phone = rs.getString("phone");
                 int status = rs.getInt("status");
-                Customer cu = new Customer(customerID, firstName, lastName, email, phone,status);
+                Customer cu = new Customer(customerID, firstName, lastName, email, phone, status);
                 Customer.add(cu);
             }
             rs.close();
