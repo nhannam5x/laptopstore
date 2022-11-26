@@ -90,5 +90,30 @@ public class CustomerBUS {
         
         return cus;
     }
+    
+    public ArrayList<Customer> search(String customerID, String firstName, String lastName, String email, String phone)
+    {
+        ArrayList<Customer> search = new ArrayList<>();
+        customerID = customerID.isEmpty()?customerID = "": customerID;
+        firstName = firstName.isEmpty()?firstName = "": firstName;
+        lastName = lastName.isEmpty()?lastName = "": lastName;
+        email = email.isEmpty()?email = "": email;
+        phone = phone.isEmpty()?phone = "": phone;
+        for(Customer cu : cus)
+        {
+            if((String.valueOf(cu.getCustomerID())).toLowerCase().contains(customerID.toLowerCase()) && 
+               (String.valueOf(cu.getFirstName())).toLowerCase().contains(firstName.toLowerCase()) &&
+               (String.valueOf(cu.getLastName())).toLowerCase().contains(lastName.toLowerCase()) &&
+               (String.valueOf(cu.getEmail())).toLowerCase().contains(email.toLowerCase()) &&
+               (String.valueOf(cu.getPhone())).toLowerCase().contains(phone.toLowerCase())
+                )
+                    
+                    
+            {
+                search.add(cu);
+            }
+        }
+        return search;
+    }
 }
 

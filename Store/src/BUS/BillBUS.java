@@ -90,5 +90,25 @@ public class BillBUS {
         
         return bil;
     }
+    
+     public ArrayList<Bill> search(String billID, String staffID, String customerID, String date)
+    {
+        ArrayList<Bill> search = new ArrayList<>();
+        billID = billID.isEmpty()?billID = "": billID;
+        staffID = staffID.isEmpty()?staffID = "": staffID;
+        customerID = customerID.isEmpty()?customerID = "": customerID;
+        date = date.isEmpty()?date = "": date;
+        for(Bill b : bil)
+        {
+            if((String.valueOf(b.getBillID())).toLowerCase().contains(billID.toLowerCase()) && 
+               (String.valueOf(b.getStaffID())).toLowerCase().contains(staffID.toLowerCase()) &&
+               (String.valueOf(b.getCustomerID())).toLowerCase().contains(customerID.toLowerCase()) &&
+               (String.valueOf(b.getDate())).toLowerCase().contains(date.toLowerCase()))
+            {
+                search.add(b);
+            }
+        }
+        return search;
+    }
 }
 

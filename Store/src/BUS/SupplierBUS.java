@@ -86,9 +86,27 @@ public class SupplierBUS {
 
     
     
-    public ArrayList<Supplier> getList() throws ClassNotFoundException {
+    public ArrayList<Supplier> getList() {
         
         return sup;
+    }
+    
+      public ArrayList<Supplier> search(String supplierID, String supplierName, String address)
+    {
+        ArrayList<Supplier> search = new ArrayList<>();
+        supplierID = supplierID.isEmpty()?supplierID = "": supplierID;
+        supplierName = supplierName.isEmpty()?supplierName = "": supplierName;
+        address = address.isEmpty()?address = "": address;
+        for(Supplier su : sup)
+        {
+            if((String.valueOf(su.getSupplierID())).toLowerCase().contains(supplierID.toLowerCase()) && 
+               (String.valueOf(su.getSupplierName())).toLowerCase().contains(supplierName.toLowerCase()) &&
+               (String.valueOf(su.getAddress())).toLowerCase().contains(address.toLowerCase()))
+            {
+                search.add(su);
+            }
+        }
+        return search;
     }
 }
 

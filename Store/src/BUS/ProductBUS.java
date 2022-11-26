@@ -86,9 +86,31 @@ public class ProductBUS {
 
     
     
-    public ArrayList<Product> getList() throws ClassNotFoundException {
+    public ArrayList<Product> getList() {
         
         return pro;
+    }
+    
+    public ArrayList<Product> search(String productID, String productName, String categoryID, String supplierID) {
+        ArrayList<Product> search = new ArrayList<>();
+        productID = productID.isEmpty()?productID = "": productID;
+        productName = productName.isEmpty()?productName = "": productName;
+        categoryID = categoryID.isEmpty()?categoryID = "": categoryID;
+        supplierID = supplierID.isEmpty()?supplierID = "": supplierID;
+        for(Product p : pro)
+        {
+            if((String.valueOf(p.getProductID())).toLowerCase().contains(productID.toLowerCase()) && 
+               (String.valueOf(p.getProductName())).toLowerCase().contains(productName.toLowerCase()) &&
+               (String.valueOf(p.getCategoryID())).toLowerCase().contains(categoryID.toLowerCase()) &&
+               (String.valueOf(p.getSupplierID())).toLowerCase().contains(supplierID.toLowerCase())
+                )
+                    
+                    
+            {
+                search.add(p);
+            }
+        }
+        return search;
     }
 }
 

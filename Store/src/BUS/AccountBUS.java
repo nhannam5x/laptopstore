@@ -86,7 +86,7 @@ public class AccountBUS {
 
     
     
-    public ArrayList<Account> getList() throws ClassNotFoundException {
+    public ArrayList<Account> getList() {
         
         return acc;
     }

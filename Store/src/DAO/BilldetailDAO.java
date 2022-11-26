@@ -30,9 +30,10 @@ public class BilldetailDAO {
             while(rs.next())
             {
                 int billID= rs.getInt("billID");
+                int productID = rs.getInt("productID");
                 int quantity= rs.getInt("quantity");
                 int status = rs.getInt("status");
-                Billdetail bd = new Billdetail(billID, quantity, status);
+                Billdetail bd = new Billdetail(billID, productID, quantity, status);
                 Billdetail.add(bd);
             }
             rs.close();
@@ -49,6 +50,7 @@ public class BilldetailDAO {
             MySQLConnect mySQL = new MySQLConnect();
             String sql = "UPDATE billdetail SET ";
             sql += "billID='"+bd.getBillID()+"', ";
+            sql += "productID='"+bd.getProductID()+"', ";
             sql += "quantity='"+bd.getQuantity()+"', ";
             sql += "status='"+bd.getStatus()+"'";
             sql += "WHERE billID="+bd.getBillID();
@@ -60,6 +62,7 @@ public class BilldetailDAO {
         MySQLConnect mySQL = new MySQLConnect();
          String sql = "INSERT INTO billdetail VALUES (";
                 sql += "'"+bd.getBillID()+"',";
+                sql += "'"+bd.getProductID()+"',";
                 sql += "'"+bd.getQuantity()+"',";
                 sql += "'"+bd.getStatus()+"')";
          System.out.println(sql);

@@ -7,6 +7,7 @@ package BUS;
 
 import DAO.BilldetailDAO;
 import DTO.Billdetail;
+import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,6 +73,8 @@ public class BilldetailBUS {
         }
     }
     
+    
+    
     public boolean CheckBilldetailID(int billID)
     {
         for(Billdetail bd : bdt)
@@ -90,5 +93,23 @@ public class BilldetailBUS {
         
         return bdt;
     }
+    
+     public ArrayList<Billdetail> search(String productID, String quantity)
+    {
+        ArrayList<Billdetail> search = new ArrayList<>();
+        productID = productID.isEmpty()?productID = "": productID;
+        quantity = quantity.isEmpty()?quantity = "": quantity;
+        for(Billdetail b : bdt)
+        {
+            if((String.valueOf(b.getProductID())).toLowerCase().contains(productID.toLowerCase()) && 
+                (String.valueOf(b.getQuantity())).toLowerCase().contains(quantity.toLowerCase()))
+            {
+                search.add(b);
+            }
+        }
+        return search;
+    }
+
+
 }
 

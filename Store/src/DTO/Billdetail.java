@@ -10,10 +10,11 @@ package DTO;
  * @author DELL XPS 15
  */
 public class Billdetail {
-    private int billID, quantity, status;
+    private int billID, productID, quantity, status;
 
-    public Billdetail(int billID, int quantity, int status) {
+    public Billdetail(int billID, int productID, int quantity, int status) {
         this.billID = billID;
+        this.productID = productID;
         this.quantity = quantity;
         this.status = status;
     }
@@ -22,6 +23,10 @@ public class Billdetail {
         return billID;
     }
 
+    public int getProductID(){
+        return productID;
+    }
+    
     public int getQuantity() {
         return quantity;
     }
@@ -32,6 +37,10 @@ public class Billdetail {
 
     public void setBillID(int billID) {
         this.billID = billID;
+    }
+    
+    public void setProductID(int productID){
+        this.productID = productID;
     }
 
     public void setQuantity(int quantity) {
