@@ -11,16 +11,15 @@ package DTO;
  */
 public class Staff {
     private int staffID;
-    private String firstName, lastName, email;
-    private int phone, authority, status;
+    private String firstName, lastName, email, phone;
+    private int status;
 
-    public Staff(int staffID, String firstName, String lastName, String email, int phone, int authority, int status) {
+    public Staff(int staffID, String firstName, String lastName, String email, String phone, int status) {
         this.staffID = staffID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
-        this.authority = authority;
         this.status = status;
     }
 
@@ -40,13 +39,10 @@ public class Staff {
         return email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public int getAuthority() {
-        return authority;
-    }
 
     public int getStatus() {
         return status;
@@ -68,12 +64,8 @@ public class Staff {
         this.email = email;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public void setAuthority(int authority) {
-        this.authority = authority;
     }
 
     public void setStatus(int status) {

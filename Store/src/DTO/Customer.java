@@ -11,10 +11,10 @@ package DTO;
  */
 public class Customer {
     private int customerID;
-    private String firstName, lastName, email;
-    private int phone, status;
+    private String firstName, lastName, email, phone;
+    private int  status;
 
-    public Customer(int customerID, String firstName, String lastName, String email, int phone, int status) {
+    public Customer(int customerID, String firstName, String lastName, String email, String phone, int status) {
         this.customerID = customerID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,7 +39,7 @@ public class Customer {
         return email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
@@ -63,7 +63,7 @@ public class Customer {
         this.email = email;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

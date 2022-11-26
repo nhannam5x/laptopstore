@@ -89,5 +89,26 @@ public class DiscountBUS {
         
         return dis;
     }
+    
+    public ArrayList<Discount> search(String discountID, String dateStart, String dateEnd)
+    {
+        ArrayList<Discount> search = new ArrayList<>();
+        discountID = discountID.isEmpty()?discountID = "": discountID;
+        dateStart = dateStart.isEmpty()?dateStart = "": dateStart;
+        dateEnd = dateEnd.isEmpty()?dateEnd = "": dateEnd;
+        for(Discount d : dis)
+        {
+            if((String.valueOf(d.getDiscountID())).toLowerCase().contains(discountID.toLowerCase()) && 
+               (String.valueOf(d.getDateStart())).toLowerCase().contains(dateStart.toLowerCase()) &&
+               (String.valueOf(d.getDateEnd())).toLowerCase().contains(dateEnd.toLowerCase())
+                )
+                    
+                    
+            {
+                search.add(d);
+            }
+        }
+        return search;
+    }
 }
 

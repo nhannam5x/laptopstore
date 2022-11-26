@@ -33,10 +33,9 @@ public class StaffDAO {
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
                 String email = rs.getString("email");
-                int phone = rs.getInt("phone");
-                int authority = rs.getInt("authority");
+                String phone = rs.getString("phone");
                 int status = rs.getInt("status");
-                Staff s = new Staff(staffID, firstName, lastName, email, phone, authority, status);
+                Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
                 Staff.add(s);
             }
             rs.close();
@@ -57,7 +56,6 @@ public class StaffDAO {
             sql += "lastName='"+s.getLastName()+"', ";
             sql += "email='"+s.getEmail()+"',";
             sql += "phone='"+s.getPhone()+"',";
-            sql += "authority='"+s.getAuthority()+"',";
             sql += "status='"+s.getStatus()+"'";
             sql += "WHERE staffID="+s.getStaffID();
             System.out.println(sql);
@@ -72,7 +70,6 @@ public class StaffDAO {
                 sql += "'"+s.getLastName()+"',";
                 sql += "'"+s.getEmail()+"',";
                 sql += "'"+s.getPhone()+"',";
-                sql += "'"+s.getAuthority()+"',";
                 sql += "'"+s.getStatus()+"')";
          System.out.println(sql);
          mySQL.executeUpdate(sql);

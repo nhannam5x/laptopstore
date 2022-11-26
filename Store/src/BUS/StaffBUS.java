@@ -90,5 +90,30 @@ public class StaffBUS {
         
         return sta;
     }
+    
+    public ArrayList<Staff> search(String staffID, String firstName, String lastName, String email, String phone)
+    {
+        ArrayList<Staff> search = new ArrayList<>();
+        staffID = staffID.isEmpty()?staffID = "": staffID;
+        firstName = firstName.isEmpty()?firstName = "": firstName;
+        lastName = lastName.isEmpty()?lastName = "": lastName;
+        email = email.isEmpty()?email = "": email;
+        phone = phone.isEmpty()?phone = "": phone;
+        for(Staff s : sta)
+        {
+            if((String.valueOf(s.getStaffID())).toLowerCase().contains(staffID.toLowerCase()) && 
+               (String.valueOf(s.getFirstName())).toLowerCase().contains(firstName.toLowerCase()) &&
+               (String.valueOf(s.getLastName())).toLowerCase().contains(lastName.toLowerCase()) &&
+               (String.valueOf(s.getEmail())).toLowerCase().contains(email.toLowerCase()) &&
+               (String.valueOf(s.getPhone())).toLowerCase().contains(phone.toLowerCase())
+                )
+                    
+                    
+            {
+                search.add(s);
+            }
+        }
+        return search;
+    }
 }
 

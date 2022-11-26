@@ -90,5 +90,21 @@ public class CategoryBUS {
         
         return cat;
     }
+    
+    public ArrayList<Category> search(String categoryID, String categoryName)
+    {
+        ArrayList<Category> search = new ArrayList<>();
+        categoryID = categoryID.isEmpty()?categoryID = "": categoryID;
+        categoryName = categoryName.isEmpty()?categoryName = "": categoryName;
+        for(Category c : cat)
+        {
+            if((String.valueOf(c.getCategoryID())).toLowerCase().contains(categoryID.toLowerCase()) && 
+               (String.valueOf(c.getCategoryName())).toLowerCase().contains(categoryName.toLowerCase()))
+            {
+                search.add(c);
+            }
+        }
+        return search;
+    }
 }
 

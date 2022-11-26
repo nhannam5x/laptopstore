@@ -30,14 +30,13 @@ public class BillDAO {
             while(rs.next())
             {
                 int billID= rs.getInt("billID");
-                int productID= rs.getInt("productID");
                 int staffID = rs.getInt("staffID");
                 int customerID = rs.getInt("customerID");
-                int discountID = rs.getInt("disctountID");
+                int discountID = rs.getInt("discountID");
                 float totalPrice = rs.getFloat("totalPrice");
                 String date = rs.getString("date");
                 int status = rs.getInt("status");
-                Bill b = new Bill(billID, productID, staffID, customerID, discountID, totalPrice, date,status);
+                Bill b = new Bill(billID, staffID, customerID, discountID, totalPrice, date,status);
                 Bill.add(b);
             }
             rs.close();
@@ -54,7 +53,6 @@ public class BillDAO {
             MySQLConnect mySQL = new MySQLConnect();
             String sql = "UPDATE bill SET ";
             sql += "billID='"+b.getBillID()+"', ";
-            sql += "productID='"+b.getProductID()+"', ";
             sql += "staffID='"+b.getStaffID()+"', ";
             sql += "customerID='"+b.getCustomerID()+"', ";
             sql += "discountID='"+b.getDiscountID()+"', ";
@@ -70,8 +68,6 @@ public class BillDAO {
         MySQLConnect mySQL = new MySQLConnect();
          String sql = "INSERT INTO bill VALUES (";
                 sql += "'"+b.getBillID()+"',";
-                sql += "'"+b.getProductID()+"',";
-                sql += "'"+b.getStaffID()+"',";
                 sql += "'"+b.getStaffID()+"',";
                 sql += "'"+b.getCustomerID()+"',";
                 sql += "'"+b.getDiscountID()+"',";
