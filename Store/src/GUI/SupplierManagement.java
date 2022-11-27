@@ -74,9 +74,14 @@ public class SupplierManagement extends javax.swing.JFrame {
            int status =1; 
            
            Supplier su = new Supplier(supplierID, supplierName, address, status);
-                        
-            supplierBUS.SetSupplier(su);
-            refresh();
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa nhà cung cấp "+ supplierID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               supplierBUS.SetSupplier(su);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
+               return;
+           }             
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(SupplierManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,10 +100,16 @@ public class SupplierManagement extends javax.swing.JFrame {
            String supplierName = tbl_Supplier.getModel().getValueAt(row, 1).toString();
            String address = tbl_Supplier.getModel().getValueAt(row, 2).toString();
            int status = 0;
-           Supplier s = new Supplier(supplierID, supplierName, address, status);
-           supplierBUS.SetSupplier(s);
-           refresh();
-           resetText();
+           Supplier su = new Supplier(supplierID, supplierName, address, status);
+           
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa nhà cung cấp "+ supplierID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               supplierBUS.SetSupplier(su);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+               return;
+           }      
            row = -1;
             
         } catch (ClassNotFoundException ex) { 

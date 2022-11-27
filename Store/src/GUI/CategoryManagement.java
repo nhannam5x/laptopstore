@@ -73,9 +73,16 @@ public class CategoryManagement extends javax.swing.JFrame {
            int status =1; 
          
            Category c = new Category(categoryID, categoryName, status);
-                        
-            categoryBUS.SetCategory(c);
-            refresh();
+            
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa loại "+ categoryID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               categoryBUS.SetCategory(c);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
+               return;
+           }
+            
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(CategoryManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -94,8 +101,15 @@ public class CategoryManagement extends javax.swing.JFrame {
            String categoryName = tbl_Category.getModel().getValueAt(row, 1).toString();
            int status = 0;
            Category c = new Category(categoryID, categoryName, status);
-           categoryBUS.SetCategory(c);
-           refresh();
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa loại "+ categoryID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               categoryBUS.SetCategory(c);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+               return;
+           }
+           
            resetText();
            row = -1;
             

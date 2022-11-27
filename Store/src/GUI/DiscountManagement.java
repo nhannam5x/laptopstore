@@ -132,9 +132,15 @@ public class DiscountManagement extends javax.swing.JFrame {
            int status =1; 
          
            Discount d = new Discount(discountID, discountValue, dateStart, dateEnd, quantity, status);
-                        
-            discountBUS.SetDiscount(d);
-            refresh();
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa khuyến mãi "+ discountID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               discountBUS.SetDiscount(d);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
+               return;
+           }             
+            
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(DiscountManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -145,7 +151,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     try {    
       if(row < 0)
       {
-        JOptionPane.showMessageDialog(new JFrame(), "Chọn sản phẩm cần xoá", "Dialog",
+        JOptionPane.showMessageDialog(new JFrame(), "Chọn khuyến mãi cần xoá", "Dialog",
         JOptionPane.ERROR_MESSAGE);
         return; 
       }
@@ -157,11 +163,15 @@ public class DiscountManagement extends javax.swing.JFrame {
       int quantity = (int)tbl_Discount.getModel().getValueAt(row, 4);
       int status = 0;
       Discount d = new Discount(discountID, discountValue, dateStart, dateEnd, quantity, status);
-      discountBUS.SetDiscount(d);
-      refresh();
-      resetText();
+      int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa khuyến mãi "+ discountID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               discountBUS.SetDiscount(d);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+               return;
+           }
       row = -1;
-            
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(Discount.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -107,12 +107,17 @@ public class StaffManagement extends javax.swing.JFrame {
                 return;
             }
             else phone = txt_phone.getText();
-           int status =1; 
+            int status =1; 
          
-           Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
-                        
-            staffBUS.SetStaff(s);
-            refresh();
+            Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
+            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục sản phẩm "+ staffID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+            if(response == JOptionPane.YES_OPTION){
+                staffBUS.SetStaff(s);
+                refresh();
+                resetText();
+                JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                return;
+            }
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(StaffManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,9 +140,14 @@ public class StaffManagement extends javax.swing.JFrame {
       String phone = tbl_Staff.getModel().getValueAt(row, 4).toString();
       int status = 0;
       Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
-      staffBUS.SetStaff(s);
-      refresh();
-      resetText();
+      int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa sản phẩm "+ staffID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+      if(response == JOptionPane.YES_OPTION){
+        staffBUS.SetStaff(s);
+        refresh();
+        resetText();
+        JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+        return;
+      }
       row = -1;
             
         } catch (ClassNotFoundException ex) { 

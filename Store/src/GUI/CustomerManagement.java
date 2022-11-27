@@ -126,9 +126,16 @@ public class CustomerManagement extends javax.swing.JFrame {
            int status =1; 
          
            Customer cu = new Customer(customerID, firstName, lastName, email, phone, status);
-                        
-            customerBUS.SetCustomer(cu);
-            refresh();
+           
+           int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa khách hàng "+ customerID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               customerBUS.SetCustomer(cu);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
+               return;
+           }
+           
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(CustomerManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,7 +146,7 @@ public class CustomerManagement extends javax.swing.JFrame {
     try {    
       if(row < 0)
       {
-        JOptionPane.showMessageDialog(new JFrame(), "Chọn sản phẩm cần xoá", "Dialog",
+        JOptionPane.showMessageDialog(new JFrame(), "Chọn khách hàng cần xoá", "Dialog",
         JOptionPane.ERROR_MESSAGE);
         return; 
       }
@@ -151,8 +158,14 @@ public class CustomerManagement extends javax.swing.JFrame {
       String phone = tbl_Customer.getModel().getValueAt(row, 4).toString();
       int status = 0;
       Customer cu = new Customer(customerID, firstName, lastName, email, phone, status);
-      customerBUS.SetCustomer(cu);
-      refresh();
+      int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa khách hàng "+ customerID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               customerBUS.SetCustomer(cu);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+               return;
+           }
       resetText();
       row = -1;
             

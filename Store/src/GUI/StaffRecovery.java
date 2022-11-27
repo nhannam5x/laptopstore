@@ -95,10 +95,16 @@ public class StaffRecovery extends javax.swing.JFrame {
            String email = tbl_Staff.getModel().getValueAt(row, 3).toString();
            String phone = tbl_Staff.getModel().getValueAt(row, 4).toString();
            int status = 1;
-           Staff p = new Staff(staffID, firstName, lastName, email, phone, status);
+           Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
                         
-        if(staffBUS.CheckStaffID(staffID)) staffBUS.SetStaff(p);
-        else {
+        if(staffBUS.CheckStaffID(staffID)) {
+            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục nhân viên "+ staffID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+            if(response == JOptionPane.YES_OPTION){
+                staffBUS.SetStaff(s);
+                JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                return;
+            }
+        } else {
            JOptionPane.showMessageDialog(new JFrame(), "Mã sản phẩm không có trong dữ liêu", "Dialog",
            JOptionPane.ERROR_MESSAGE);
         }

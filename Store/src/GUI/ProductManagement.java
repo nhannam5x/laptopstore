@@ -27,16 +27,31 @@ public class ProductManagement extends javax.swing.JFrame {
     CategoryBUS categoryBUS = new CategoryBUS();
     SupplierBUS supplierBUS = new SupplierBUS();
     ArrayList<Product> productls = productBUS.getList();
-    ArrayList<Category> category = categoryBUS.getList();
-    ArrayList<Supplier> supplier = supplierBUS.getList();
+    ArrayList<Category> categoryls = categoryBUS.getList();
+    ArrayList<Supplier> supplierls = supplierBUS.getList();
     
     public ProductManagement() throws ClassNotFoundException {
         initComponents();
         productBUS.listProduct();
         categoryBUS.listCategory();
         supplierBUS.listSupplier();
-
         showTable(productls);
+        ArrayList<Integer> categoryCombo = new ArrayList();
+        ArrayList<Integer> supplierCombo = new ArrayList();
+            for(Category c: categoryls ){
+                categoryCombo.add(c.getCategoryID());
+            }
+            for(int i=0; i<categoryCombo.size(); i++){
+                jComboCategory.addItem(String.valueOf(categoryCombo.get(i)));
+            }
+        
+            for(Supplier s: supplierls ){
+                supplierCombo.add(s.getSupplierID());
+            }
+            for(int i=0; i<supplierCombo.size(); i++){
+                jComboSupplier.addItem(String.valueOf(supplierCombo.get(i)));
+            }
+        
     }
     
     private void showTable(ArrayList<Product> productls)
@@ -44,6 +59,7 @@ public class ProductManagement extends javax.swing.JFrame {
         tbl_Product.removeAll();
         DefaultTableModel defaultModel = (DefaultTableModel) tbl_Product.getModel();
         defaultModel.setRowCount(0);
+        
         for(Product p : productls)
         {
             if(p.getStatus() == 1){
@@ -64,8 +80,8 @@ public class ProductManagement extends javax.swing.JFrame {
         int row = tbl_Product.getSelectedRow();
         jlb_productID.setText(tbl_Product.getModel().getValueAt(row, 0).toString());
         txt_productName.setText(tbl_Product.getModel().getValueAt(row, 1).toString());
-        jlb_categoryID.setText(tbl_Product.getModel().getValueAt(row, 2).toString());
-        jlb_supplierID.setText(tbl_Product.getModel().getValueAt(row, 3).toString());
+        jComboCategory.setSelectedItem(tbl_Product.getModel().getValueAt(row, 2).toString());
+        jComboSupplier.setSelectedItem(tbl_Product.getModel().getValueAt(row, 3).toString());
         txt_price.setText(tbl_Product.getModel().getValueAt(row, 4).toString());
         txt_quantity.setText(tbl_Product.getModel().getValueAt(row, 5).toString());
     }   
@@ -73,7 +89,9 @@ public class ProductManagement extends javax.swing.JFrame {
      private void editProduct()
     {
         int productID;
-        int row = tbl_Product.getSelectedRow();    
+        int row = tbl_Product.getSelectedRow();  
+        int category = Integer.parseInt(jComboCategory.getSelectedItem().toString());
+        int supplier = Integer.parseInt(jComboSupplier.getSelectedItem().toString());
         try {    
          if(row < 0)
          {
@@ -84,16 +102,20 @@ public class ProductManagement extends javax.swing.JFrame {
            
            productID = Integer.parseInt(jlb_productID.getText());
            String productName = txt_productName.getText();
-           int category = Integer.parseInt(jlb_categoryID.getText());
-           int supplier = Integer.parseInt(jlb_supplierID.getText());
            float price = Float.parseFloat(txt_price.getText());
            int quantity = Integer.parseInt(txt_quantity.getText());
            int status =1; 
          
            Product p = new Product(productID, productName, category, supplier, price, quantity, status);
-                        
-            productBUS.SetProduct(p);
-            refresh();
+           int response = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa sản phẩm " + productID + " không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               productBUS.SetProduct(p);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Bạn đã sửa thành công");
+               return;
+           }
+            
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -117,9 +139,14 @@ public class ProductManagement extends javax.swing.JFrame {
            int quantity = (int)tbl_Product.getModel().getValueAt(row, 5);
            int status = 0;
            Product p = new Product(productID, productName, categoryID, supplierID, price, quantity, status);
-            productBUS.SetProduct(p);
-            refresh();
-            resetText();
+           int response = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa sản phẩm "+ productID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+           if(response == JOptionPane.YES_OPTION){
+               productBUS.SetProduct(p);
+               refresh();
+               resetText();
+               JOptionPane.showMessageDialog(rootPane, "Bạn đã xóa thành công");
+               return;
+           }
             row = -1;
             
         } catch (ClassNotFoundException ex) { 
@@ -130,8 +157,8 @@ public class ProductManagement extends javax.swing.JFrame {
     private void resetText(){
         jlb_productID.setText("...");
         txt_productName.setText("");
-        jlb_categoryID.setText("...");
-        jlb_supplierID.setText("...");
+        jComboCategory.setSelectedIndex(-1);
+        jComboSupplier.setSelectedIndex(-1);
         txt_price.setText("");
         txt_quantity.setText("");
     }
@@ -183,8 +210,6 @@ public class ProductManagement extends javax.swing.JFrame {
         jlb_productID = new javax.swing.JLabel();
         jlb_productName = new javax.swing.JLabel();
         txt_productName = new javax.swing.JTextField();
-        jlb_categoryID = new javax.swing.JLabel();
-        jlb_supplierID = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         btn_add1 = new javax.swing.JToggleButton();
         jlb_price = new javax.swing.JLabel();
@@ -194,6 +219,9 @@ public class ProductManagement extends javax.swing.JFrame {
         jlb_productID1 = new javax.swing.JLabel();
         jlb_category = new javax.swing.JLabel();
         jlb_supplier = new javax.swing.JLabel();
+        jComboCategory = new javax.swing.JComboBox<>();
+        jComboSupplier = new javax.swing.JComboBox<>();
+        jlb_price1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -397,16 +425,6 @@ public class ProductManagement extends javax.swing.JFrame {
     });
     jPanel1.add(txt_productName, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 340, 330, 52));
 
-    jlb_categoryID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_categoryID.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_categoryID.setText("...");
-    jPanel1.add(jlb_categoryID, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 270, 110, 52));
-
-    jlb_supplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_supplierID.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplierID.setText("...");
-    jPanel1.add(jlb_supplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 270, 90, 52));
-
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
     jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 1270, 10));
@@ -429,8 +447,8 @@ public class ProductManagement extends javax.swing.JFrame {
 
     jlb_price.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_price.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_price.setText("Price:");
-    jPanel1.add(jlb_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 60, 52));
+    jlb_price.setText("VNĐ");
+    jPanel1.add(jlb_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 340, 50, 52));
 
     txt_price.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
     txt_price.setForeground(new java.awt.Color(255, 153, 51));
@@ -439,7 +457,7 @@ public class ProductManagement extends javax.swing.JFrame {
             txt_priceActionPerformed(evt);
         }
     });
-    jPanel1.add(txt_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 340, 360, 52));
+    jPanel1.add(txt_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 300, 52));
 
     jlb_quantity.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_quantity.setForeground(new java.awt.Color(255, 153, 51));
@@ -463,12 +481,21 @@ public class ProductManagement extends javax.swing.JFrame {
     jlb_category.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_category.setForeground(new java.awt.Color(255, 153, 51));
     jlb_category.setText("CategoryID:");
-    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 120, 52));
+    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 270, 120, 52));
 
     jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
     jlb_supplier.setText("SupplierID:");
-    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 270, 110, 52));
+    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 110, 52));
+
+    jPanel1.add(jComboCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 270, 70, 50));
+
+    jPanel1.add(jComboSupplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 270, 70, 50));
+
+    jlb_price1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_price1.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_price1.setText("Price:");
+    jPanel1.add(jlb_price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 60, 52));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -630,6 +657,8 @@ public class ProductManagement extends javax.swing.JFrame {
     private javax.swing.JToggleButton btn_add1;
     private javax.swing.JToggleButton btn_del;
     private javax.swing.JToggleButton btn_restore;
+    private javax.swing.JComboBox<String> jComboCategory;
+    private javax.swing.JComboBox<String> jComboSupplier;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
@@ -641,14 +670,13 @@ public class ProductManagement extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel jlb_category;
-    private javax.swing.JLabel jlb_categoryID;
     private javax.swing.JLabel jlb_price;
+    private javax.swing.JLabel jlb_price1;
     private javax.swing.JLabel jlb_productID;
     private javax.swing.JLabel jlb_productID1;
     private javax.swing.JLabel jlb_productName;
     private javax.swing.JLabel jlb_quantity;
     private javax.swing.JLabel jlb_supplier;
-    private javax.swing.JLabel jlb_supplierID;
     private javax.swing.JTable tbl_Product;
     private javax.swing.JTextField txt_price;
     private javax.swing.JTextField txt_productName;

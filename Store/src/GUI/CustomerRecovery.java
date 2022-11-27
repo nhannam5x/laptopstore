@@ -91,8 +91,14 @@ public class CustomerRecovery extends javax.swing.JFrame {
            
            Customer c = new Customer(customerID, firstName, lastName, email, phone,status);
                         
-        if(customerBUS.CheckCustomerID(customerID)) customerBUS.SetCustomer(c);
-        else {
+        if(customerBUS.CheckCustomerID(customerID)) {
+            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục khách hàng "+ customerID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+            if(response == JOptionPane.YES_OPTION){
+               customerBUS.SetCustomer(c);
+               JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+               return;
+           }
+        } else {
            JOptionPane.showMessageDialog(new JFrame(), "Mã khách hàng không có trong dữ liêu", "Dialog",
            JOptionPane.ERROR_MESSAGE);
         }

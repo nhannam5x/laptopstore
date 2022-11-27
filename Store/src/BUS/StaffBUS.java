@@ -86,7 +86,7 @@ public class StaffBUS {
 
     
     
-    public ArrayList<Staff> getList() throws ClassNotFoundException {
+    public ArrayList<Staff> getList() {
         
         return sta;
     }

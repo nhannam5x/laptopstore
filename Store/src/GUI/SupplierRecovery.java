@@ -82,7 +82,7 @@ public class SupplierRecovery extends javax.swing.JFrame {
         try {    
           if(row < 0)
          {
-           JOptionPane.showMessageDialog(new JFrame(), "Chọn sản phẩm cần khôi phục", "Dialog",
+           JOptionPane.showMessageDialog(new JFrame(), "Chọn nhà cung cấp cần khôi phục", "Dialog",
            JOptionPane.ERROR_MESSAGE);
            return; 
          }
@@ -91,14 +91,20 @@ public class SupplierRecovery extends javax.swing.JFrame {
            String supplierName = tbl_Supplier.getModel().getValueAt(row, 1).toString();
            String address = tbl_Supplier.getModel().getValueAt(row, 2).toString();
            int status = 1;
-           Supplier p = new Supplier(supplierID, supplierName, address, status);
+           Supplier su = new Supplier(supplierID, supplierName, address, status);
                         
-        if(supplierBUS.CheckSupplierID(supplierID)) supplierBUS.SetSupplier(p);
-        else {
-           JOptionPane.showMessageDialog(new JFrame(), "Mã sản phẩm không có trong dữ liêu", "Dialog",
-           JOptionPane.ERROR_MESSAGE);
-        }
-                showTable();
+           if(supplierBUS.CheckSupplierID(supplierID)){
+                int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa nhà cung cấp "+ supplierID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+                if(response == JOptionPane.YES_OPTION){
+                    supplierBUS.SetSupplier(su);
+                    JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+                    return;
+                }    
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Mã nhà cung cấp không có trong dữ liêu", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+            }
+            showTable();
             
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(SupplierRecovery.class.getName()).log(Level.SEVERE, null, ex);

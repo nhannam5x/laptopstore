@@ -76,7 +76,7 @@ public class DiscountRecovery extends javax.swing.JFrame {
         try {    
           if(row < 0)
          {
-           JOptionPane.showMessageDialog(new JFrame(), "Chọn mã giảm giá cần khôi phục");
+           JOptionPane.showMessageDialog(new JFrame(), "Chọn khuyến mãi cần khôi phục");
            return; 
          }
           
@@ -89,12 +89,18 @@ public class DiscountRecovery extends javax.swing.JFrame {
            
            Discount c = new Discount(discountID, discountValue, dateStart, dateEnd, quantity,status);
                         
-        if(discountBUS.CheckDiscountID(discountID)) discountBUS.SetDiscount(c);
-        else {
-           JOptionPane.showMessageDialog(new JFrame(), "Mã giảm giá không có trong dữ liêu", "Dialog",
-           JOptionPane.ERROR_MESSAGE);
-        }
-                showTable();
+            if(discountBUS.CheckDiscountID(discountID)) {
+                int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục khuyến mãi "+ discountID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+                if(response == JOptionPane.YES_OPTION){
+                   discountBUS.SetDiscount(c);
+                   JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                   return;
+               }
+            } else {
+               JOptionPane.showMessageDialog(new JFrame(), "Mã giảm giá không có trong dữ liêu", "Dialog",
+               JOptionPane.ERROR_MESSAGE);
+            }
+            showTable();
             
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(DiscountRecovery.class.getName()).log(Level.SEVERE, null, ex);

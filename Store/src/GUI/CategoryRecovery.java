@@ -74,7 +74,7 @@ public class CategoryRecovery extends javax.swing.JFrame {
         try {    
           if(row < 0)
          {
-           JOptionPane.showMessageDialog(new JFrame(), "Chọn danh mục cần khôi phục");
+           JOptionPane.showMessageDialog(new JFrame(), "Chọn loại cần khôi phục");
            return; 
          }
           
@@ -84,12 +84,19 @@ public class CategoryRecovery extends javax.swing.JFrame {
            
            Category c = new Category(categoryID, categoryName,status);
                         
-        if(categoryBUS.CheckCategoryID(categoryID)) categoryBUS.SetCategory(c);
-        else {
-           JOptionPane.showMessageDialog(new JFrame(), "Mã danh muục không có trong dữ liêu", "Dialog",
-           JOptionPane.ERROR_MESSAGE);
-        }
-                showTable();
+            if(categoryBUS.CheckCategoryID(categoryID)){
+                int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục loại "+ categoryID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+                if(response == JOptionPane.YES_OPTION){
+                    categoryBUS.SetCategory(c);
+                    JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                    return;
+                }
+            
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Mã loại không có trong dữ liêu", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+            }
+            showTable();
             
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(CategoryRecovery.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,7 +216,6 @@ public class CategoryRecovery extends javax.swing.JFrame {
     private void btn_restoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_restoreActionPerformed
         
         restoreCategory();
-        
         
     }//GEN-LAST:event_btn_restoreActionPerformed
 

@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 public class ProductRecovery extends javax.swing.JFrame {
     
     ProductBUS productBUS = new ProductBUS();
+    
     /**
      * Creates new form Customer
      */
@@ -99,13 +100,18 @@ public class ProductRecovery extends javax.swing.JFrame {
            int status = 1;
            Product p = new Product(productID, productName, categoryID, supplierID, price, quantity, status);
                         
-        if(productBUS.CheckProductID(productID)) productBUS.SetProduct(p);
-        else {
-           JOptionPane.showMessageDialog(new JFrame(), "Mã sản phẩm không có trong dữ liêu", "Dialog",
-           JOptionPane.ERROR_MESSAGE);
-        }
+            if(productBUS.CheckProductID(productID)){
+                int response = JOptionPane.showConfirmDialog(this, "Bạn muốn khôi phục sản phẩm "+ productID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+                if(response == JOptionPane.YES_OPTION){
+                    productBUS.SetProduct(p);
+                    JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Mã sản phẩm không có trong dữ liêu", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+            }
                 showTable();
-            
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(ProductRecovery.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -222,9 +228,7 @@ public class ProductRecovery extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_restoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_restoreActionPerformed
-        
         restoreProduct();
-        
         
     }//GEN-LAST:event_btn_restoreActionPerformed
 
@@ -242,6 +246,7 @@ public class ProductRecovery extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         this.dispose();
+        
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
