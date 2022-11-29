@@ -5,16 +5,14 @@
  */
 package GUI;
 
-import DTO.Bill;
-import BUS.BillBUS;
+import DTO.Inventorybill;
+import BUS.InventorybillBUS;
 import DTO.Product;
 import BUS.ProductBUS;
 import DTO.Staff;
 import BUS.StaffBUS;
-import DTO.Customer;
-import BUS.CustomerBUS;
-import DTO.Discount;
-import BUS.DiscountBUS;
+import DTO.Supplier;
+import BUS.SupplierBUS;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,64 +23,59 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author donha
  */
-public class BillManagement extends javax.swing.JFrame {
+public class InventorybillManagement extends javax.swing.JFrame {
 
     /**
      * Creates new form BillManagement
      */
-    BillBUS billBUS = new BillBUS();
+    InventorybillBUS inventorybillBUS = new InventorybillBUS();
     ProductBUS productBUS = new ProductBUS();
     StaffBUS staffBUS = new StaffBUS();
-    CustomerBUS customerBUS = new CustomerBUS();
-    DiscountBUS discountBUS = new DiscountBUS();
-    ArrayList<Bill> billls = billBUS.getList();
+    SupplierBUS supplierBUS = new SupplierBUS();
+    ArrayList<Inventorybill> inventorybillls = inventorybillBUS.getList();
     ArrayList<Product> product = productBUS.getList();
     ArrayList<Staff> staff = staffBUS.getList();
-    ArrayList<Customer> customer = customerBUS.getList();
-    ArrayList<Discount> discount = discountBUS.getList();
+    ArrayList<Supplier> supplier = supplierBUS.getList();
     
-    public BillManagement() throws ClassNotFoundException {
+    public InventorybillManagement() throws ClassNotFoundException {
         initComponents();
-        billBUS.listBill();
+        inventorybillBUS.listInventorybill();
         productBUS.listProduct();
         staffBUS.listStaff();
-        customerBUS.listCustomer();
-        discountBUS.listDiscount();
-        showTable(billls);
+        supplierBUS.listSupplier();
+        showTable(inventorybillls);
     }
     
-    private void showTable(ArrayList<Bill> billls)
+    private void showTable(ArrayList<Inventorybill> inventorybillls)
     {   
-        tbl_Bill.removeAll();
-        DefaultTableModel defaultModel = (DefaultTableModel) tbl_Bill.getModel();
+        tbl_Inventorybill.removeAll();
+        DefaultTableModel defaultModel = (DefaultTableModel) tbl_Inventorybill.getModel();
         defaultModel.setRowCount(0);
-        for(Bill b : billls)
+        for(Inventorybill b : inventorybillls)
         {
             if(b.getStatus() == 1){
-                int billID = b.getBillID();
+                int inventorybillID = b.getInventorybillID();
                 int staffID = staffBUS.getStaffID(b.getStaffID()).getStaffID();
                 String staffName = staffBUS.getStaffID(b.getStaffID()).getFirstName()+ " "+staffBUS.getStaffID(b.getStaffID()).getLastName();
-                int customerID = customerBUS.getCustomerID(b.getCustomerID()).getCustomerID();
-                String customerName = customerBUS.getCustomerID(b.getCustomerID()).getFirstName() +" "+ customerBUS.getCustomerID(b.getCustomerID()).getLastName();
-                int discount = discountBUS.getDiscountID(b.getDiscountID()).getDiscountValue();
+                int supplierID = supplierBUS.getSupplierID(b.getSupplierID()).getSupplierID();
+                String supplierName = supplierBUS.getSupplierID(b.getSupplierID()).getSupplierName();
                 float totalPrice = b.getTotalPrice();
                 String date = b.getDate();
                 
-                defaultModel.addRow(new Object[]{billID, staffID, staffName, customerID, customerName, discount, totalPrice, date});
+                defaultModel.addRow(new Object[]{inventorybillID, staffID, staffName, supplierID, supplierName, totalPrice, date});
             }
         }
     }
     
-    private void showBillValue(ArrayList<Bill> billls)
+    private void showBillValue(ArrayList<Inventorybill> inventorybillls)
     {
         
-        int row = tbl_Bill.getSelectedRow();
-        jlb_billID.setText(tbl_Bill.getModel().getValueAt(row, 0).toString());
-        jlb_staffID.setText(tbl_Bill.getModel().getValueAt(row, 1).toString());
-        jlb_customerID.setText(tbl_Bill.getModel().getValueAt(row, 3).toString());
-        jlb_discountID.setText(tbl_Bill.getModel().getValueAt(row, 5).toString());
-        jlb_totalPrice.setText(tbl_Bill.getModel().getValueAt(row, 6).toString());
-        jlb_date.setText(tbl_Bill.getModel().getValueAt(row, 7).toString());
+        int row = tbl_Inventorybill.getSelectedRow();
+        jlb_billID.setText(tbl_Inventorybill.getModel().getValueAt(row, 0).toString());
+        jlb_staffID.setText(tbl_Inventorybill.getModel().getValueAt(row, 1).toString());
+        jlb_supplierID.setText(tbl_Inventorybill.getModel().getValueAt(row, 3).toString());
+        jlb_totalPrice.setText(tbl_Inventorybill.getModel().getValueAt(row, 5).toString());
+        jlb_date.setText(tbl_Inventorybill.getModel().getValueAt(row, 6).toString());
                 
     }   
     
@@ -90,28 +83,27 @@ public class BillManagement extends javax.swing.JFrame {
     private void resetText(){
         jlb_billID.setText("...");
         jlb_staffID.setText("");
-        jlb_customerID.setText("");
-        jlb_discountID.setText("");
+        jlb_supplierID.setText("");
         jlb_totalPrice.setText("");
         jlb_date.setText("");
     }
     
     private void refresh(){
         try {
-            billBUS.listBill();
-            billls = billBUS.getList(); 
+            inventorybillBUS.listInventorybill();
+            inventorybillls = inventorybillBUS.getList(); 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventorybillManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showTable(billls);
+        showTable(inventorybillls);
     }
     
     private void search(){
-        String billID = txt_sBillID.getText();
+        String inventorybillID = txt_sInventorybillID.getText();
         String staffID = txt_sStaffID.getText();
-        String customerID = txt_sCustomerID.getText();
+        String supplierID = txt_sSupplierID.getText();
         String date = txt_sDate.getText();
-        showTable(billBUS.search(billID, staffID, customerID, date));
+        showTable(inventorybillBUS.search(inventorybillID, staffID, supplierID, date));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,12 +117,11 @@ public class BillManagement extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl_Bill = new javax.swing.JTable();
+        tbl_Inventorybill = new javax.swing.JTable();
         btn_Check = new javax.swing.JToggleButton();
         btn_Refresh = new javax.swing.JToggleButton();
         jLabel3 = new javax.swing.JLabel();
-        txt_sBillID = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        txt_sInventorybillID = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txt_sDate = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
@@ -142,15 +133,14 @@ public class BillManagement extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jlb_totalPrice1 = new javax.swing.JLabel();
         jlb_date1 = new javax.swing.JLabel();
-        jlb_customer = new javax.swing.JLabel();
+        jlb_supplier = new javax.swing.JLabel();
         jlb_bill = new javax.swing.JLabel();
-        jlb_discount = new javax.swing.JLabel();
-        jlb_discountID = new javax.swing.JLabel();
         jlb_staffID = new javax.swing.JLabel();
         jlb_totalPrice = new javax.swing.JLabel();
-        jlb_customerID = new javax.swing.JLabel();
+        jlb_supplierID = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txt_sCustomerID = new javax.swing.JTextField();
+        txt_sSupplierID = new javax.swing.JTextField();
+        jlb_bill1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -161,17 +151,17 @@ public class BillManagement extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 153, 51));
-        jLabel1.setText("Bill Management");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 261, 77));
+        jLabel1.setText("Inventory bill Management");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 340, 77));
 
-        tbl_Bill.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        tbl_Bill.setForeground(new java.awt.Color(255, 153, 51));
-        tbl_Bill.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_Inventorybill.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        tbl_Inventorybill.setForeground(new java.awt.Color(255, 153, 51));
+        tbl_Inventorybill.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "billID", "staffID", "staffName", "customer", "customerName", "discount", "totalPrice", "date"
+                "billID", "staffID", "staffName", "supplier", "supplierName", "totalPrice", "date"
             }
         )
         {
@@ -181,19 +171,19 @@ public class BillManagement extends javax.swing.JFrame {
         }
 
     );
-    tbl_Bill.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-    tbl_Bill.setRowHeight(40);
-    tbl_Bill.setRowMargin(2);
-    tbl_Bill.setSelectionBackground(new java.awt.Color(153, 255, 153));
-    tbl_Bill.setSelectionForeground(new java.awt.Color(0, 0, 0));
-    tbl_Bill.addMouseListener(new java.awt.event.MouseAdapter() {
+    tbl_Inventorybill.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tbl_Inventorybill.setRowHeight(40);
+    tbl_Inventorybill.setRowMargin(2);
+    tbl_Inventorybill.setSelectionBackground(new java.awt.Color(153, 255, 153));
+    tbl_Inventorybill.setSelectionForeground(new java.awt.Color(0, 0, 0));
+    tbl_Inventorybill.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            tbl_BillMouseClicked(evt);
+            tbl_InventorybillMouseClicked(evt);
         }
     });
-    jScrollPane1.setViewportView(tbl_Bill);
+    jScrollPane1.setViewportView(tbl_Inventorybill);
 
-    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1300, 157));
+    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1290, 157));
 
     btn_Check.setBackground(new java.awt.Color(102, 255, 102));
     btn_Check.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -228,24 +218,19 @@ public class BillManagement extends javax.swing.JFrame {
     jLabel3.setText("SEARCH");
     jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 470, 90, 50));
 
-    txt_sBillID.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    txt_sBillID.setForeground(new java.awt.Color(255, 153, 51));
-    txt_sBillID.addActionListener(new java.awt.event.ActionListener() {
+    txt_sInventorybillID.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    txt_sInventorybillID.setForeground(new java.awt.Color(255, 153, 51));
+    txt_sInventorybillID.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_sBillIDActionPerformed(evt);
+            txt_sInventorybillIDActionPerformed(evt);
         }
     });
-    txt_sBillID.addKeyListener(new java.awt.event.KeyAdapter() {
+    txt_sInventorybillID.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyReleased(java.awt.event.KeyEvent evt) {
-            txt_sBillIDKeyReleased(evt);
+            txt_sInventorybillIDKeyReleased(evt);
         }
     });
-    jPanel1.add(txt_sBillID, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 440, 200, 52));
-
-    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("BillID:");
-    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 440, 138, 52));
+    jPanel1.add(txt_sInventorybillID, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 440, 200, 52));
 
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(255, 153, 51));
@@ -292,7 +277,7 @@ public class BillManagement extends javax.swing.JFrame {
     jlb_billID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_billID.setForeground(new java.awt.Color(255, 153, 51));
     jlb_billID.setText("...");
-    jPanel1.add(jlb_billID, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 270, 140, 52));
+    jPanel1.add(jlb_billID, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 270, 140, 52));
 
     jlb_staff.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_staff.setForeground(new java.awt.Color(255, 153, 51));
@@ -318,25 +303,15 @@ public class BillManagement extends javax.swing.JFrame {
     jlb_date1.setText("Date:");
     jPanel1.add(jlb_date1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 340, 60, 52));
 
-    jlb_customer.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_customer.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_customer.setText("Customer:");
-    jPanel1.add(jlb_customer, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 270, 120, 52));
+    jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_supplier.setText("Supplier:");
+    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 270, 120, 52));
 
     jlb_bill.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_bill.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_bill.setText("BillID:");
-    jPanel1.add(jlb_bill, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 60, 52));
-
-    jlb_discount.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_discount.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_discount.setText("Discount:");
-    jPanel1.add(jlb_discount, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 90, 52));
-
-    jlb_discountID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_discountID.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_discountID.setText("...");
-    jPanel1.add(jlb_discountID, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 340, 90, 52));
+    jlb_bill.setText("InventoryBillID:");
+    jPanel1.add(jlb_bill, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 440, 160, 52));
 
     jlb_staffID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_staffID.setForeground(new java.awt.Color(255, 153, 51));
@@ -348,29 +323,34 @@ public class BillManagement extends javax.swing.JFrame {
     jlb_totalPrice.setText("...");
     jPanel1.add(jlb_totalPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 90, 52));
 
-    jlb_customerID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_customerID.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_customerID.setText("...");
-    jPanel1.add(jlb_customerID, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 320, 52));
+    jlb_supplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_supplierID.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_supplierID.setText("...");
+    jPanel1.add(jlb_supplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 320, 52));
 
     jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel7.setText("CustomerID:");
+    jLabel7.setText("SupplierID:");
     jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 440, 120, 52));
 
-    txt_sCustomerID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    txt_sCustomerID.setForeground(new java.awt.Color(255, 153, 51));
-    txt_sCustomerID.addActionListener(new java.awt.event.ActionListener() {
+    txt_sSupplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    txt_sSupplierID.setForeground(new java.awt.Color(255, 153, 51));
+    txt_sSupplierID.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_sCustomerIDActionPerformed(evt);
+            txt_sSupplierIDActionPerformed(evt);
         }
     });
-    txt_sCustomerID.addKeyListener(new java.awt.event.KeyAdapter() {
+    txt_sSupplierID.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyReleased(java.awt.event.KeyEvent evt) {
-            txt_sCustomerIDKeyReleased(evt);
+            txt_sSupplierIDKeyReleased(evt);
         }
     });
-    jPanel1.add(txt_sCustomerID, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 210, 52));
+    jPanel1.add(txt_sSupplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 210, 52));
+
+    jlb_bill1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_bill1.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_bill1.setText("InventoryBillID:");
+    jPanel1.add(jlb_bill1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 160, 52));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -388,13 +368,13 @@ public class BillManagement extends javax.swing.JFrame {
     pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbl_BillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_BillMouseClicked
-        showBillValue(billls);
-    }//GEN-LAST:event_tbl_BillMouseClicked
+    private void tbl_InventorybillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_InventorybillMouseClicked
+        showBillValue(inventorybillls);
+    }//GEN-LAST:event_tbl_InventorybillMouseClicked
 
     private void btn_CheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CheckActionPerformed
-        int billID;
-        int row = tbl_Bill.getSelectedRow();    
+        int inventorybillID;
+        int row = tbl_Inventorybill.getSelectedRow();    
         try {    
          if(row < 0)
          {
@@ -403,11 +383,11 @@ public class BillManagement extends javax.swing.JFrame {
            return; 
          }
            
-           billID = Integer.parseInt(jlb_billID.getText());    
-           BilldetailManagement bd = new BilldetailManagement(billID);
+           inventorybillID = Integer.parseInt(jlb_billID.getText());    
+           InventorybilldetailManagement bd = new InventorybilldetailManagement(inventorybillID);
             bd.setVisible(true);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventorybillManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_CheckActionPerformed
 
@@ -421,9 +401,9 @@ public class BillManagement extends javax.swing.JFrame {
         refresh();
     }//GEN-LAST:event_btn_RefreshActionPerformed
 
-    private void txt_sBillIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sBillIDActionPerformed
+    private void txt_sInventorybillIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sInventorybillIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_sBillIDActionPerformed
+    }//GEN-LAST:event_txt_sInventorybillIDActionPerformed
 
     private void txt_sDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sDateActionPerformed
         // TODO add your handling code here:
@@ -433,24 +413,24 @@ public class BillManagement extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_sStaffIDActionPerformed
 
-    private void txt_sCustomerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sCustomerIDActionPerformed
+    private void txt_sSupplierIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sSupplierIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_sCustomerIDActionPerformed
+    }//GEN-LAST:event_txt_sSupplierIDActionPerformed
 
-    private void txt_sBillIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sBillIDKeyReleased
+    private void txt_sInventorybillIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sInventorybillIDKeyReleased
         // TODO add your handling code here:
         search();
-    }//GEN-LAST:event_txt_sBillIDKeyReleased
+    }//GEN-LAST:event_txt_sInventorybillIDKeyReleased
 
     private void txt_sStaffIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sStaffIDKeyReleased
         // TODO add your handling code here:
         search();
     }//GEN-LAST:event_txt_sStaffIDKeyReleased
 
-    private void txt_sCustomerIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sCustomerIDKeyReleased
+    private void txt_sSupplierIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sSupplierIDKeyReleased
         // TODO add your handling code here:
         search();
-    }//GEN-LAST:event_txt_sCustomerIDKeyReleased
+    }//GEN-LAST:event_txt_sSupplierIDKeyReleased
 
     private void txt_sDateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sDateKeyReleased
         // TODO add your handling code here:
@@ -474,14 +454,16 @@ public class BillManagement extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -489,9 +471,9 @@ public class BillManagement extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new BillManagement().setVisible(true);
+                    new InventorybillManagement().setVisible(true);
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(InventorybillManagement.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -503,7 +485,6 @@ public class BillManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -511,21 +492,20 @@ public class BillManagement extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel jlb_bill;
+    private javax.swing.JLabel jlb_bill1;
     private javax.swing.JLabel jlb_billID;
-    private javax.swing.JLabel jlb_customer;
-    private javax.swing.JLabel jlb_customerID;
     private javax.swing.JLabel jlb_date;
     private javax.swing.JLabel jlb_date1;
-    private javax.swing.JLabel jlb_discount;
-    private javax.swing.JLabel jlb_discountID;
     private javax.swing.JLabel jlb_staff;
     private javax.swing.JLabel jlb_staffID;
+    private javax.swing.JLabel jlb_supplier;
+    private javax.swing.JLabel jlb_supplierID;
     private javax.swing.JLabel jlb_totalPrice;
     private javax.swing.JLabel jlb_totalPrice1;
-    private javax.swing.JTable tbl_Bill;
-    private javax.swing.JTextField txt_sBillID;
-    private javax.swing.JTextField txt_sCustomerID;
+    private javax.swing.JTable tbl_Inventorybill;
     private javax.swing.JTextField txt_sDate;
+    private javax.swing.JTextField txt_sInventorybillID;
     private javax.swing.JTextField txt_sStaffID;
+    private javax.swing.JTextField txt_sSupplierID;
     // End of variables declaration//GEN-END:variables
 }

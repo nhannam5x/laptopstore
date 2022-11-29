@@ -280,9 +280,9 @@ public class DiscountManagement extends javax.swing.JFrame {
     });
     jScrollPane1.setViewportView(tbl_Discount);
 
-    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1270, 157));
+    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1280, 157));
 
-    btn_restore.setBackground(new java.awt.Color(102, 255, 102));
+    btn_restore.setBackground(new java.awt.Color(204, 204, 204));
     btn_restore.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_restore.setForeground(new java.awt.Color(255, 255, 255));
     btn_restore.setText("Khôi phục");
@@ -299,7 +299,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     jPanel1.add(btn_restore, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 610, 230, 90));
 
     btn_del.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_del.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_del.setForeground(new java.awt.Color(255, 255, 255));
     btn_del.setText("Xóa");
     btn_del.addActionListener(new java.awt.event.ActionListener() {
@@ -309,7 +309,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     });
     jPanel1.add(btn_del, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 610, 230, 90));
 
-    btn_Update.setBackground(new java.awt.Color(102, 255, 102));
+    btn_Update.setBackground(new java.awt.Color(51, 102, 255));
     btn_Update.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_Update.setForeground(new java.awt.Color(255, 255, 255));
     btn_Update.setText("Sửa");
@@ -363,7 +363,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, 1270, 10));
+    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 1360, 10));
 
     jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel9.setForeground(new java.awt.Color(255, 153, 51));
@@ -455,7 +455,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 1270, 10));
+    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 1360, 10));
 
     btn_add1.setBackground(new java.awt.Color(102, 255, 102));
     btn_add1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -496,10 +496,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap())
+        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1320, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

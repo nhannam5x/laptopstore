@@ -5,10 +5,10 @@
  */
 package GUI;
 
-import DTO.Billdetail;
-import BUS.BilldetailBUS;
-import DTO.Bill;
-import BUS.BillBUS;
+import DTO.Inventorybilldetail;
+import BUS.InventorybilldetailBUS;
+import DTO.Inventorybill;
+import BUS.InventorybillBUS;
 import DTO.Product;
 import BUS.ProductBUS;
 import java.util.ArrayList;
@@ -21,46 +21,46 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author donha
  */
-public class BilldetailManagement extends javax.swing.JFrame {
+public class InventorybilldetailManagement extends javax.swing.JFrame {
 
     /**
      * Creates new form BillManagement
      */
-    BilldetailBUS billdetailBUS = new BilldetailBUS();
-    BillBUS billBUS = new BillBUS();
+    InventorybilldetailBUS inventorybilldetailBUS = new InventorybilldetailBUS();
+    InventorybillBUS inventorybillBUS = new InventorybillBUS();
     ProductBUS productBUS = new ProductBUS();
-    ArrayList<Billdetail> billdls = billdetailBUS.getList();
-    ArrayList<Bill> bill = billBUS.getList();
+    ArrayList<Inventorybilldetail> billdls = inventorybilldetailBUS.getList();
+    ArrayList<Inventorybill> bill = inventorybillBUS.getList();
     ArrayList<Product> product = productBUS.getList();
-    int billID;
+    int inventorybillID;
     
-    public BilldetailManagement(int billID) throws ClassNotFoundException {
+    public InventorybilldetailManagement(int inventorybillID) throws ClassNotFoundException {
         initComponents();
-        this.billID = billID;
-        System.out.println(billID);
-        billdetailBUS.listBilldetail();
-        billBUS.listBill();
+        this.inventorybillID = inventorybillID;
+        System.out.println(inventorybillID);
+        inventorybilldetailBUS.listInventorybilldetail();
+        inventorybillBUS.listInventorybill();
         productBUS.listProduct();
         showTable(billdls);
         
     }
     
-    private void showTable(ArrayList<Billdetail> billdls)
+    private void showTable(ArrayList<Inventorybilldetail> billdls)
     {   
-        tbl_Billdetail.removeAll();
-        DefaultTableModel defaultModel = (DefaultTableModel) tbl_Billdetail.getModel();
+        tbl_Inventorybilldetail.removeAll();
+        DefaultTableModel defaultModel = (DefaultTableModel) tbl_Inventorybilldetail.getModel();
         defaultModel.setRowCount(0);
         int totalRow = 0, totalQuantity=0;
         
-        for(Billdetail bd : billdls)
+        for(Inventorybilldetail bd : billdls)
         {
             if(bd.getStatus() == 1){
-                if(bd.getBillID() == this.billID){
-                    int productID = productBUS.getProductByID(bd.getProductID()).getProductID();
+                if(bd.getInventorybillID() == this.inventorybillID){
+                    int productID = productBUS.getProductID(bd.getProductID()).getProductID();
                     int quantity = bd.getQuantity();
-                    String productName = productBUS.getProductByID(bd.getProductID()).getProductName();
-                    float price = productBUS.getProductByID(bd.getProductID()).getPrice();
-                    defaultModel.addRow(new Object[]{this.billID, productID, productName, price, quantity});
+                    String productName = productBUS.getProductID(bd.getProductID()).getProductName();
+                    float price = productBUS.getProductID(bd.getProductID()).getPrice();
+                    defaultModel.addRow(new Object[]{this.inventorybillID, productID, productName, price, quantity});
                     totalRow ++;
                     totalQuantity += quantity;
                     jlb_rowCount.setText(String.valueOf(totalRow));
@@ -71,16 +71,16 @@ public class BilldetailManagement extends javax.swing.JFrame {
         }
     }
     
-    private void showBillValue(ArrayList<Billdetail> billdls)
+    private void showBillValue(ArrayList<Inventorybilldetail> billdls)
     {
         
-        int row = tbl_Billdetail.getSelectedRow();
-        int quantity = (int) tbl_Billdetail.getModel().getValueAt(row, 4);
-        float price = (float) tbl_Billdetail.getModel().getValueAt(row, 3);
-        jlb_productID.setText(tbl_Billdetail.getModel().getValueAt(row, 1).toString());
-        jlb_productName.setText(tbl_Billdetail.getModel().getValueAt(row, 2).toString());
-        jlb_price.setText(tbl_Billdetail.getModel().getValueAt(row, 3).toString());
-        jlb_quantity.setText(tbl_Billdetail.getModel().getValueAt(row, 4).toString());
+        int row = tbl_Inventorybilldetail.getSelectedRow();
+        int quantity = (int) tbl_Inventorybilldetail.getModel().getValueAt(row, 4);
+        float price = (float) tbl_Inventorybilldetail.getModel().getValueAt(row, 3);
+        jlb_productID.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 1).toString());
+        jlb_productName.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 2).toString());
+        jlb_price.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 3).toString());
+        jlb_quantity.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 4).toString());
         jlb_subTotal.setText(String.valueOf(quantity*price));
                 
             
@@ -91,7 +91,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
     {
         String productID = txt_sProductID.getText();
         String quantity = txt_sQuantity.getText();
-        showTable(billdetailBUS.search(productID, quantity));
+        showTable(inventorybilldetailBUS.search(productID, quantity));
     }
     
     /**
@@ -106,7 +106,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbl_Billdetail = new javax.swing.JTable();
+        tbl_Inventorybilldetail = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         txt_sProductID = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -138,12 +138,12 @@ public class BilldetailManagement extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 153, 51));
-        jLabel1.setText("Bill detail Management");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 300, 77));
+        jLabel1.setText("Inventory Bill detail Management");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 420, 77));
 
-        tbl_Billdetail.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        tbl_Billdetail.setForeground(new java.awt.Color(255, 153, 51));
-        tbl_Billdetail.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_Inventorybilldetail.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        tbl_Inventorybilldetail.setForeground(new java.awt.Color(255, 153, 51));
+        tbl_Inventorybilldetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -158,19 +158,19 @@ public class BilldetailManagement extends javax.swing.JFrame {
         }
 
     );
-    tbl_Billdetail.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-    tbl_Billdetail.setRowHeight(40);
-    tbl_Billdetail.setRowMargin(2);
-    tbl_Billdetail.setSelectionBackground(new java.awt.Color(153, 255, 153));
-    tbl_Billdetail.setSelectionForeground(new java.awt.Color(0, 0, 0));
-    tbl_Billdetail.addMouseListener(new java.awt.event.MouseAdapter() {
+    tbl_Inventorybilldetail.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+    tbl_Inventorybilldetail.setRowHeight(40);
+    tbl_Inventorybilldetail.setRowMargin(2);
+    tbl_Inventorybilldetail.setSelectionBackground(new java.awt.Color(153, 255, 153));
+    tbl_Inventorybilldetail.setSelectionForeground(new java.awt.Color(0, 0, 0));
+    tbl_Inventorybilldetail.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            tbl_BilldetailMouseClicked(evt);
+            tbl_InventorybilldetailMouseClicked(evt);
         }
     });
-    jScrollPane1.setViewportView(tbl_Billdetail);
+    jScrollPane1.setViewportView(tbl_Inventorybilldetail);
 
-    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1260, 290));
+    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1270, 290));
 
     jLabel3.setBackground(new java.awt.Color(255, 255, 255));
     jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -209,7 +209,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1300, 10));
+    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1310, 10));
 
     jlb_totalQuantity.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_totalQuantity.setForeground(new java.awt.Color(255, 153, 51));
@@ -264,7 +264,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
     jlb_product3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_product3.setForeground(new java.awt.Color(255, 153, 51));
     jlb_product3.setText("VNĐ");
-    jPanel1.add(jlb_product3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 470, 60, 52));
+    jPanel1.add(jlb_product3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1230, 470, 60, 52));
 
     jlb_subTotal.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_subTotal.setForeground(new java.awt.Color(255, 153, 51));
@@ -299,10 +299,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap())
+        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1320, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,9 +311,9 @@ public class BilldetailManagement extends javax.swing.JFrame {
     pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbl_BilldetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_BilldetailMouseClicked
+    private void tbl_InventorybilldetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_InventorybilldetailMouseClicked
         showBillValue(billdls);
-    }//GEN-LAST:event_tbl_BilldetailMouseClicked
+    }//GEN-LAST:event_tbl_InventorybilldetailMouseClicked
 
     private void txt_sProductIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sProductIDActionPerformed
         // TODO add your handling code here:
@@ -360,7 +357,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_rowCount;
     private javax.swing.JLabel jlb_subTotal;
     private javax.swing.JLabel jlb_totalQuantity;
-    private javax.swing.JTable tbl_Billdetail;
+    private javax.swing.JTable tbl_Inventorybilldetail;
     private javax.swing.JTextField txt_sProductID;
     private javax.swing.JTextField txt_sQuantity;
     // End of variables declaration//GEN-END:variables
