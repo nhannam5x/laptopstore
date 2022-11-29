@@ -5,26 +5,24 @@
  */
 package GUI;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+
 /**
  *
- * @author donha
+ * @author Admin
  */
 public class StoreMenu extends javax.swing.JFrame {
 
-
-    
+    /**
+     * Creates new form CourseraMenu
+     */
     public StoreMenu() {
         initComponents();
-
+        
+//        AutoCompleteDecorator.decorate(jComboBox1);
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,378 +32,254 @@ public class StoreMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        btn_categoryManegement = new javax.swing.JToggleButton();
-        btn_customerManagement = new javax.swing.JToggleButton();
-        btn_Logout = new javax.swing.JToggleButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        btn_billManagement = new javax.swing.JToggleButton();
-        btn_discountManagement = new javax.swing.JToggleButton();
-        btn_productManagement = new javax.swing.JToggleButton();
-        btn_supplierManagement = new javax.swing.JToggleButton();
-        btn_staffManagement = new javax.swing.JToggleButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        btn_categoryManegement1 = new javax.swing.JToggleButton();
-        btn_discountManagement1 = new javax.swing.JToggleButton();
-        btn_staffManagement1 = new javax.swing.JToggleButton();
-        jSeparator3 = new javax.swing.JSeparator();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setMinimumSize(new java.awt.Dimension(1300, 720));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jTabbedPane.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        jTabbedPane.setPreferredSize(new java.awt.Dimension(1300, 750));
 
-        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 153, 51));
-        jLabel1.setText("Store Menu");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 140, 77));
+        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
-        btn_categoryManegement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_categoryManegement.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        btn_categoryManegement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_categoryManegement.setText("Loại sản phẩm");
-        btn_categoryManegement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_categoryManegementMouseClicked(evt);
-            }
-        });
-        btn_categoryManegement.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setBackground(new java.awt.Color(51, 102, 255));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Sale Management");
+        jButton1.setBorder(null);
+        jButton1.setBorderPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_categoryManegementActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_categoryManegement, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, 200, 90));
 
-        btn_customerManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_customerManagement.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_customerManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_customerManagement.setText("Khách hàng");
-        btn_customerManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_customerManagementMouseClicked(evt);
-            }
-        });
-        btn_customerManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton2.setBackground(new java.awt.Color(51, 102, 255));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Customer Management");
+        jButton2.setBorder(null);
+        jButton2.setBorderPainted(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_customerManagementActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_customerManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 90, 200, 90));
 
-        btn_Logout.setBackground(new java.awt.Color(255, 51, 51));
-        btn_Logout.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_Logout.setForeground(new java.awt.Color(255, 255, 255));
-        btn_Logout.setText("Đăng xuất");
-        btn_Logout.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_LogoutMouseClicked(evt);
-            }
-        });
-        btn_Logout.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setBackground(new java.awt.Color(51, 102, 255));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("Bill Management");
+        jButton3.setBorder(null);
+        jButton3.setBorderPainted(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_LogoutActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_Logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 610, 220, 90));
 
-        jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
-        jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 1280, 10));
-
-        btn_billManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_billManagement.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        btn_billManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_billManagement.setText("Hóa đơn");
-        btn_billManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_billManagementMouseClicked(evt);
-            }
-        });
-        btn_billManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton4.setBackground(new java.awt.Color(51, 102, 255));
+        jButton4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("Product Management");
+        jButton4.setBorder(null);
+        jButton4.setBorderPainted(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_billManagementActionPerformed(evt);
+                jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_billManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, 200, 90));
 
-        btn_discountManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_discountManagement.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_discountManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_discountManagement.setText("Khuyến mãi");
-        btn_discountManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_discountManagementMouseClicked(evt);
-            }
-        });
-        btn_discountManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton5.setBackground(new java.awt.Color(51, 102, 255));
+        jButton5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Staff Management");
+        jButton5.setBorder(null);
+        jButton5.setBorderPainted(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_discountManagementActionPerformed(evt);
+                jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_discountManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 260, 200, 90));
 
-        btn_productManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_productManagement.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        btn_productManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_productManagement.setText("Sản phẩm");
-        btn_productManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_productManagementMouseClicked(evt);
-            }
-        });
-        btn_productManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton6.setBackground(new java.awt.Color(51, 102, 255));
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Inventory Management");
+        jButton6.setBorder(null);
+        jButton6.setBorderPainted(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_productManagementActionPerformed(evt);
+                jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_productManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 200, 90));
 
-        btn_supplierManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_supplierManagement.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_supplierManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_supplierManagement.setText("Nhà cung cấp");
-        btn_supplierManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_supplierManagementMouseClicked(evt);
-            }
-        });
-        btn_supplierManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton7.setBackground(new java.awt.Color(51, 102, 255));
+        jButton7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton7.setForeground(new java.awt.Color(255, 255, 255));
+        jButton7.setText("Category Management");
+        jButton7.setBorder(null);
+        jButton7.setBorderPainted(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_supplierManagementActionPerformed(evt);
+                jButton7ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_supplierManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 90, 200, 90));
 
-        btn_staffManagement.setBackground(new java.awt.Color(255, 153, 51));
-        btn_staffManagement.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_staffManagement.setForeground(new java.awt.Color(255, 255, 255));
-        btn_staffManagement.setText("Nhân viên");
-        btn_staffManagement.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_staffManagementMouseClicked(evt);
-            }
-        });
-        btn_staffManagement.addActionListener(new java.awt.event.ActionListener() {
+        jButton8.setBackground(new java.awt.Color(51, 102, 255));
+        jButton8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton8.setForeground(new java.awt.Color(255, 255, 255));
+        jButton8.setText("Discount Management");
+        jButton8.setBorder(null);
+        jButton8.setBorderPainted(false);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_staffManagementActionPerformed(evt);
+                jButton8ActionPerformed(evt);
             }
         });
-        jPanel1.add(btn_staffManagement, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 260, 200, 90));
 
-        jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
-        jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-        jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, 1280, 10));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
-        btn_categoryManegement1.setBackground(new java.awt.Color(255, 153, 51));
-        btn_categoryManegement1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        btn_categoryManegement1.setForeground(new java.awt.Color(255, 255, 255));
-        btn_categoryManegement1.setText("Thống kê");
-        btn_categoryManegement1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_categoryManegement1MouseClicked(evt);
-            }
-        });
-        btn_categoryManegement1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_categoryManegement1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_categoryManegement1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 430, 200, 90));
+        jPanel2.setBackground(new java.awt.Color(0, 51, 255));
 
-        btn_discountManagement1.setBackground(new java.awt.Color(255, 153, 51));
-        btn_discountManagement1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_discountManagement1.setForeground(new java.awt.Color(255, 255, 255));
-        btn_discountManagement1.setText("Thống kê");
-        btn_discountManagement1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_discountManagement1MouseClicked(evt);
-            }
-        });
-        btn_discountManagement1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_discountManagement1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_discountManagement1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 430, 200, 90));
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1305, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 184, Short.MAX_VALUE)
+        );
 
-        btn_staffManagement1.setBackground(new java.awt.Color(255, 153, 51));
-        btn_staffManagement1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_staffManagement1.setForeground(new java.awt.Color(255, 255, 255));
-        btn_staffManagement1.setText("Thống kê");
-        btn_staffManagement1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_staffManagement1MouseClicked(evt);
-            }
-        });
-        btn_staffManagement1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_staffManagement1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_staffManagement1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 430, 200, 90));
+        jPanel3.setBackground(new java.awt.Color(204, 255, 255));
 
-        jSeparator3.setBackground(new java.awt.Color(255, 153, 51));
-        jSeparator3.setForeground(new java.awt.Color(255, 153, 51));
-        jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 1280, 10));
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 318, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_categoryManegementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_categoryManegementMouseClicked
-        // TODO add your handling code here:
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
             // TODO add your handling code here:
-            CategoryManagement sm = new CategoryManagement();
-            sm.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btn_categoryManegementMouseClicked
-
-    private void btn_categoryManegementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_categoryManegementActionPerformed
-//        CourseRecovery a = new CourseRecovery();
-//        a.setVisible(true);
-
-    }//GEN-LAST:event_btn_categoryManegementActionPerformed
-
-    private void btn_customerManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_customerManagementActionPerformed
-
-    }//GEN-LAST:event_btn_customerManagementActionPerformed
-
-    private void btn_LogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_LogoutMouseClicked
-        Login l = new Login();
-        l.setVisible(true);
-        this.dispose();
-
-    }//GEN-LAST:event_btn_LogoutMouseClicked
-
-    private void btn_LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LogoutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_LogoutActionPerformed
-
-    private void btn_billManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_billManagementMouseClicked
-        try {
-           BillManagement b = new BillManagement();
-            b.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_btn_billManagementMouseClicked
-
-    private void btn_billManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_billManagementActionPerformed
-
-    }//GEN-LAST:event_btn_billManagementActionPerformed
-
-    private void btn_discountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_discountManagementActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_discountManagementActionPerformed
-
-    private void btn_productManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_productManagementMouseClicked
-        // TODO add your handling code here:
-        try {
-            ProductManagement pm = new ProductManagement();
-            pm.setVisible(true);
+            jTabbedPane.removeAll();
+            ProductManagement productManagement = new ProductManagement();
+            
+            jTabbedPane.add("Product Management", productManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }//GEN-LAST:event_btn_productManagementMouseClicked
+    }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void btn_productManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_productManagementActionPerformed
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
-    }//GEN-LAST:event_btn_productManagementActionPerformed
-
-    private void btn_supplierManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_supplierManagementActionPerformed
-
-    }//GEN-LAST:event_btn_supplierManagementActionPerformed
-
-    private void btn_staffManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_staffManagementActionPerformed
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_staffManagementActionPerformed
+    }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void btn_discountManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_discountManagementMouseClicked
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
-        try {
-           DiscountManagement d = new DiscountManagement();
-            d.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_btn_discountManagementMouseClicked
-
-    private void btn_customerManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_customerManagementMouseClicked
-        try {
-           CustomerManagement cu = new CustomerManagement();
-            cu.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btn_customerManagementMouseClicked
-
-    private void btn_staffManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_staffManagementMouseClicked
-        try {
-           StaffManagement s = new StaffManagement();
-            s.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btn_staffManagementMouseClicked
-
-    private void btn_supplierManagementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_supplierManagementMouseClicked
-        // TODO add your handling code here:
-        try {
-           SupplierManagement su = new SupplierManagement();
-            su.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btn_supplierManagementMouseClicked
-
-    private void btn_categoryManegement1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_categoryManegement1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_categoryManegement1MouseClicked
-
-    private void btn_categoryManegement1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_categoryManegement1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_categoryManegement1ActionPerformed
-
-    private void btn_discountManagement1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_discountManagement1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_discountManagement1MouseClicked
-
-    private void btn_discountManagement1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_discountManagement1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_discountManagement1ActionPerformed
-
-    private void btn_staffManagement1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_staffManagement1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_staffManagement1MouseClicked
-
-    private void btn_staffManagement1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_staffManagement1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_staffManagement1ActionPerformed
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,7 +292,7 @@ public class StoreMenu extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Window Vista".equals(info.getName())) {
+                if ("Windows Vista".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -444,21 +318,17 @@ public class StoreMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btn_Logout;
-    private javax.swing.JToggleButton btn_billManagement;
-    private javax.swing.JToggleButton btn_categoryManegement;
-    private javax.swing.JToggleButton btn_categoryManegement1;
-    private javax.swing.JToggleButton btn_customerManagement;
-    private javax.swing.JToggleButton btn_discountManagement;
-    private javax.swing.JToggleButton btn_discountManagement1;
-    private javax.swing.JToggleButton btn_productManagement;
-    private javax.swing.JToggleButton btn_staffManagement;
-    private javax.swing.JToggleButton btn_staffManagement1;
-    private javax.swing.JToggleButton btn_supplierManagement;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTabbedPane jTabbedPane;
     // End of variables declaration//GEN-END:variables
 }
