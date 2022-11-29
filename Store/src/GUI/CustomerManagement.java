@@ -284,7 +284,7 @@ public class CustomerManagement extends javax.swing.JFrame {
     });
     jScrollPane1.setViewportView(tbl_Customer);
 
-    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1270, 157));
+    jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1300, 157));
 
     btn_restore.setBackground(new java.awt.Color(102, 255, 102));
     btn_restore.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -386,7 +386,7 @@ public class CustomerManagement extends javax.swing.JFrame {
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1270, 10));
+    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1360, 10));
 
     jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel9.setForeground(new java.awt.Color(255, 153, 51));
@@ -475,7 +475,7 @@ public class CustomerManagement extends javax.swing.JFrame {
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 1270, 10));
+    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 1360, 10));
 
     btn_add1.setBackground(new java.awt.Color(102, 255, 102));
     btn_add1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -535,10 +535,7 @@ public class CustomerManagement extends javax.swing.JFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap())
+        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1320, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

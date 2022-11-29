@@ -188,7 +188,7 @@ public class CategoryRecovery extends javax.swing.JFrame {
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 1270, 10));
+    jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 450, 1310, 10));
 
     jButton2.setBackground(new java.awt.Color(255, 255, 255));
     jButton2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
