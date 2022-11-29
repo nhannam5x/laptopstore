@@ -24,7 +24,6 @@ public class SupplierManagement extends javax.swing.JFrame {
      */
     SupplierBUS supplierBUS = new SupplierBUS();
     ArrayList<Supplier> supplierls = supplierBUS.getList();
-
     
     public SupplierManagement() throws ClassNotFoundException {
         initComponents();
@@ -79,9 +78,11 @@ public class SupplierManagement extends javax.swing.JFrame {
                supplierBUS.SetSupplier(su);
                refresh();
                resetText();
+               
                JOptionPane.showMessageDialog(rootPane, "Sửa thành công");
                return;
-           }             
+           }
+           row = -1;
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(SupplierManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,7 +111,7 @@ public class SupplierManagement extends javax.swing.JFrame {
                JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
                return;
            }      
-           row = -1;
+            row = -1;
             
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(Supplier.class.getName()).log(Level.SEVERE, null, ex);

@@ -157,8 +157,8 @@ public class ProductManagement extends javax.swing.JFrame {
     private void resetText(){
         jlb_productID.setText("...");
         txt_productName.setText("");
-        jComboCategory.setSelectedIndex(-1);
-        jComboSupplier.setSelectedIndex(-1);
+        jComboCategory.setSelectedIndex(0);
+        jComboSupplier.setSelectedIndex(0);
         txt_price.setText("");
         txt_quantity.setText("");
     }
