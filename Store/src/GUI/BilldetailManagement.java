@@ -56,10 +56,10 @@ public class BilldetailManagement extends javax.swing.JFrame {
         {
             if(bd.getStatus() == 1){
                 if(bd.getBillID() == this.billID){
-                    int productID = productBUS.getProductID(bd.getProductID()).getProductID();
+                    int productID = productBUS.getProductByID(bd.getProductID()).getProductID();
                     int quantity = bd.getQuantity();
-                    String productName = productBUS.getProductID(bd.getProductID()).getProductName();
-                    float price = productBUS.getProductID(bd.getProductID()).getPrice();
+                    String productName = productBUS.getProductByID(bd.getProductID()).getProductName();
+                    float price = productBUS.getProductByID(bd.getProductID()).getPrice();
                     defaultModel.addRow(new Object[]{this.billID, productID, productName, price, quantity});
                     totalRow ++;
                     totalQuantity += quantity;

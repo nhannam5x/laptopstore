@@ -133,8 +133,8 @@ public class ProductManagement extends javax.swing.JFrame {
          
            int productID = (int)tbl_Product.getModel().getValueAt(row, 0);
            String productName = tbl_Product.getModel().getValueAt(row, 1).toString();
-           int categoryID = productBUS.getProductID(productID).getCategoryID();
-           int supplierID = productBUS.getProductID(productID).getSupplierID();
+           int categoryID = productBUS.getProductByID(productID).getCategoryID();
+           int supplierID = productBUS.getProductByID(productID).getSupplierID();
            float price = (float)tbl_Product.getModel().getValueAt(row, 4);
            int quantity = (int)tbl_Product.getModel().getValueAt(row, 5);
            int status = 0;
