@@ -18,6 +18,20 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import static org.apache.logging.log4j.util.Strings.isEmpty;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import static org.apache.poi.hssf.usermodel.HeaderFooter.date;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 /**
  *
  * @author donha
@@ -60,8 +74,8 @@ public class DiscountManagement extends javax.swing.JFrame {
         int row = tbl_Discount.getSelectedRow();
         jlb_discountID.setText(tbl_Discount.getModel().getValueAt(row, 0).toString());
         txt_discountValue.setText(tbl_Discount.getModel().getValueAt(row, 1).toString());
-        txt_dateStart.setText(tbl_Discount.getModel().getValueAt(row, 2).toString());
-        txt_dateEnd.setText(tbl_Discount.getModel().getValueAt(row, 3).toString());
+        jDateStart.getDate();
+        jDateEnd.getDate();
         txt_quantity.setText(tbl_Discount.getModel().getValueAt(row, 4).toString());
     } 
     
@@ -91,7 +105,6 @@ public class DiscountManagement extends javax.swing.JFrame {
      private void editDiscount()
     {
         int discountID, discountValue, quantity;
-        String dateStart, dateEnd;
         int row = tbl_Discount.getSelectedRow();    
         try {    
          if(row < 0)
@@ -116,19 +129,8 @@ public class DiscountManagement extends javax.swing.JFrame {
             }
             else quantity = Integer.parseInt(txt_quantity.getText());            
                         
-            if(!isValidDate(txt_dateStart.getText())){
-                JOptionPane.showMessageDialog(new JFrame(), "Ngày bắt đầu không hợp lệ ", "Dialog",
-                JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            else dateStart = txt_dateStart.getText();            
-            
-            if(!isValidDate(txt_dateEnd.getText())){
-                JOptionPane.showMessageDialog(new JFrame(), "Ngày kết thúc không hợp lệ ", "Dialog",
-                JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            else dateEnd = txt_dateEnd.getText();
+            String dateStart="";
+            String dateEnd="";
            int status =1; 
          
            Discount d = new Discount(discountID, discountValue, dateStart, dateEnd, quantity, status);
@@ -180,8 +182,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     private void resetText(){
         jlb_discountID.setText("...");
         txt_discountValue.setText("");
-        txt_dateStart.setText("");
-        txt_dateEnd.setText("");
+      
         txt_quantity.setText("");
     }
     
@@ -230,14 +231,14 @@ public class DiscountManagement extends javax.swing.JFrame {
         jlb_discountValue = new javax.swing.JLabel();
         txt_discountValue = new javax.swing.JTextField();
         jlb_dateStart = new javax.swing.JLabel();
-        txt_dateStart = new javax.swing.JTextField();
         jlb_dateEnd = new javax.swing.JLabel();
-        txt_dateEnd = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
         btn_add1 = new javax.swing.JToggleButton();
         jlb_quantity = new javax.swing.JLabel();
         txt_quantity = new javax.swing.JTextField();
         jlb_discount = new javax.swing.JLabel();
+        jDateStart = new com.toedter.calendar.JDateChooser();
+        jDateEnd = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -430,28 +431,10 @@ public class DiscountManagement extends javax.swing.JFrame {
     jlb_dateStart.setText("DateStart:");
     jPanel1.add(jlb_dateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, 110, 52));
 
-    txt_dateStart.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    txt_dateStart.setForeground(new java.awt.Color(255, 153, 51));
-    txt_dateStart.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_dateStartActionPerformed(evt);
-        }
-    });
-    jPanel1.add(txt_dateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 270, 52));
-
     jlb_dateEnd.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_dateEnd.setForeground(new java.awt.Color(255, 153, 51));
     jlb_dateEnd.setText("DateEnd:");
     jPanel1.add(jlb_dateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 350, 140, 52));
-
-    txt_dateEnd.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    txt_dateEnd.setForeground(new java.awt.Color(255, 153, 51));
-    txt_dateEnd.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_dateEndActionPerformed(evt);
-        }
-    });
-    jPanel1.add(txt_dateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 350, 290, 52));
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
@@ -491,6 +474,8 @@ public class DiscountManagement extends javax.swing.JFrame {
     jlb_discount.setForeground(new java.awt.Color(255, 153, 51));
     jlb_discount.setText("DiscountID:");
     jPanel1.add(jlb_discount, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 138, 52));
+    jPanel1.add(jDateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 350, 320, 50));
+    jPanel1.add(jDateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 320, 50));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -556,14 +541,6 @@ public class DiscountManagement extends javax.swing.JFrame {
     private void txt_discountValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_discountValueActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_discountValueActionPerformed
-
-    private void txt_dateStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dateStartActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_dateStartActionPerformed
-
-    private void txt_dateEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dateEndActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_dateEndActionPerformed
 
     private void btn_add1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add1MouseClicked
         // TODO add your handling code here:
@@ -664,6 +641,8 @@ public class DiscountManagement extends javax.swing.JFrame {
     private javax.swing.JToggleButton btn_add1;
     private javax.swing.JToggleButton btn_del;
     private javax.swing.JToggleButton btn_restore;
+    private com.toedter.calendar.JDateChooser jDateEnd;
+    private com.toedter.calendar.JDateChooser jDateStart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
@@ -680,8 +659,6 @@ public class DiscountManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_discountValue;
     private javax.swing.JLabel jlb_quantity;
     private javax.swing.JTable tbl_Discount;
-    private javax.swing.JTextField txt_dateEnd;
-    private javax.swing.JTextField txt_dateStart;
     private javax.swing.JTextField txt_discountValue;
     private javax.swing.JTextField txt_quantity;
     private javax.swing.JTextField txt_sDateEnd;
