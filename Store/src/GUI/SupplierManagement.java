@@ -217,7 +217,7 @@ public class SupplierManagement extends javax.swing.JFrame {
 
     jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 101, 1290, 157));
 
-    btn_restore.setBackground(new java.awt.Color(102, 255, 102));
+    btn_restore.setBackground(new java.awt.Color(204, 204, 204));
     btn_restore.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_restore.setForeground(new java.awt.Color(255, 255, 255));
     btn_restore.setText("Khôi phục");
@@ -234,7 +234,7 @@ public class SupplierManagement extends javax.swing.JFrame {
     jPanel1.add(btn_restore, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 610, 230, 90));
 
     btn_del.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_del.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_del.setForeground(new java.awt.Color(255, 255, 255));
     btn_del.setText("Xóa");
     btn_del.addActionListener(new java.awt.event.ActionListener() {
@@ -244,7 +244,7 @@ public class SupplierManagement extends javax.swing.JFrame {
     });
     jPanel1.add(btn_del, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 610, 230, 90));
 
-    btn_Update.setBackground(new java.awt.Color(102, 255, 102));
+    btn_Update.setBackground(new java.awt.Color(51, 51, 255));
     btn_Update.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_Update.setForeground(new java.awt.Color(255, 255, 255));
     btn_Update.setText("Sửa");

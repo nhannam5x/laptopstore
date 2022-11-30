@@ -10,15 +10,14 @@ package DTO;
  * @author DELL XPS 15
  */
 public class Inventorybill {
-    private int inventorybillID, staffID, supplierID;
+    private int inventorybillID, staffID;
     private float totalPrice;
     private String date;
     private int status;
 
-    public Inventorybill(int inventorybillID, int staffID, int supplierID, float totalPrice, String date, int status) {
+    public Inventorybill(int inventorybillID, int staffID, float totalPrice, String date, int status) {
         this.inventorybillID = inventorybillID;
         this.staffID = staffID;
-        this.supplierID = supplierID;
         this.totalPrice = totalPrice;
         this.date = date;
         this.status = status;
@@ -33,10 +32,7 @@ public class Inventorybill {
         return staffID;
     }
 
-    public int getSupplierID() {
-        return supplierID;
-    }
-
+   
     public float getTotalPrice() {
         return totalPrice;
     }
@@ -55,10 +51,6 @@ public class Inventorybill {
 
     public void setStaffID(int staffID) {
         this.staffID = staffID;
-    }
-
-    public void setSupplierID(int supplierID) {
-        this.supplierID = supplierID;
     }
 
     public void setTotalPrice(float totalPrice) {

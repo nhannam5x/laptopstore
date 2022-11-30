@@ -309,7 +309,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     });
     jPanel1.add(btn_del, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 610, 230, 90));
 
-    btn_Update.setBackground(new java.awt.Color(51, 102, 255));
+    btn_Update.setBackground(new java.awt.Color(51, 51, 255));
     btn_Update.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_Update.setForeground(new java.awt.Color(255, 255, 255));
     btn_Update.setText("Sửa");

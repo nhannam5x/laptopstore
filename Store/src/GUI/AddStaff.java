@@ -73,7 +73,6 @@ public class AddStaff extends javax.swing.JFrame {
         txt_lastName.setText("LastName");
         txt_email.setText("Email");
         txt_phone.setText("Phone");
-        txt_authority.setText("Authority");
     }
 
     
@@ -141,8 +140,6 @@ public class AddStaff extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         txt_phone = new javax.swing.JTextField();
         jSeparator5 = new javax.swing.JSeparator();
-        txt_authority = new javax.swing.JTextField();
-        jSeparator7 = new javax.swing.JSeparator();
 
         txt_phone1.setBackground(new java.awt.Color(255, 153, 51));
         txt_phone1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -293,25 +290,6 @@ public class AddStaff extends javax.swing.JFrame {
         jSeparator5.setBackground(new java.awt.Color(255, 153, 51));
         jSeparator5.setForeground(new java.awt.Color(255, 255, 255));
 
-        txt_authority.setBackground(new java.awt.Color(255, 153, 51));
-        txt_authority.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        txt_authority.setForeground(new java.awt.Color(255, 255, 255));
-        txt_authority.setText("Authority");
-        txt_authority.setBorder(null);
-        txt_authority.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txt_authorityFocusGained(evt);
-            }
-        });
-        txt_authority.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_authorityActionPerformed(evt);
-            }
-        });
-
-        jSeparator7.setBackground(new java.awt.Color(255, 153, 51));
-        jSeparator7.setForeground(new java.awt.Color(255, 255, 255));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -341,15 +319,12 @@ public class AddStaff extends javax.swing.JFrame {
                                 .addComponent(txt_phone))
                             .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txt_email)
-                                .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txt_firstName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                                .addComponent(jSeparator4))
-                            .addComponent(txt_authority, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txt_email)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_firstName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                            .addComponent(jSeparator4))
+                        .addContainerGap(201, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,19 +349,12 @@ public class AddStaff extends javax.swing.JFrame {
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_phone, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_authority, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txt_phone, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -493,14 +461,6 @@ public class AddStaff extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_phone1ActionPerformed
 
-    private void txt_authorityFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_authorityFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_authorityFocusGained
-
-    private void txt_authorityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_authorityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_authorityActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -517,8 +477,6 @@ public class AddStaff extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
-    private javax.swing.JTextField txt_authority;
     private javax.swing.JTextField txt_email;
     private javax.swing.JTextField txt_firstName;
     private javax.swing.JTextField txt_lastName;

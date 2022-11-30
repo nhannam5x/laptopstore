@@ -9,6 +9,8 @@ import DTO.Inventorybilldetail;
 import BUS.InventorybilldetailBUS;
 import DTO.Inventorybill;
 import BUS.InventorybillBUS;
+import BUS.SupplierBUS;
+import BUS.CategoryBUS;
 import DTO.Product;
 import BUS.ProductBUS;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     InventorybilldetailBUS inventorybilldetailBUS = new InventorybilldetailBUS();
     InventorybillBUS inventorybillBUS = new InventorybillBUS();
     ProductBUS productBUS = new ProductBUS();
+    CategoryBUS categoryBUS = new CategoryBUS();
+    SupplierBUS supplierBUS = new SupplierBUS();
     ArrayList<Inventorybilldetail> billdls = inventorybilldetailBUS.getList();
     ArrayList<Inventorybill> bill = inventorybillBUS.getList();
     ArrayList<Product> product = productBUS.getList();
@@ -41,6 +45,8 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         inventorybilldetailBUS.listInventorybilldetail();
         inventorybillBUS.listInventorybill();
         productBUS.listProduct();
+        categoryBUS.listCategory();
+        supplierBUS.listSupplier();
         showTable(billdls);
         
     }
@@ -59,8 +65,10 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
                     int productID = productBUS.getProductID(bd.getProductID()).getProductID();
                     int quantity = bd.getQuantity();
                     String productName = productBUS.getProductID(bd.getProductID()).getProductName();
+                    int categoryID = categoryBUS.getCategoryID(bd.getCategoryID()).getCategoryID();
+                    int supplierID = supplierBUS.getSupplierID(bd.getSupplierID()).getSupplierID();
                     float price = productBUS.getProductID(bd.getProductID()).getPrice();
-                    defaultModel.addRow(new Object[]{this.inventorybillID, productID, productName, price, quantity});
+                    defaultModel.addRow(new Object[]{this.inventorybillID, productID, productName,categoryID,supplierID, price, quantity});
                     totalRow ++;
                     totalQuantity += quantity;
                     jlb_rowCount.setText(String.valueOf(totalRow));
@@ -79,6 +87,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         float price = (float) tbl_Inventorybilldetail.getModel().getValueAt(row, 3);
         jlb_productID.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 1).toString());
         jlb_productName.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 2).toString());
+        
         jlb_price.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 3).toString());
         jlb_quantity.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 4).toString());
         jlb_subTotal.setText(String.valueOf(quantity*price));
@@ -128,6 +137,8 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         jlb_product4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txt_sQuantity = new javax.swing.JTextField();
+        jlb_product5 = new javax.swing.JLabel();
+        jlb_productName1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -148,7 +159,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "billID", "productID", "productName", "price", "quantity"
+                "billID", "productID", "productName", "categoryID", "supplierID", "price", "quantity"
             }
         )
         {
@@ -295,6 +306,16 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     });
     jPanel1.add(txt_sQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 630, 260, 52));
 
+    jlb_product5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_product5.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_product5.setText("CategoryID:");
+    jPanel1.add(jlb_product5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 120, 52));
+
+    jlb_productName1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_productName1.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_productName1.setText("...");
+    jPanel1.add(jlb_productName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, 250, 52));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -349,8 +370,10 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_product2;
     private javax.swing.JLabel jlb_product3;
     private javax.swing.JLabel jlb_product4;
+    private javax.swing.JLabel jlb_product5;
     private javax.swing.JLabel jlb_productID;
     private javax.swing.JLabel jlb_productName;
+    private javax.swing.JLabel jlb_productName1;
     private javax.swing.JLabel jlb_quantity;
     private javax.swing.JLabel jlb_quantity1;
     private javax.swing.JLabel jlb_quantity2;

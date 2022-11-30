@@ -31,9 +31,11 @@ public class InventorybilldetailDAO {
             {
                 int inventorybillID= rs.getInt("inventorybillID");
                 int productID = rs.getInt("productID");
+                int categoryID = rs.getInt("categoryID");
+                int supplierID = rs.getInt("supplierID");
                 int quantity= rs.getInt("quantity");
                 int status = rs.getInt("status");
-                Inventorybilldetail bd = new Inventorybilldetail(inventorybillID, productID, quantity, status);
+                Inventorybilldetail bd = new Inventorybilldetail(inventorybillID, productID, categoryID, supplierID,  quantity, status);
                 Inventorybilldetail.add(bd);
             }
             rs.close();
@@ -51,6 +53,8 @@ public class InventorybilldetailDAO {
             String sql = "UPDATE inventorybilldetail SET ";
             sql += "inventorybillID='"+bd.getInventorybillID()+"', ";
             sql += "productID='"+bd.getProductID()+"', ";
+            sql += "categoryID='"+bd.getCategoryID()+"', ";
+            sql += "supplierID='"+bd.getSupplierID()+"', ";
             sql += "quantity='"+bd.getQuantity()+"', ";
             sql += "status='"+bd.getStatus()+"'";
             sql += "WHERE inventorybillID="+bd.getInventorybillID();
@@ -63,6 +67,8 @@ public class InventorybilldetailDAO {
          String sql = "INSERT INTO inventorybilldetail VALUES (";
                 sql += "'"+bd.getInventorybillID()+"',";
                 sql += "'"+bd.getProductID()+"',";
+                sql += "'"+bd.getCategoryID()+"',";
+                sql += "'"+bd.getSupplierID()+"',";
                 sql += "'"+bd.getQuantity()+"',";
                 sql += "'"+bd.getStatus()+"')";
          System.out.println(sql);

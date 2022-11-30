@@ -10,11 +10,13 @@ package DTO;
  * @author DELL XPS 15
  */
 public class Inventorybilldetail {
-    private int inventorybillID, productID, quantity, status;
+    private int inventorybillID, productID, categoryID, supplierID, quantity, status;
 
-    public Inventorybilldetail(int inventorybillID, int productID, int quantity, int status) {
+    public Inventorybilldetail(int inventorybillID, int productID, int categoryID, int supplierID,int quantity, int status) {
         this.inventorybillID = inventorybillID;
         this.productID = productID;
+        this.categoryID = categoryID;
+        this.supplierID = supplierID;
         this.quantity = quantity;
         this.status = status;
     }
@@ -23,10 +25,18 @@ public class Inventorybilldetail {
         return inventorybillID;
     }
 
-    public int getProductID(){
+    public int getProductID() {
         return productID;
     }
-    
+
+    public int getCategoryID() {
+        return categoryID;
+    }
+
+    public int getSupplierID() {
+        return supplierID;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -35,12 +45,20 @@ public class Inventorybilldetail {
         return status;
     }
 
-    public void setInventorybillID(int billID) {
+    public void setInventorybillID(int inventorybillID) {
         this.inventorybillID = inventorybillID;
     }
-    
-    public void setProductID(int productID){
+
+    public void setProductID(int productID) {
         this.productID = productID;
+    }
+
+    public void setCategoryID(int categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public void setSupplierID(int supplierID) {
+        this.supplierID = supplierID;
     }
 
     public void setQuantity(int quantity) {
@@ -51,6 +69,6 @@ public class Inventorybilldetail {
         this.status = status;
     }
 
-  
+   
         
 }

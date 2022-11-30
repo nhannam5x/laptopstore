@@ -91,18 +91,16 @@ public class InventorybillBUS {
         return ivb;
     }
     
-     public ArrayList<Inventorybill> search(String inventorybillID, String staffID, String supplierID, String date)
+     public ArrayList<Inventorybill> search(String inventorybillID, String staffID, String date)
     {
         ArrayList<Inventorybill> search = new ArrayList<>();
         inventorybillID = inventorybillID.isEmpty()?inventorybillID = "": inventorybillID;
         staffID = staffID.isEmpty()?staffID = "": staffID;
-        supplierID = supplierID.isEmpty()?supplierID = "": supplierID;
         date = date.isEmpty()?date = "": date;
         for(Inventorybill b : ivb)
         {
             if((String.valueOf(b.getInventorybillID())).toLowerCase().contains(inventorybillID.toLowerCase()) && 
                (String.valueOf(b.getStaffID())).toLowerCase().contains(staffID.toLowerCase()) &&
-               (String.valueOf(b.getSupplierID())).toLowerCase().contains(supplierID.toLowerCase()) &&
                (String.valueOf(b.getDate())).toLowerCase().contains(date.toLowerCase()))
             {
                 search.add(b);

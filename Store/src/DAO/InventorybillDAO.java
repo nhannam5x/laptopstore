@@ -31,11 +31,10 @@ public class InventorybillDAO {
             {
                 int inventorybillID= rs.getInt("inventorybillID");
                 int staffID = rs.getInt("staffID");
-                int supplierID = rs.getInt("supplierID");
                 float totalPrice = rs.getFloat("totalPrice");
                 String date = rs.getString("date");
                 int status = rs.getInt("status");
-                Inventorybill b = new Inventorybill(inventorybillID, staffID, supplierID, totalPrice, date,status);
+                Inventorybill b = new Inventorybill(inventorybillID, staffID, totalPrice, date,status);
                 Inventorybill.add(b);
             }
             rs.close();
@@ -53,7 +52,6 @@ public class InventorybillDAO {
             String sql = "UPDATE inventorybill SET ";
             sql += "inventorybillID='"+b.getInventorybillID()+"', ";
             sql += "staffID='"+b.getStaffID()+"', ";
-            sql += "customerID='"+b.getSupplierID()+"', ";
             sql += "totalPrice='"+b.getTotalPrice()+"', ";
             sql += "date='"+b.getDate()+"', ";
             sql += "status='"+b.getStatus()+"'";
@@ -67,7 +65,6 @@ public class InventorybillDAO {
          String sql = "INSERT INTO inventorybill VALUES (";
                 sql += "'"+b.getInventorybillID()+"',";
                 sql += "'"+b.getStaffID()+"',";
-                sql += "'"+b.getSupplierID()+"',";
                 sql += "'"+b.getTotalPrice()+"',";
                 sql += "'"+b.getDate()+"',";
                 sql += "'"+b.getStatus()+"')";

@@ -57,12 +57,10 @@ public class InventorybillManagement extends javax.swing.JFrame {
                 int inventorybillID = b.getInventorybillID();
                 int staffID = staffBUS.getStaffID(b.getStaffID()).getStaffID();
                 String staffName = staffBUS.getStaffID(b.getStaffID()).getFirstName()+ " "+staffBUS.getStaffID(b.getStaffID()).getLastName();
-                int supplierID = supplierBUS.getSupplierID(b.getSupplierID()).getSupplierID();
-                String supplierName = supplierBUS.getSupplierID(b.getSupplierID()).getSupplierName();
                 float totalPrice = b.getTotalPrice();
                 String date = b.getDate();
                 
-                defaultModel.addRow(new Object[]{inventorybillID, staffID, staffName, supplierID, supplierName, totalPrice, date});
+                defaultModel.addRow(new Object[]{inventorybillID, staffID, staffName, totalPrice, date});
             }
         }
     }
@@ -73,9 +71,8 @@ public class InventorybillManagement extends javax.swing.JFrame {
         int row = tbl_Inventorybill.getSelectedRow();
         jlb_billID.setText(tbl_Inventorybill.getModel().getValueAt(row, 0).toString());
         jlb_staffID.setText(tbl_Inventorybill.getModel().getValueAt(row, 1).toString());
-        jlb_supplierID.setText(tbl_Inventorybill.getModel().getValueAt(row, 3).toString());
-        jlb_totalPrice.setText(tbl_Inventorybill.getModel().getValueAt(row, 5).toString());
-        jlb_date.setText(tbl_Inventorybill.getModel().getValueAt(row, 6).toString());
+        jlb_totalPrice.setText(tbl_Inventorybill.getModel().getValueAt(row, 2).toString());
+        jlb_date.setText(tbl_Inventorybill.getModel().getValueAt(row, 3).toString());
                 
     }   
     
@@ -83,7 +80,6 @@ public class InventorybillManagement extends javax.swing.JFrame {
     private void resetText(){
         jlb_billID.setText("...");
         jlb_staffID.setText("");
-        jlb_supplierID.setText("");
         jlb_totalPrice.setText("");
         jlb_date.setText("");
     }
@@ -101,9 +97,8 @@ public class InventorybillManagement extends javax.swing.JFrame {
     private void search(){
         String inventorybillID = txt_sInventorybillID.getText();
         String staffID = txt_sStaffID.getText();
-        String supplierID = txt_sSupplierID.getText();
         String date = txt_sDate.getText();
-        showTable(inventorybillBUS.search(inventorybillID, staffID, supplierID, date));
+        showTable(inventorybillBUS.search(inventorybillID, staffID, date));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -133,13 +128,9 @@ public class InventorybillManagement extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jlb_totalPrice1 = new javax.swing.JLabel();
         jlb_date1 = new javax.swing.JLabel();
-        jlb_supplier = new javax.swing.JLabel();
         jlb_bill = new javax.swing.JLabel();
         jlb_staffID = new javax.swing.JLabel();
         jlb_totalPrice = new javax.swing.JLabel();
-        jlb_supplierID = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txt_sSupplierID = new javax.swing.JTextField();
         jlb_bill1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -161,7 +152,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "billID", "staffID", "staffName", "supplier", "supplierName", "totalPrice", "date"
+                "billID", "staffID", "staffName", "totalPrice", "date"
             }
         )
         {
@@ -235,7 +226,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(255, 153, 51));
     jLabel6.setText("Date:");
-    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 520, 60, 52));
+    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 480, 60, 52));
 
     txt_sDate.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_sDate.setForeground(new java.awt.Color(255, 153, 51));
@@ -249,7 +240,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
             txt_sDateKeyReleased(evt);
         }
     });
-    jPanel1.add(txt_sDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 520, 210, 52));
+    jPanel1.add(txt_sDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 480, 210, 52));
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
@@ -287,7 +278,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
     jlb_date.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_date.setForeground(new java.awt.Color(255, 153, 51));
     jlb_date.setText("...");
-    jPanel1.add(jlb_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 340, 320, 52));
+    jPanel1.add(jlb_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 310, 320, 52));
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
@@ -301,12 +292,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
     jlb_date1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_date1.setForeground(new java.awt.Color(255, 153, 51));
     jlb_date1.setText("Date:");
-    jPanel1.add(jlb_date1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 340, 60, 52));
-
-    jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplier.setText("Supplier:");
-    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 270, 120, 52));
+    jPanel1.add(jlb_date1, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 310, 60, 52));
 
     jlb_bill.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_bill.setForeground(new java.awt.Color(255, 153, 51));
@@ -322,30 +308,6 @@ public class InventorybillManagement extends javax.swing.JFrame {
     jlb_totalPrice.setForeground(new java.awt.Color(255, 153, 51));
     jlb_totalPrice.setText("...");
     jPanel1.add(jlb_totalPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 90, 52));
-
-    jlb_supplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_supplierID.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplierID.setText("...");
-    jPanel1.add(jlb_supplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 320, 52));
-
-    jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel7.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel7.setText("SupplierID:");
-    jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 440, 120, 52));
-
-    txt_sSupplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    txt_sSupplierID.setForeground(new java.awt.Color(255, 153, 51));
-    txt_sSupplierID.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_sSupplierIDActionPerformed(evt);
-        }
-    });
-    txt_sSupplierID.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyReleased(java.awt.event.KeyEvent evt) {
-            txt_sSupplierIDKeyReleased(evt);
-        }
-    });
-    jPanel1.add(txt_sSupplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 210, 52));
 
     jlb_bill1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_bill1.setForeground(new java.awt.Color(255, 153, 51));
@@ -413,10 +375,6 @@ public class InventorybillManagement extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_sStaffIDActionPerformed
 
-    private void txt_sSupplierIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sSupplierIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_sSupplierIDActionPerformed
-
     private void txt_sInventorybillIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sInventorybillIDKeyReleased
         // TODO add your handling code here:
         search();
@@ -426,11 +384,6 @@ public class InventorybillManagement extends javax.swing.JFrame {
         // TODO add your handling code here:
         search();
     }//GEN-LAST:event_txt_sStaffIDKeyReleased
-
-    private void txt_sSupplierIDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sSupplierIDKeyReleased
-        // TODO add your handling code here:
-        search();
-    }//GEN-LAST:event_txt_sSupplierIDKeyReleased
 
     private void txt_sDateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sDateKeyReleased
         // TODO add your handling code here:
@@ -486,7 +439,6 @@ public class InventorybillManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
@@ -498,14 +450,11 @@ public class InventorybillManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_date1;
     private javax.swing.JLabel jlb_staff;
     private javax.swing.JLabel jlb_staffID;
-    private javax.swing.JLabel jlb_supplier;
-    private javax.swing.JLabel jlb_supplierID;
     private javax.swing.JLabel jlb_totalPrice;
     private javax.swing.JLabel jlb_totalPrice1;
     private javax.swing.JTable tbl_Inventorybill;
     private javax.swing.JTextField txt_sDate;
     private javax.swing.JTextField txt_sInventorybillID;
     private javax.swing.JTextField txt_sStaffID;
-    private javax.swing.JTextField txt_sSupplierID;
     // End of variables declaration//GEN-END:variables
 }
