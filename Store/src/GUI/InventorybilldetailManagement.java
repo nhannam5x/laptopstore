@@ -83,13 +83,14 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     {
         
         int row = tbl_Inventorybilldetail.getSelectedRow();
-        int quantity = (int) tbl_Inventorybilldetail.getModel().getValueAt(row, 4);
-        float price = (float) tbl_Inventorybilldetail.getModel().getValueAt(row, 3);
+        int quantity = (int) tbl_Inventorybilldetail.getModel().getValueAt(row, 6);
+        float price = (float) tbl_Inventorybilldetail.getModel().getValueAt(row, 5);
         jlb_productID.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 1).toString());
         jlb_productName.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 2).toString());
-        
-        jlb_price.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 3).toString());
-        jlb_quantity.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 4).toString());
+        jlb_categoryID.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 3).toString());
+        jlb_supplierID.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 4).toString());
+        jlb_price.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 5).toString());
+        jlb_quantity.setText(tbl_Inventorybilldetail.getModel().getValueAt(row, 6).toString());
         jlb_subTotal.setText(String.valueOf(quantity*price));
                 
             
@@ -138,7 +139,9 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txt_sQuantity = new javax.swing.JTextField();
         jlb_product5 = new javax.swing.JLabel();
-        jlb_productName1 = new javax.swing.JLabel();
+        jlb_categoryID = new javax.swing.JLabel();
+        jlb_product6 = new javax.swing.JLabel();
+        jlb_supplierID = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -216,7 +219,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     jlb_productID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_productID.setForeground(new java.awt.Color(255, 153, 51));
     jlb_productID.setText("...");
-    jPanel1.add(jlb_productID, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 470, 100, 52));
+    jPanel1.add(jlb_productID, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 470, 100, 52));
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
@@ -235,7 +238,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     jlb_product.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_product.setForeground(new java.awt.Color(255, 153, 51));
     jlb_product.setText("ProductID:");
-    jPanel1.add(jlb_product, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 470, 110, 52));
+    jPanel1.add(jlb_product, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 470, 110, 52));
 
     jlb_quantity1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_quantity1.setForeground(new java.awt.Color(255, 153, 51));
@@ -309,12 +312,22 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     jlb_product5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_product5.setForeground(new java.awt.Color(255, 153, 51));
     jlb_product5.setText("CategoryID:");
-    jPanel1.add(jlb_product5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 120, 52));
+    jPanel1.add(jlb_product5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 520, 120, 52));
 
-    jlb_productName1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jlb_productName1.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_productName1.setText("...");
-    jPanel1.add(jlb_productName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, 250, 52));
+    jlb_categoryID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_categoryID.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_categoryID.setText("...");
+    jPanel1.add(jlb_categoryID, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, 70, 52));
+
+    jlb_product6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_product6.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_product6.setText("SupplierID:");
+    jPanel1.add(jlb_product6, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, 120, 52));
+
+    jlb_supplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jlb_supplierID.setForeground(new java.awt.Color(255, 153, 51));
+    jlb_supplierID.setText("...");
+    jPanel1.add(jlb_supplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 520, 70, 52));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -364,6 +377,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel jlb_bill;
+    private javax.swing.JLabel jlb_categoryID;
     private javax.swing.JLabel jlb_price;
     private javax.swing.JLabel jlb_product;
     private javax.swing.JLabel jlb_product1;
@@ -371,14 +385,15 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_product3;
     private javax.swing.JLabel jlb_product4;
     private javax.swing.JLabel jlb_product5;
+    private javax.swing.JLabel jlb_product6;
     private javax.swing.JLabel jlb_productID;
     private javax.swing.JLabel jlb_productName;
-    private javax.swing.JLabel jlb_productName1;
     private javax.swing.JLabel jlb_quantity;
     private javax.swing.JLabel jlb_quantity1;
     private javax.swing.JLabel jlb_quantity2;
     private javax.swing.JLabel jlb_rowCount;
     private javax.swing.JLabel jlb_subTotal;
+    private javax.swing.JLabel jlb_supplierID;
     private javax.swing.JLabel jlb_totalQuantity;
     private javax.swing.JTable tbl_Inventorybilldetail;
     private javax.swing.JTextField txt_sProductID;
