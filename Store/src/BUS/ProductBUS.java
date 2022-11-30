@@ -32,7 +32,7 @@ public class ProductBUS {
         }
     }
     
-    public  Product getProductID(int product_id)
+    public  Product getProductByID(int product_id)
     {
         for(Product pr : pro )
         {
