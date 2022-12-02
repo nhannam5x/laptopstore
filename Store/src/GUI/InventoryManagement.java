@@ -606,17 +606,18 @@ public class InventoryManagement extends javax.swing.JFrame {
     jlb_price1.setText("Price:");
     jPanel1.add(jlb_price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 510, 60, 52));
 
-    jButton1.setBackground(new java.awt.Color(0, 153, 0));
+    jButton1.setBackground(new java.awt.Color(102, 204, 0));
     jButton1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jButton1.setForeground(new java.awt.Color(255, 255, 255));
-    jButton1.setText("Import Excel");
+    jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    jButton1.setText("Nhập Excel");
     jButton1.setBorderPainted(false);
     jButton1.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             jButton1ActionPerformed(evt);
         }
     });
-    jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1111, 51, 160, 40));
+    jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 30, 200, 60));
 
     btn_add2.setBackground(new java.awt.Color(102, 255, 102));
     btn_add2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -700,8 +701,8 @@ public class InventoryManagement extends javax.swing.JFrame {
             for (int i = 0 ; i < tbl_Product.getRowCount();i++){
                 int productID = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 0).toString());
                 int inventoryQuantity = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 5).toString());
-                if(productBUS.getProductID(productID) != null){
-                    int quantity = productBUS.getProductID(productID).getQuantity() + inventoryQuantity;
+                if(productBUS.getProductByID(productID) != null){
+                    int quantity = productBUS.getProductByID(productID).getQuantity() + inventoryQuantity;
                     addInventorybilldetail(i);
                     updateInventory(i, quantity);
                     

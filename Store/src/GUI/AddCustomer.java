@@ -79,7 +79,7 @@ public class AddCustomer extends javax.swing.JFrame {
     
     public void addCustomer(){
         int customerID;
-        String email, phone;
+        String email, phone, firstName, lastName;
         System.out.println(isValidPhone(txt_phone.getText()));
         try {
             if(!isNumeric(txt_customerID.getText())){
@@ -88,6 +88,18 @@ public class AddCustomer extends javax.swing.JFrame {
                 return;
             }
             else customerID = Integer.parseInt(txt_customerID.getText());
+            
+            if(txt_firstName.getText().equals("") || txt_firstName.getText().equals("FirstName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }firstName = txt_firstName.getText();
+            
+            if(txt_lastName.getText().equals("") || txt_lastName.getText().equals("LastName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập họ ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }lastName = txt_lastName.getText();
             
             if(!isValidEmailAddress(txt_email.getText())){
                 JOptionPane.showMessageDialog(new JFrame(), "Email không hợp lệ ", "Dialog",
@@ -103,8 +115,7 @@ public class AddCustomer extends javax.swing.JFrame {
             }
             else phone = txt_phone.getText();
             
-            String firstName = txt_firstName.getText();
-            String lastName = txt_lastName.getText();
+            
             int status = 1;
             Customer cu = new Customer(customerID, firstName, lastName, email, phone, status);
             

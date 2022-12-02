@@ -9,9 +9,12 @@ import DTO.Discount;
 import BUS.DiscountBUS;
 import DTO.Category;
 import DTO.Customer;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -68,15 +71,17 @@ public class DiscountManagement extends javax.swing.JFrame {
         }
     }
     
-    private void showDiscountValue(ArrayList<Discount> discountls)
+    private void showDiscountValue(ArrayList<Discount> discountls) throws ParseException
     {
-        
+        DefaultTableModel model =(DefaultTableModel) tbl_Discount.getModel();
         int row = tbl_Discount.getSelectedRow();
-        jlb_discountID.setText(tbl_Discount.getModel().getValueAt(row, 0).toString());
-        txt_discountValue.setText(tbl_Discount.getModel().getValueAt(row, 1).toString());
-        jDateStart.getDate();
-        jDateEnd.getDate();
-        txt_quantity.setText(tbl_Discount.getModel().getValueAt(row, 4).toString());
+        jlb_discountID.setText(model.getValueAt(row, 0).toString());
+        txt_discountValue.setText(model.getValueAt(row, 1).toString());
+        Date dateStart = new SimpleDateFormat("dd-MM-yyyy").parse((String)model.getValueAt(row, 2));
+        jDateStart.setDate(dateStart);  
+        Date dateEnd = new SimpleDateFormat("dd-MM-yyyy").parse((String)model.getValueAt(row, 3));
+        jDateEnd.setDate(dateEnd);
+        txt_quantity.setText(model.getValueAt(row, 4).toString());
     } 
     
         private boolean isNumeric(CharSequence cs) {
@@ -102,10 +107,11 @@ public class DiscountManagement extends javax.swing.JFrame {
         }
         return true;
     }
-     private void editDiscount()
+     private void editDiscount() throws ParseException
     {
         int discountID, discountValue, quantity;
-        int row = tbl_Discount.getSelectedRow();    
+        int row = tbl_Discount.getSelectedRow();  
+        String dateStart = null, dateEnd = null;
         try {    
          if(row < 0)
          {
@@ -128,10 +134,20 @@ public class DiscountManagement extends javax.swing.JFrame {
                 return;
             }
             else quantity = Integer.parseInt(txt_quantity.getText());            
-                        
-            String dateStart="";
-            String dateEnd="";
-           int status =1; 
+           
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date date1 = jDateStart.getDate();
+            Date date2 = jDateEnd.getDate();
+            if(date1.before(date2)){
+                dateStart = dateFormat.format(date1);            
+                dateEnd = dateFormat.format(date2);
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Ngày kết thúc phải lớn hơn ngày bắt đầu ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+           
+            int status =1; 
          
            Discount d = new Discount(discountID, discountValue, dateStart, dateEnd, quantity, status);
            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa khuyến mãi "+ discountID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
@@ -180,9 +196,11 @@ public class DiscountManagement extends javax.swing.JFrame {
     }
     
     private void resetText(){
+        Date date = new Date();
         jlb_discountID.setText("...");
         txt_discountValue.setText("");
-      
+        jDateStart.setDate(date);
+        jDateEnd.setDate(date);
         txt_quantity.setText("");
     }
     
@@ -239,6 +257,7 @@ public class DiscountManagement extends javax.swing.JFrame {
         jlb_discount = new javax.swing.JLabel();
         jDateStart = new com.toedter.calendar.JDateChooser();
         jDateEnd = new com.toedter.calendar.JDateChooser();
+        btn_exportExcel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -477,6 +496,16 @@ public class DiscountManagement extends javax.swing.JFrame {
     jPanel1.add(jDateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 350, 320, 50));
     jPanel1.add(jDateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 320, 50));
 
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    btn_exportExcel.setText("XUẤT EXCEL");
+    btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_exportExcelActionPerformed(evt);
+        }
+    });
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -494,7 +523,11 @@ public class DiscountManagement extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbl_DiscountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_DiscountMouseClicked
-        showDiscountValue(discountls);
+        try{
+            showDiscountValue(discountls);
+        } catch (Exception e){
+            Logger.getLogger(CustomerManagement.class.getName()).log(Level.SEVERE, null, e);
+        }
     }//GEN-LAST:event_tbl_DiscountMouseClicked
 
     private void btn_restoreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_restoreMouseClicked
@@ -513,7 +546,11 @@ public class DiscountManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_delActionPerformed
 
     private void btn_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_UpdateActionPerformed
-        editDiscount();
+        try {
+            editDiscount();
+        } catch (ParseException ex) {
+            Logger.getLogger(DiscountManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_UpdateActionPerformed
 
     private void btn_RefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_RefreshMouseClicked
@@ -523,7 +560,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     private void btn_RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RefreshActionPerformed
         // TODO add your handling code here:
-//        showTable();
+        refresh();
     }//GEN-LAST:event_btn_RefreshActionPerformed
 
     private void txt_sDiscountIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sDiscountIDActionPerformed
@@ -580,6 +617,18 @@ public class DiscountManagement extends javax.swing.JFrame {
     private void txt_sDateStartKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sDateStartKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_sDateStartKeyTyped
+
+    private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
+        // TODO add your handling code here:
+        //        try {
+            //            // TODO add your handling code here:
+            //            String date = java.time.LocalDate.now().toString();
+            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
+            //            writeExcel(this.productls,excelFilePath);
+            //        } catch (IOException ex) {
+            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+            //        }
+    }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -640,6 +689,7 @@ public class DiscountManagement extends javax.swing.JFrame {
     private javax.swing.JToggleButton btn_Update;
     private javax.swing.JToggleButton btn_add1;
     private javax.swing.JToggleButton btn_del;
+    private javax.swing.JButton btn_exportExcel;
     private javax.swing.JToggleButton btn_restore;
     private com.toedter.calendar.JDateChooser jDateEnd;
     private com.toedter.calendar.JDateChooser jDateStart;

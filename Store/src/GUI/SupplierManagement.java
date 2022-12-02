@@ -59,6 +59,7 @@ public class SupplierManagement extends javax.swing.JFrame {
     private void editSupplier()
     {
         int supplierID;
+        String supplierName , address;
         int row = tbl_Supplier.getSelectedRow();    
         try {    
          if(row < 0)
@@ -68,8 +69,18 @@ public class SupplierManagement extends javax.swing.JFrame {
            return; 
          }
            supplierID = Integer.parseInt(jlb_supplierID.getText());
-           String supplierName = txt_supplierName.getText();
-           String address = txt_address.getText();
+           if(txt_supplierName.getText().equals("") || txt_supplierName.getText().equals("Name")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }supplierName = txt_supplierName.getText();
+            
+            if(txt_address.getText().equals("") || txt_address.getText().equals("Address")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập địa chỉ ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }address = txt_address.getText();
+           
            int status =1; 
            
            Supplier su = new Supplier(supplierID, supplierName, address, status);
@@ -173,6 +184,7 @@ public class SupplierManagement extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         btn_add1 = new javax.swing.JToggleButton();
         jlb_supplier = new javax.swing.JLabel();
+        btn_exportExcel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -396,6 +408,16 @@ public class SupplierManagement extends javax.swing.JFrame {
     jlb_supplier.setText("SupplierID:");
     jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 138, 52));
 
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    btn_exportExcel.setText("XUẤT EXCEL");
+    btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_exportExcelActionPerformed(evt);
+        }
+    });
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -493,6 +515,18 @@ public class SupplierManagement extends javax.swing.JFrame {
         search();
     }//GEN-LAST:event_txt_sAddressKeyReleased
 
+    private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
+        // TODO add your handling code here:
+//        try {
+//            // TODO add your handling code here:
+//            String date = java.time.LocalDate.now().toString();
+//            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
+//            writeExcel(this.productls,excelFilePath);
+//        } catch (IOException ex) {
+//            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_btn_exportExcelActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -539,7 +573,7 @@ public class SupplierManagement extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new StaffManagement().setVisible(true);
+                    new SupplierManagement().setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(SupplierManagement.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -551,6 +585,7 @@ public class SupplierManagement extends javax.swing.JFrame {
     private javax.swing.JToggleButton btn_Update;
     private javax.swing.JToggleButton btn_add1;
     private javax.swing.JToggleButton btn_del;
+    private javax.swing.JButton btn_exportExcel;
     private javax.swing.JToggleButton btn_restore;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

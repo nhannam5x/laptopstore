@@ -59,6 +59,7 @@ public class AddSupplier extends javax.swing.JFrame {
     
     public void addSupplier(){
         int supplierID;
+        String supplierName, address;
         System.out.println(isNumeric(txt_supplierID.getText()));
         try {
             
@@ -69,8 +70,17 @@ public class AddSupplier extends javax.swing.JFrame {
             }
             else supplierID = Integer.parseInt(txt_supplierID.getText());
             
-            String supplierName = txt_supplierName.getText();
-            String address = txt_address.getText();
+            if(txt_supplierName.getText().equals("") || txt_supplierName.getText().equals("SupplierName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }supplierName = txt_supplierName.getText();
+            
+            if(txt_address.getText().equals("") || txt_address.getText().equals("Address")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập địa chỉ ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }address = txt_address.getText();
             int status = 1;
             Supplier s = new Supplier(supplierID, supplierName, address, status);
             

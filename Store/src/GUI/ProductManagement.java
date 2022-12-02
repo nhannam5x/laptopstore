@@ -670,14 +670,15 @@ public class ProductManagement extends javax.swing.JFrame {
     jlb_price1.setText("Price:");
     jPanel1.add(jlb_price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, 60, 52));
 
-    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
     btn_exportExcel.setText("XUẤT EXCEL");
     btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             btn_exportExcelActionPerformed(evt);
         }
     });
-    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 180, 60));
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);

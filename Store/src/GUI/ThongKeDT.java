@@ -4,8 +4,16 @@
  */
 package GUI;
 
+import DTO.Bill;
 import BUS.BillBUS;
-import Entity.bill;
+import DTO.Product;
+import BUS.ProductBUS;
+import DTO.Staff;
+import BUS.StaffBUS;
+import DTO.Customer;
+import BUS.CustomerBUS;
+import DTO.Discount;
+import BUS.DiscountBUS;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,27 +37,48 @@ import javax.swing.table.TableRowSorter;
  * @author TruongMinhNhat
  */
 public class ThongKeDT extends javax.swing.JFrame {
-     private BillBUS bBUS = new BillBUS();
+    BillBUS billBUS = new BillBUS();
+    ProductBUS productBUS = new ProductBUS();
+    StaffBUS staffBUS = new StaffBUS();
+    CustomerBUS customerBUS = new CustomerBUS();
+    DiscountBUS discountBUS = new DiscountBUS();
+    ArrayList<Bill> billls = billBUS.getList();
+    ArrayList<Product> product = productBUS.getList();
+    ArrayList<Staff> staff = staffBUS.getList();
+    ArrayList<Customer> customer = customerBUS.getList();
+    ArrayList<Discount> discount = discountBUS.getList();
     /**
      * Creates new form NewJFrame
      */
-    public ThongKeDT() {
+    public ThongKeDT() throws ClassNotFoundException {
         initComponents();
-        list();
-        outModel((ArrayList<bill>) bBUS.getList());
+        billBUS.listBill();
+        productBUS.listProduct();
+        staffBUS.listStaff();
+        customerBUS.listCustomer();
+        discountBUS.listDiscount();
+        showTable(billls);
     }
     
-    public void outModel(ArrayList<bill> arrBill) // Xuất ra Table từ ArrayList
+    public void showTable(ArrayList<Bill> billls) // Xuất ra Table từ ArrayList
     {
         DefaultTableModel defaultModel = (DefaultTableModel) tbl_revenue.getModel();
         Vector data;
         defaultModel.setRowCount(0);
-        for (bill b : arrBill) {
+        float revenue=0;
+        for (Bill b : billls) {
             data = new Vector();
             data.add(b.getBillID());
-            data.add(b.getCustomerID());
+            data.add(staffBUS.getStaffID(b.getStaffID()).getStaffID());
+            data.add(staffBUS.getStaffID(b.getStaffID()).getFirstName() + " " + staffBUS.getStaffID(b.getStaffID()).getLastName());
+            data.add(customerBUS.getCustomerID(b.getCustomerID()).getCustomerID());
+            data.add(customerBUS.getCustomerID(b.getCustomerID()).getFirstName() + " " + customerBUS.getCustomerID(b.getCustomerID()).getLastName());
+            data.add(discountBUS.getDiscountID(b.getDiscountID()).getDiscountValue());
+            data.add(b.getTotalPrice());
             data.add(b.getDate());
-            data.add(b.getTotal());
+            lb_count.setText("Count: " + String.valueOf(tbl_revenue.getRowCount() + 1));            
+            revenue += b.getTotalPrice();
+            lb_total.setText("Total Revenue: " + String.valueOf(revenue));
             defaultModel.addRow(data);
         }
         tbl_revenue.setModel(defaultModel);
@@ -57,34 +86,38 @@ public class ThongKeDT extends javax.swing.JFrame {
 
     public void list() // Chép ArrayList lên table
     {
-        if (bBUS.getList() == null) {
-            bBUS.list();
+        if (billBUS.getList() == null) {
+            try {
+                billBUS.listBill();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        ArrayList<bill> arrBill = (ArrayList<bill>) bBUS.getList();
+        ArrayList<Bill> billls = (ArrayList<Bill>) billBUS.getList();
 //        model.setRowCount(0);
-        outModel(arrBill);
+        showTable(billls);
     }
      
-    private void filter(ArrayList<bill> arrBill) throws ParseException{
-        ArrayList<bill> arrFilter = new ArrayList<>();
+    private void filter(ArrayList<Bill> billls) throws ParseException{
+        ArrayList<Bill> arrFilter = new ArrayList<>();
         float total = 0;
         Date start = jDateChooseFrom.getDate(); 
         Date end = jDateChooseTo.getDate();
         
-        for(bill b : arrBill){
-            if(start.before(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b.getDate())) && end.after(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b.getDate())) ){
+        for(Bill b : billls){
+            if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
                 arrFilter.add(b);
             }
         }  
         
-        outModel(arrFilter);
+        showTable(arrFilter);
         
         for(int i = 0; i < tbl_revenue.getRowCount(); i++){
             total += (float) tbl_revenue.getValueAt(i, 3);
         }
         
-        lb_count.setText(String.valueOf(tbl_revenue.getRowCount()));
-        lb_total.setText("Total Revenue: " +total);
+        lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
+        lb_total.setText("Total Revenue: " +String.valueOf(total));
     }
 
     
@@ -111,6 +144,7 @@ public class ThongKeDT extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         lb_count = new javax.swing.JLabel();
         lb_total = new javax.swing.JLabel();
+        btn_refresh = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -127,7 +161,7 @@ public class ThongKeDT extends javax.swing.JFrame {
 
             },
             new String [] {
-                "BillID", "CustomerID", "Date", "Total","Note"
+                "bill ID", "staff ID", "staff Name", "customer ID", "customer Name", "discount", "total Price", "date"
             }
         )
         {
@@ -185,6 +219,21 @@ public class ThongKeDT extends javax.swing.JFrame {
     lb_total.setForeground(new java.awt.Color(255, 102, 0));
     lb_total.setText("Total Revenue: ");
 
+    btn_refresh.setBackground(new java.awt.Color(102, 255, 102));
+    btn_refresh.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
+    btn_refresh.setText("Search");
+    btn_refresh.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            btn_refreshMouseClicked(evt);
+        }
+    });
+    btn_refresh.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_refreshActionPerformed(evt);
+        }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -193,7 +242,7 @@ public class ThongKeDT extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSeparator2)
                 .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(116, Short.MAX_VALUE)
+                    .addContainerGap(142, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(84, 84, 84)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,7 +258,9 @@ public class ThongKeDT extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(527, 527, 527)
-                            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(36, 36, 36)
+                            .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(23, 23, 23)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1270, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -237,7 +288,7 @@ public class ThongKeDT extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(lb_count)
                 .addComponent(lb_total))
-            .addGap(18, 18, Short.MAX_VALUE)
+            .addGap(18, 52, Short.MAX_VALUE)
             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,10 +299,12 @@ public class ThongKeDT extends javax.swing.JFrame {
                         .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jDateChooseFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(27, 27, 27)
-            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(29, 29, 29))
     );
 
@@ -263,16 +316,13 @@ public class ThongKeDT extends javax.swing.JFrame {
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
 
     pack();
     }// </editor-fold>//GEN-END:initComponents
     
-/*    public ArrayList<bill> search(String billID, String customerID, String date)
+/*public ArrayList<bill> search(String billID, String customerID, String date)
     {
         ArrayList<bill> search = new ArrayList<>();
         date = date.isEmpty()?date = "": date;
@@ -280,15 +330,15 @@ public class ThongKeDT extends javax.swing.JFrame {
         Date date3 = jDateChooseTo.getDate();
         
         if(date1.before(date2) && date3.after(date2)) {
-            System.out.println("Date lies between from and to date");    } */
-    
+            System.out.println("Date lies between from and to date");    } 
+  */  
     private void btn_searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_searchMouseClicked
   
     }//GEN-LAST:event_btn_searchMouseClicked
 
     private void btn_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_searchActionPerformed
          try {
-             filter((ArrayList<bill>) bBUS.getList());
+             filter((ArrayList<Bill>) billBUS.getList());
          } catch (ParseException ex) {
              Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
          }
@@ -297,8 +347,18 @@ public class ThongKeDT extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_searchActionPerformed
 
     private void tbl_revenueMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_revenueMouseClicked
-        //        showStudentValue();
+//                showStudentValue();
     }//GEN-LAST:event_tbl_revenueMouseClicked
+
+    private void btn_refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_refreshMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_refreshMouseClicked
+
+    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
+        // TODO add your handling code here:
+        tbl_revenue.removeAll();
+        showTable(billls);
+    }//GEN-LAST:event_btn_refreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,12 +405,17 @@ public class ThongKeDT extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ThongKeDT().setVisible(true);
+                try {
+                    new ThongKeDT().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton btn_refresh;
     private javax.swing.JToggleButton btn_search;
     private com.toedter.calendar.JDateChooser jDateChooseFrom;
     private com.toedter.calendar.JDateChooser jDateChooseTo;

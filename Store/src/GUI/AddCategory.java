@@ -59,6 +59,7 @@ public class AddCategory extends javax.swing.JFrame {
     
     public void addCategory(){
         int categoryID;
+        String categoryName;
         System.out.println(isNumeric(txt_categoryID.getText()));
         try {
             
@@ -69,7 +70,11 @@ public class AddCategory extends javax.swing.JFrame {
             }
             else categoryID = Integer.parseInt(txt_categoryID.getText());
             
-            String categoryName = txt_categoryName.getText();
+            if(txt_categoryName.getText().equals("")||txt_categoryName.getText().equals("CategoryName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên loại ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }categoryName = txt_categoryName.getText();
             int status = 1;
             Category c = new Category(categoryID, categoryName, status);
             

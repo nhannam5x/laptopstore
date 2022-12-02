@@ -128,6 +128,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
         jlb_product4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txt_sQuantity = new javax.swing.JTextField();
+        btn_exportExcel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -209,7 +210,7 @@ public class BilldetailManagement extends javax.swing.JFrame {
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1300, 10));
+    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 590, 1340, 10));
 
     jlb_totalQuantity.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_totalQuantity.setForeground(new java.awt.Color(255, 153, 51));
@@ -295,14 +296,21 @@ public class BilldetailManagement extends javax.swing.JFrame {
     });
     jPanel1.add(txt_sQuantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 630, 260, 52));
 
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    btn_exportExcel.setText("XUẤT EXCEL");
+    btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_exportExcelActionPerformed(evt);
+        }
+    });
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1300, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap())
+        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1320, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,7 +345,20 @@ public class BilldetailManagement extends javax.swing.JFrame {
         Search();
     }//GEN-LAST:event_txt_sQuantityKeyReleased
 
+    private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
+        // TODO add your handling code here:
+        //        try {
+            //            // TODO add your handling code here:
+            //            String date = java.time.LocalDate.now().toString();
+            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
+            //            writeExcel(this.productls,excelFilePath);
+            //        } catch (IOException ex) {
+            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+            //        }
+    }//GEN-LAST:event_btn_exportExcelActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_exportExcel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

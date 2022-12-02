@@ -86,7 +86,7 @@ public class CustomerBUS {
 
     
     
-    public ArrayList<Customer> getList() throws ClassNotFoundException {
+    public ArrayList<Customer> getList() {
         
         return cus;
     }

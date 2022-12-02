@@ -85,7 +85,7 @@ public class DiscountBUS {
 
     
     
-    public ArrayList<Discount> getList() throws ClassNotFoundException {
+    public ArrayList<Discount> getList() {
         
         return dis;
     }

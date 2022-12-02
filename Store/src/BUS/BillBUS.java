@@ -44,7 +44,7 @@ public class BillBUS {
         return null;
     }
     
-    public void listBill() throws ClassNotFoundException
+    public void listBill() throws ClassNotFoundException 
     {
         BillDAO bilDAO = new BillDAO();
         bil = new ArrayList<>();
@@ -86,7 +86,7 @@ public class BillBUS {
 
     
     
-    public ArrayList<Bill> getList() throws ClassNotFoundException {
+    public ArrayList<Bill> getList() {
         
         return bil;
     }

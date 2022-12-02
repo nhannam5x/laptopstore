@@ -95,7 +95,7 @@ public class CustomerManagement extends javax.swing.JFrame {
      private void editCustomer()
     {
         int customerID;
-        String email, phone;
+        String email, phone,firstName, lastName;
         int row = tbl_Customer.getSelectedRow();    
         try {    
          if(row < 0)
@@ -107,6 +107,18 @@ public class CustomerManagement extends javax.swing.JFrame {
            
            customerID = Integer.parseInt(jlb_customerID.getText());
            
+           if(txt_firstName.getText().equals("") || txt_firstName.getText().equals("FirstName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }firstName = txt_firstName.getText();
+            
+            if(txt_lastName.getText().equals("") || txt_lastName.getText().equals("LastName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập họ ", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }lastName = txt_lastName.getText();
+            
             if(!isValidEmailAddress(txt_email.getText())){
                 JOptionPane.showMessageDialog(new JFrame(), "Email không hợp lệ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
@@ -120,8 +132,7 @@ public class CustomerManagement extends javax.swing.JFrame {
                 return;
             }
             else phone = txt_phone.getText();
-           String firstName = txt_firstName.getText();
-           String lastName = txt_lastName.getText();
+           
 
            int status =1; 
          
@@ -242,6 +253,7 @@ public class CustomerManagement extends javax.swing.JFrame {
         jlb_product = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txt_sEmail = new javax.swing.JTextField();
+        btn_exportExcel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -531,6 +543,16 @@ public class CustomerManagement extends javax.swing.JFrame {
     });
     jPanel1.add(txt_sEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 510, 330, 52));
 
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    btn_exportExcel.setText("XUẤT EXCEL");
+    btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_exportExcelActionPerformed(evt);
+        }
+    });
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -655,6 +677,18 @@ public class CustomerManagement extends javax.swing.JFrame {
         search();
     }//GEN-LAST:event_txt_sPhoneKeyReleased
 
+    private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
+        // TODO add your handling code here:
+        //        try {
+            //            // TODO add your handling code here:
+            //            String date = java.time.LocalDate.now().toString();
+            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
+            //            writeExcel(this.productls,excelFilePath);
+            //        } catch (IOException ex) {
+            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+            //        }
+    }//GEN-LAST:event_btn_exportExcelActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -706,6 +740,7 @@ public class CustomerManagement extends javax.swing.JFrame {
     private javax.swing.JToggleButton btn_Update;
     private javax.swing.JToggleButton btn_add1;
     private javax.swing.JToggleButton btn_del;
+    private javax.swing.JButton btn_exportExcel;
     private javax.swing.JToggleButton btn_restore;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

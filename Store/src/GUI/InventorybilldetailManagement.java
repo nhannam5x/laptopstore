@@ -62,12 +62,12 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         {
             if(bd.getStatus() == 1){
                 if(bd.getInventorybillID() == this.inventorybillID){
-                    int productID = productBUS.getProductID(bd.getProductID()).getProductID();
+                    int productID = productBUS.getProductByID(bd.getProductID()).getProductID();
                     int quantity = bd.getQuantity();
-                    String productName = productBUS.getProductID(bd.getProductID()).getProductName();
+                    String productName = productBUS.getProductByID(bd.getProductID()).getProductName();
                     int categoryID = categoryBUS.getCategoryID(bd.getCategoryID()).getCategoryID();
                     int supplierID = supplierBUS.getSupplierID(bd.getSupplierID()).getSupplierID();
-                    float price = productBUS.getProductID(bd.getProductID()).getPrice();
+                    float price = productBUS.getProductByID(bd.getProductID()).getPrice();
                     defaultModel.addRow(new Object[]{this.inventorybillID, productID, productName,categoryID,supplierID, price, quantity});
                     totalRow ++;
                     totalQuantity += quantity;
@@ -142,6 +142,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         jlb_categoryID = new javax.swing.JLabel();
         jlb_product6 = new javax.swing.JLabel();
         jlb_supplierID = new javax.swing.JLabel();
+        btn_exportExcel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -329,6 +330,16 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     jlb_supplierID.setText("...");
     jPanel1.add(jlb_supplierID, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 520, 70, 52));
 
+    btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_exportExcel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/a1.png"))); // NOI18N
+    btn_exportExcel.setText("XUẤT EXCEL");
+    btn_exportExcel.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_exportExcelActionPerformed(evt);
+        }
+    });
+    jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -368,7 +379,20 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         Search();
     }//GEN-LAST:event_txt_sQuantityKeyReleased
 
+    private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
+        // TODO add your handling code here:
+        //        try {
+            //            // TODO add your handling code here:
+            //            String date = java.time.LocalDate.now().toString();
+            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
+            //            writeExcel(this.productls,excelFilePath);
+            //        } catch (IOException ex) {
+            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+            //        }
+    }//GEN-LAST:event_btn_exportExcelActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_exportExcel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

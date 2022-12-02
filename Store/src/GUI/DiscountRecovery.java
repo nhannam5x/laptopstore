@@ -13,6 +13,8 @@ import BUS.DiscountBUS;
 import DTO.Discount;
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -94,6 +96,7 @@ public class DiscountRecovery extends javax.swing.JFrame {
                 if(response == JOptionPane.YES_OPTION){
                    discountBUS.SetDiscount(c);
                    JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                   showTable();
                    return;
                }
             } else {
