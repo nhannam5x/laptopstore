@@ -41,7 +41,7 @@ public class BillManagement extends javax.swing.JFrame {
     ArrayList<Customer> customer = customerBUS.getList();
     ArrayList<Discount> discount = discountBUS.getList();
     
-    public BillManagement(int staffID) throws ClassNotFoundException {
+    public BillManagement() throws ClassNotFoundException {
         initComponents();
         
         billBUS.listBill();

@@ -4,17 +4,6 @@
  */
 package GUI;
 
-import DTO.Bill;
-import BUS.BillBUS;
-import DTO.Product;
-import BUS.ProductBUS;
-import DTO.Staff;
-import BUS.StaffBUS;
-import DTO.Customer;
-import BUS.CustomerBUS;
-import DTO.Discount;
-import BUS.DiscountBUS;
-import BUS.InventorybillBUS;
 import ConnectMysql.MySQLConnect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,9 +34,6 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
     private  MySQLConnect mySQL = new MySQLConnect();
-    ProductBUS productBUS = new ProductBUS();
-    BillBUS billBUS = new BillBUS();
-    InventorybillBUS inventorybillBUS = new InventorybillBUS();
     public ThongKeCuaHang() throws ClassNotFoundException, SQLException {
         initComponents();
         showStoreStatistic();
@@ -106,7 +92,7 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 //        showTable(billls);
     }
      
-    private void filter(ArrayList<Bill> billls) throws ParseException{
+//    private void filter(ArrayList<Bill> billls) throws ParseException{
 //        ArrayList<Bill> arrFilter = new ArrayList<>();
 //        float total = 0;
 //        Date start = jDateChooseFrom.getDate(); 
@@ -126,7 +112,7 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 //        
 //        lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
 //        lb_total.setText("Total Revenue: " +String.valueOf(total));
-    }
+//    }
 
     
     /**
