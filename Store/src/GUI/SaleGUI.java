@@ -4,46 +4,118 @@
  * and open the template in the editor.
  */
 package GUI;
+import BUS.BillBUS;
+import BUS.BilldetailBUS;
+import BUS.CategoryBUS;
+import BUS.CustomerBUS;
+import BUS.DiscountBUS;
 import DTO.Product;
+import DTO.Discount;
 import BUS.ProductBUS;
+import BUS.SupplierBUS;
+import DTO.Product;
+import DTO.Supplier;
+import DTO.Bill;
+import DTO.Billdetail;
+import DTO.Category;
+import DTO.Customer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime; // Import the LocalDateTime class
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import static org.apache.logging.log4j.util.Strings.isEmpty;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 /**
  *
  * @author Admin
  */
 public class SaleGUI extends javax.swing.JFrame {
     ProductBUS productBUS = new ProductBUS();
+    CustomerBUS customerBUS = new CustomerBUS();
+    DiscountBUS discountBUS = new DiscountBUS();
+    CategoryBUS categoryBUS = new CategoryBUS();
+    SupplierBUS supplierBUS = new SupplierBUS();
+    BillBUS billBUS = new BillBUS();
+    BilldetailBUS billdetailBUS = new BilldetailBUS();
+    ArrayList<Customer> customer = customerBUS.getList();
+    ArrayList<Discount> discount = discountBUS.getList();
+    ArrayList<Category> category = categoryBUS.getList();
+    ArrayList<Supplier> supplier = supplierBUS.getList();
     DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     /**
      * Creates new form SaleGUI
      */
     ArrayList<Product> arrProduct = new ArrayList<>();
-    ArrayList<Product> arrCart = new ArrayList<>();
     
     public SaleGUI() throws ClassNotFoundException {
         initComponents();
+        AutoCompleteDecorator.decorate(customerJComboBox);
+        AutoCompleteDecorator.decorate(discountJComboBox);
+        customerBUS.listCustomer();
+        discountBUS.listDiscount();
+        setValueDiscountJcombo(discount);
+        setValueCustomerJcombo(customer);
+        customerJComboBox.setSelectedItem("Khách Hàng");
+        discountJComboBox.setSelectedItem("Không");
         productBUS.listProduct();
-        showTableProduct();
+        arrProduct = productBUS.getList();
+        showTableProduct(arrProduct);
     }
 
-    private void showTableProduct()
+    public void setValueCustomerJcombo(ArrayList<Customer> customer){
+        customerJComboBox.removeAllItems();
+        for(Customer c: customer){
+            customerJComboBox.addItem(String.valueOf(c.getCustomerID()));
+        }
+        customerJComboBox.setSelectedItem("Khách Hàng");
+    }
+    
+    public void setValueDiscountJcombo(ArrayList<Discount> discount){
+        discountJComboBox.removeAllItems();
+        for(Discount d: discount){
+            if(d.getQuantity() > 0){
+                try { 
+                    Date start = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDateStart());
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(java.time.LocalDate.now().toString());
+                    Date end = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDateEnd());
+                    if(start.before(date) && end.after(date)){
+                         discountJComboBox.addItem(String.valueOf(d.getDiscountID()));
+                    }
+                } catch (ParseException ex) {
+                    Logger.getLogger(SaleGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        discountJComboBox.setSelectedItem("Không");
+    }
+    
+    private boolean isNumeric(CharSequence cs) {
+        int sz = cs.length();
+        for (int i = 0; i < sz; i++) {
+            if (!Character.isDigit(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showTableProduct(ArrayList<Product> arrProduct)
     {        
         tbl_product.removeAll();
-        arrProduct = productBUS.getList();
         DefaultTableModel ModelProduct = (DefaultTableModel) tbl_product.getModel();
         ModelProduct.setRowCount(0);
         Vector data;
         for(Product pro : arrProduct)
         {       
-                if(pro.getStatus() == 1){
+                if(pro.getStatus() == 1 && pro.getQuantity() > 0){
                     data = new Vector();
                     data.add(pro.getProductID());
                     data.add(pro.getProductName());
@@ -57,30 +129,75 @@ public class SaleGUI extends javax.swing.JFrame {
         tbl_product.setModel(ModelProduct);
     }
     
-    private void showTableCart()
-    {        
-        tbl_cart.removeAll();
+    private void addCart(){
+        boolean flag = false;
         DefaultTableModel ModelCart = (DefaultTableModel) tbl_cart.getModel();
-        ModelCart.setRowCount(0);
-        Vector data;
-        for(Product cart : arrCart)
-        {       
-                if(cart.getStatus() == 1){
-                    data = new Vector();
-                    data.add(cart.getProductID());
-                    data.add(cart.getProductName());
-                    data.add(cart.getCategoryID());
-                    data.add(cart.getSupplierID());
-                    data.add(cart.getPrice());
-                    data.add(cart.getQuantity());
-                    ModelCart.addRow(data);
+        int row = tbl_product.getSelectedRow();
+        
+        int productID = 0;          //lấy id sản phẩm
+        if(txt_productID.getText().equals("")){
+            if(row < 0)
+            {
+                JOptionPane.showMessageDialog(new JFrame(), "Hãy chọn sản phẩm", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            productID = (int) tbl_product.getValueAt(row, 0);
+        }else{
+            productID = Integer.parseInt(txt_productID.getText());
+        }
+        
+        if(productBUS.getProductByID(productID) == null){
+            JOptionPane.showMessageDialog(new JFrame(), "ID sản phẩm không hợp lệ", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(!isNumeric(txt_Qty.getText())){
+            JOptionPane.showMessageDialog(new JFrame(), "Số lượng không hợp lệ", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Product itemCart = productBUS.getProductByID(productID);
+        
+        for(int i = 0; i< tbl_cart.getRowCount(); i++){
+            if(Integer.parseInt(tbl_cart.getModel().getValueAt(i, 0).toString()) == productID){
+                flag = true;
+                int quantity = Integer.parseInt(tbl_cart.getModel().getValueAt(i, 3).toString()) + getQty();
+                if(quantity > itemCart.getQuantity()){
+                    JOptionPane.showMessageDialog(new JFrame(), "Sản phẩm không đủ số lượng", "Dialog",
+                    JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }        
-        tbl_cart.setModel(ModelCart);
+                tbl_cart.getModel().setValueAt(quantity, i, 3);
+//                resetText();
+                    refesh();
+                }
+            }
+        if(!flag){
+            int quantity = getQty();
+            if(quantity > itemCart.getQuantity()){
+                JOptionPane.showMessageDialog(new JFrame(), "Sản phẩm không đủ số lượng", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            ModelCart.addRow(new Object[]{productID, itemCart.getProductName(),itemCart.getPrice(),quantity});
+//            resetText();
+                refesh();
+        }
+        
+        getTotal();
     }
     
-    private void addCart(){
-        int row = tbl_product.getSelectedRow();
+    private int getQty(){
+        if(txt_Qty.getText().equals("")){
+            return 1;
+        }
+        return Integer.parseInt(txt_Qty.getText());
+    }
+    
+    private void editQty(){
+        int row = tbl_cart.getSelectedRow();
         if(row < 0)
         {
             JOptionPane.showMessageDialog(new JFrame(), "Hãy chọn sản phẩm", "Dialog",
@@ -88,56 +205,205 @@ public class SaleGUI extends javax.swing.JFrame {
             return;
         }
         
-        int productID = (int) tbl_product.getValueAt(row, 0);
+        if(!isNumeric(txt_Qty.getText()) || Integer.parseInt(txt_Qty.getText()) <= 0){
+            JOptionPane.showMessageDialog(new JFrame(), "Số lượng không hợp lệ", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int productID = (int) tbl_cart.getValueAt(row, 0);
         Product itemCart = productBUS.getProductByID(productID);
-        arrCart.add(itemCart);
-        showTableCart();
+        int quantity = getQty();
+        if(quantity > itemCart.getQuantity()){
+            JOptionPane.showMessageDialog(new JFrame(), "Sản phẩm không đủ số lượng", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        tbl_cart.getModel().setValueAt(quantity, row, 3);
+        getTotal();
     }
 
-//    private boolean checkItemCart(ArrayList<Product> cart,int id){
-//        for(Product c : arrCart){
-//            if(c.getProductID() == id){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    
-//    private int getItemCart(ArrayList<product> cart,int id){
-//        int i = 0;
-//        for(product c : cart){
-//            if(c.getProductID() == id){
-//                return i;
-//            }else{
-//                i++;
-//            }
-//        }
-//        return i;
-//    }
-//  
+    private void del(String type){
+        DefaultTableModel ModelCart = (DefaultTableModel) tbl_cart.getModel();
+        if(type.equals("Item")){
+            int row = tbl_cart.getSelectedRow();
+            if(row < 0)
+            {
+                JOptionPane.showMessageDialog(new JFrame(), "Hãy chọn sản phẩm", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa sản phẩm không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+            if(response == JOptionPane.YES_OPTION){
+              ModelCart.removeRow(row);
+              row = -1;
+              JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+               getTotal();
+              return;
+            }
+        }
+        
+        if(type.equals("All")){
+            int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa giỏ hàng không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+            if(response == JOptionPane.YES_OPTION){
+              for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
+                ModelCart.removeRow(row);
+              }
+              getTotal();
+              JOptionPane.showMessageDialog(rootPane, "Xóa thành công");
+              return;
+            }
+        }
+       
+    }
     
-//    private void delCartItem(){
-//        int row = tbl_cart.getSelectedRow();
-//        if(row == -1)
-//        {
-//           JOptionPane.showMessageDialog(new JFrame(), "Chưa chọn dòng để xoá", "Dialog",
-//           JOptionPane.ERROR_MESSAGE);
-//        }else{
-//           product p = proBUS.getProductById(tbl_product.getModel().getValueAt(row, 0).toString());
-//           proBUS.delete(p);
-//           showTableCart(Cart);
-//           
-//           JOptionPane.showMessageDialog(new JFrame(), "Xoá thành công", "Dialog",
-//           JOptionPane.INFORMATION_MESSAGE);
-//     
-//        }
-//    }
-//    
-//    private void delCart(){
-//        Cart.clear();
-//        showTableCart(Cart);
-//    }
-//    
+    private float getTotal(){
+        System.out.println("Chạy");
+        float total = 0;
+        for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
+            total += (float) tbl_cart.getValueAt(row,2) * (int) tbl_cart.getValueAt(row,3);
+        }
+            if(!discountJComboBox.getSelectedItem().toString().equals("Không")){
+                lb_total.setText(String.valueOf(total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100));
+                return total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100;
+            }
+        
+            lb_total.setText(String.valueOf(total));
+            return total;
+    }
+        
+    private boolean checkCart()
+    {
+        if(tbl_cart.getRowCount() == 0){
+            return false;
+        }
+        return true;
+    }
+    
+    private void search(){
+        String productName = txt_productName.getText();
+        String category = txt_category.getText();
+        String supplier = txt_supplier.getText();
+        showTableProduct(productBUS.search("", productName,category,supplier));
+    }
+    
+
+    
+    private void addBill(){
+       
+        int billID = 0;
+        int staffID = 1;
+        int customerID = 0;
+        if (!customerJComboBox.getSelectedItem().toString().equals("Khách Hàng")){
+            customerID = Integer.parseInt(customerJComboBox.getSelectedItem().toString());
+        }
+        int discountID = 0;
+        
+        if (!discountJComboBox.getSelectedItem().toString().equals("Không")){
+            discountID = Integer.parseInt(discountJComboBox.getSelectedItem().toString());
+        }
+        float totalPrice = getTotal();
+        if(!(discountID == 0)){
+            totalPrice = totalPrice - (totalPrice*discountBUS.getDiscountID(discountID).getDiscountValue()/100);
+        }
+        String date = java.time.LocalDate.now().toString();
+        int status = 1;
+        Bill b = new Bill(billID,staffID,customerID,discountID,totalPrice, date, status);
+        try {
+            billBUS.AddBill(b);
+            billBUS.listBill();
+            if(!(discountID == 0)){
+                Discount d = discountBUS.getDiscountID(discountID);
+                d.setQuantity(d.getQuantity() - 1);
+                discountBUS.SetDiscount(d);
+                discountBUS.listDiscount();
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InventoryManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void pay(){
+        DefaultTableModel ModelCart = (DefaultTableModel) tbl_cart.getModel();
+        if(!checkCart()){
+            JOptionPane.showMessageDialog(new JFrame(), "Chưa có hàng trong giỏ", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        addBill();
+        for (int i = 0 ; i < tbl_cart.getRowCount();i++){
+                int quantity = (int) tbl_cart.getValueAt(i, 3);
+                addBilletail(i);
+                updateProduct(i, quantity);
+        }
+        
+        for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
+            ModelCart.removeRow(row);
+        }
+        refesh();
+        refeshData();
+        customerJComboBox.setSelectedItem("Khách Hàng");
+        discountJComboBox.setSelectedItem("Không");
+        JOptionPane.showMessageDialog(new JFrame(), "Thanh toán thành công", "Dialog",
+        JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void updateProduct(int row, int quantity){
+        try{
+            int productID = Integer.parseInt(tbl_cart.getModel().getValueAt(row, 0).toString());
+            Product p = productBUS.getProductByID(productID);
+            p.setQuantity(p.getQuantity() - quantity);
+            productBUS.SetProduct(p);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InventoryManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private int getBillID(){
+        int billID = billBUS.getList().size();
+        return billID;
+    }
+    
+    private void addBilletail(int row){
+        try{
+            int billID = getBillID();
+            int productID = Integer.parseInt(tbl_cart.getModel().getValueAt(row, 0).toString());
+            int quantity = Integer.parseInt(tbl_cart.getModel().getValueAt(row, 3).toString());
+            int status = 1;
+            Billdetail bd = new Billdetail(billID, productID, quantity, status);
+            
+            billdetailBUS.AddBilldetail(bd);
+            
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Thêm thất bại", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(InventoryManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void refesh(){
+        txt_productID.setText("");
+        txt_Qty.setText("");
+        txt_productName.setText("");
+        txt_category.setText("");
+        txt_supplier.setText("");
+        getTotal();
+    }
+    
+    private void refeshData() {
+        try {
+            productBUS.listProduct();
+            customerBUS.listCustomer();
+            discountBUS.listDiscount();
+            setValueDiscountJcombo(discount);
+            setValueCustomerJcombo(customer);
+            showTableProduct(arrProduct);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SaleGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
 //    private float getTotal(){ //tính tổng tiền bill
 //        float total = 0;
 //        for (product c: Cart){
@@ -174,65 +440,53 @@ public class SaleGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btn_add = new javax.swing.JToggleButton();
-        btn_del = new javax.swing.JToggleButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        btn_restore = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbl_product = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        categoryCBB = new javax.swing.JComboBox<>();
-        btn_del1 = new javax.swing.JToggleButton();
-        btn_Refresh = new javax.swing.JToggleButton();
-        jLabel11 = new javax.swing.JLabel();
-        lb_total = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        customerJComboBox = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
-        btn_del2 = new javax.swing.JToggleButton();
-        btn_del3 = new javax.swing.JToggleButton();
-        jSeparator2 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tbl_cart = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        btn_add1 = new javax.swing.JToggleButton();
-        btn_del4 = new javax.swing.JToggleButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         btn_restore1 = new javax.swing.JToggleButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tbl_cart2 = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         categoryCBB2 = new javax.swing.JComboBox<>();
-        txt_productID1 = new javax.swing.JTextField();
-        btn_del5 = new javax.swing.JToggleButton();
-        jButton3 = new javax.swing.JButton();
-        btn_Refresh1 = new javax.swing.JToggleButton();
-        jLabel21 = new javax.swing.JLabel();
-        lb_total1 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        categoryCBB3 = new javax.swing.JComboBox<>();
+        txt_productID = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         btn_del6 = new javax.swing.JToggleButton();
-        btn_del7 = new javax.swing.JToggleButton();
-        jSeparator3 = new javax.swing.JSeparator();
+        btn_delAll = new javax.swing.JToggleButton();
         jLabel23 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tbl_cart3 = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
-        categoryCBB1 = new javax.swing.JComboBox<>();
-        categoryCBB5 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        discountJComboBox = new javax.swing.JComboBox<>();
         jButton6 = new javax.swing.JButton();
         txt_Qty = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        btn_Refresh = new javax.swing.JToggleButton();
+        btn_add = new javax.swing.JToggleButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jButton7 = new javax.swing.JButton();
+        txt_supplier = new javax.swing.JTextField();
+        txt_productName = new javax.swing.JTextField();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        txt_category = new javax.swing.JTextField();
+        lb_total = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
         txt_productID2 = new javax.swing.JTextField();
         categoryCBB4 = new javax.swing.JComboBox<>();
         jButton5 = new javax.swing.JButton();
@@ -242,51 +496,8 @@ public class SaleGUI extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMinimumSize(new java.awt.Dimension(1300, 720));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btn_add.setBackground(new java.awt.Color(102, 255, 102));
-        btn_add.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btn_add.setForeground(new java.awt.Color(255, 255, 255));
-        btn_add.setText("Thêm sản phẩm");
-        btn_add.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_addMouseClicked(evt);
-            }
-        });
-        btn_add.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_addActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 310, 330, 60));
-
-        btn_del.setBackground(new java.awt.Color(255, 0, 0));
-        btn_del.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btn_del.setForeground(new java.awt.Color(255, 255, 255));
-        btn_del.setText("Giảm");
-        btn_del.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_delActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_del, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 430, 160, 60));
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 20, -1, 60));
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 352, -1, -1));
-
-        btn_restore.setBackground(new java.awt.Color(102, 255, 102));
-        btn_restore.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btn_restore.setForeground(new java.awt.Color(255, 255, 255));
-        btn_restore.setText("Thanh Toán");
-        btn_restore.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_restoreMouseClicked(evt);
-            }
-        });
-        btn_restore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_restoreActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btn_restore, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 620, 330, 90));
 
         tbl_product.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         tbl_product.setForeground(new java.awt.Color(255, 153, 51));
@@ -324,92 +535,20 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel3.setText("Sản phẩm");
     jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 90, 40));
 
-    jLabel5.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("VNĐ");
-    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 560, 50, 50));
-
-    categoryCBB.addActionListener(new java.awt.event.ActionListener() {
+    customerJComboBox.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            categoryCBBActionPerformed(evt);
+            customerJComboBoxActionPerformed(evt);
         }
     });
-    jPanel1.add(categoryCBB, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 40, 180, 40));
-
-    btn_del1.setBackground(new java.awt.Color(102, 255, 102));
-    btn_del1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del1.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del1.setText("Tăng");
-    btn_del1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del1ActionPerformed(evt);
-        }
-    });
-    jPanel1.add(btn_del1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 430, 170, 60));
-
-    btn_Refresh.setBackground(new java.awt.Color(102, 255, 255));
-    btn_Refresh.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-    btn_Refresh.setForeground(new java.awt.Color(255, 255, 255));
-    btn_Refresh.setText("Cập nhật số lượng");
-    btn_Refresh.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            btn_RefreshMouseClicked(evt);
-        }
-    });
-    btn_Refresh.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_RefreshActionPerformed(evt);
-        }
-    });
-    jPanel1.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 490, 330, 70));
-
-    jLabel11.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel11.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel11.setText("Thành tiền:");
-    jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 560, 130, 50));
-
-    lb_total.setBackground(new java.awt.Color(255, 255, 255));
-    lb_total.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    lb_total.setForeground(new java.awt.Color(255, 153, 51));
-    lb_total.setText("...");
-    jPanel1.add(lb_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 560, 170, 50));
-
-    jLabel12.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel12.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel12.setText("Nhân viên:");
-    jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 0, 100, 30));
+    jPanel1.add(customerJComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 40, 180, 40));
 
     jButton2.setText("...");
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton2ActionPerformed(evt);
+        }
+    });
     jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 40, 40, 40));
-
-    btn_del2.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del2.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del2.setText("Xóa");
-    btn_del2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del2ActionPerformed(evt);
-        }
-    });
-    jPanel1.add(btn_del2, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 370, 170, 60));
-
-    btn_del3.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del3.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del3.setText("Hủy giỏ hàng");
-    btn_del3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del3ActionPerformed(evt);
-        }
-    });
-    jPanel1.add(btn_del3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 370, 160, 60));
-
-    jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
-    jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 950, 10));
 
     jLabel6.setBackground(new java.awt.Color(255, 255, 255));
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -424,7 +563,7 @@ public class SaleGUI extends javax.swing.JFrame {
 
         },
         new String [] {
-            "ProductID", "CategoryID", "Name", "Amount","Price"
+            "productID", "productName", "price", "quantity"
         }
     )
     {
@@ -450,33 +589,6 @@ public class SaleGUI extends javax.swing.JFrame {
     jPanel2.setBackground(new java.awt.Color(255, 255, 255));
     jPanel2.setMinimumSize(new java.awt.Dimension(1300, 720));
     jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-    btn_add1.setBackground(new java.awt.Color(102, 255, 102));
-    btn_add1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_add1.setForeground(new java.awt.Color(255, 255, 255));
-    btn_add1.setText("Thêm sản phẩm");
-    btn_add1.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            btn_add1MouseClicked(evt);
-        }
-    });
-    btn_add1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_add1ActionPerformed(evt);
-        }
-    });
-    jPanel2.add(btn_add1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 310, 330, 60));
-
-    btn_del4.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del4.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del4.setText("Giảm");
-    btn_del4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del4ActionPerformed(evt);
-        }
-    });
-    jPanel2.add(btn_del4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 430, 160, 60));
     jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 20, -1, 60));
     jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 352, -1, -1));
 
@@ -494,7 +606,7 @@ public class SaleGUI extends javax.swing.JFrame {
             btn_restore1ActionPerformed(evt);
         }
     });
-    jPanel2.add(btn_restore1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 620, 330, 90));
+    jPanel2.add(btn_restore1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 630, 330, 80));
 
     tbl_cart2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     tbl_cart2.setForeground(new java.awt.Color(255, 153, 51));
@@ -532,17 +644,11 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel15.setText("Sản phẩm");
     jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 90, 40));
 
-    jLabel16.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel16.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel16.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel16.setText("VNĐ");
-    jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 560, 50, 50));
-
     jLabel17.setBackground(new java.awt.Color(255, 255, 255));
     jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel17.setForeground(new java.awt.Color(255, 153, 51));
     jLabel17.setText("Số lượng:");
-    jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 250, 100, 30));
+    jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 170, 100, 30));
 
     jLabel18.setBackground(new java.awt.Color(255, 255, 255));
     jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -557,67 +663,12 @@ public class SaleGUI extends javax.swing.JFrame {
     });
     jPanel2.add(categoryCBB2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 40, 180, 40));
 
-    txt_productID1.addActionListener(new java.awt.event.ActionListener() {
+    txt_productID.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            txt_productID1ActionPerformed(evt);
+            txt_productIDActionPerformed(evt);
         }
     });
-    jPanel2.add(txt_productID1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 220, 40));
-
-    btn_del5.setBackground(new java.awt.Color(102, 255, 102));
-    btn_del5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del5.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del5.setText("Tăng");
-    btn_del5.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del5ActionPerformed(evt);
-        }
-    });
-    jPanel2.add(btn_del5, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 430, 170, 60));
-
-    jButton3.setText("...");
-    jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 200, 40, 40));
-
-    btn_Refresh1.setBackground(new java.awt.Color(102, 255, 255));
-    btn_Refresh1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-    btn_Refresh1.setForeground(new java.awt.Color(255, 255, 255));
-    btn_Refresh1.setText("Cập nhật số lượng");
-    btn_Refresh1.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            btn_Refresh1MouseClicked(evt);
-        }
-    });
-    btn_Refresh1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_Refresh1ActionPerformed(evt);
-        }
-    });
-    jPanel2.add(btn_Refresh1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 490, 330, 70));
-
-    jLabel21.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel21.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel21.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel21.setText("Thành tiền:");
-    jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 560, 130, 50));
-
-    lb_total1.setBackground(new java.awt.Color(255, 255, 255));
-    lb_total1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    lb_total1.setForeground(new java.awt.Color(255, 153, 51));
-    lb_total1.setText("...");
-    jPanel2.add(lb_total1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 560, 170, 50));
-
-    jLabel22.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel22.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel22.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel22.setText("Nhân viên:");
-    jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 0, 100, 30));
-
-    categoryCBB3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            categoryCBB3ActionPerformed(evt);
-        }
-    });
-    jPanel2.add(categoryCBB3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 200, 180, 40));
+    jPanel2.add(txt_productID, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 220, 40));
 
     jButton4.setText("...");
     jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 40, 40, 40));
@@ -631,22 +682,18 @@ public class SaleGUI extends javax.swing.JFrame {
             btn_del6ActionPerformed(evt);
         }
     });
-    jPanel2.add(btn_del6, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 370, 170, 60));
+    jPanel2.add(btn_del6, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 450, 170, 60));
 
-    btn_del7.setBackground(new java.awt.Color(255, 0, 0));
-    btn_del7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    btn_del7.setForeground(new java.awt.Color(255, 255, 255));
-    btn_del7.setText("Hủy giỏ hàng");
-    btn_del7.addActionListener(new java.awt.event.ActionListener() {
+    btn_delAll.setBackground(new java.awt.Color(255, 0, 0));
+    btn_delAll.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_delAll.setForeground(new java.awt.Color(255, 255, 255));
+    btn_delAll.setText("Hủy giỏ hàng");
+    btn_delAll.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_del7ActionPerformed(evt);
+            btn_delAllActionPerformed(evt);
         }
     });
-    jPanel2.add(btn_del7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 370, 160, 60));
-
-    jSeparator3.setBackground(new java.awt.Color(255, 153, 51));
-    jSeparator3.setForeground(new java.awt.Color(255, 153, 51));
-    jPanel2.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 950, 10));
+    jPanel2.add(btn_delAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 450, 160, 60));
 
     jLabel23.setBackground(new java.awt.Color(255, 255, 255));
     jLabel23.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -688,34 +735,29 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel8.setForeground(new java.awt.Color(255, 153, 51));
     jLabel8.setText("Nhà CC:");
-    jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 210, 100, 30));
+    jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 350, 100, 30));
 
-    categoryCBB1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            categoryCBB1ActionPerformed(evt);
+    discountJComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            discountJComboBoxMouseClicked(evt);
         }
     });
-    jPanel2.add(categoryCBB1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 160, 180, 40));
-
-    categoryCBB5.addActionListener(new java.awt.event.ActionListener() {
+    discountJComboBox.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            categoryCBB5ActionPerformed(evt);
+            discountJComboBoxActionPerformed(evt);
         }
     });
-    jPanel2.add(categoryCBB5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 80, 180, 40));
-
-    jButton1.setText("...");
-    jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 160, 40, 40));
+    jPanel2.add(discountJComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 80, 180, 40));
 
     jButton6.setText("...");
     jPanel2.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 80, 40, 40));
-    jPanel2.add(txt_Qty, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 240, 220, 40));
+    jPanel2.add(txt_Qty, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 160, 220, 40));
 
     jLabel24.setBackground(new java.awt.Color(255, 255, 255));
     jLabel24.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel24.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel24.setText("Loại SP:");
-    jPanel2.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 170, 100, 30));
+    jLabel24.setText("Tên SP:");
+    jPanel2.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 270, 100, 30));
 
     jLabel9.setBackground(new java.awt.Color(255, 255, 255));
     jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -728,6 +770,105 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel10.setForeground(new java.awt.Color(255, 153, 51));
     jLabel10.setText("Mã KH:");
     jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 50, 80, 30));
+
+    btn_Refresh.setBackground(new java.awt.Color(102, 255, 255));
+    btn_Refresh.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+    btn_Refresh.setForeground(new java.awt.Color(255, 255, 255));
+    btn_Refresh.setText("Cập nhật số lượng");
+    btn_Refresh.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            btn_RefreshMouseClicked(evt);
+        }
+    });
+    btn_Refresh.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_RefreshActionPerformed(evt);
+        }
+    });
+    jPanel2.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 510, 330, 60));
+
+    btn_add.setBackground(new java.awt.Color(102, 255, 102));
+    btn_add.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    btn_add.setForeground(new java.awt.Color(255, 255, 255));
+    btn_add.setText("Thêm sản phẩm");
+    btn_add.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            btn_addMouseClicked(evt);
+        }
+    });
+    btn_add.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            btn_addActionPerformed(evt);
+        }
+    });
+    jPanel2.add(btn_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 390, 330, 60));
+
+    jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
+    jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
+    jPanel2.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 250, 330, 10));
+
+    jButton7.setBackground(new java.awt.Color(0, 51, 204));
+    jButton7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jButton7.setForeground(new java.awt.Color(255, 255, 255));
+    jButton7.setText("Làm Mới");
+    jButton7.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton7ActionPerformed(evt);
+        }
+    });
+    jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 200, 160, 40));
+
+    txt_supplier.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            txt_supplierKeyReleased(evt);
+        }
+    });
+    jPanel2.add(txt_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 340, 160, 40));
+
+    txt_productName.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            txt_productNameKeyReleased(evt);
+        }
+    });
+    jPanel2.add(txt_productName, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 260, 160, 40));
+
+    jSeparator3.setBackground(new java.awt.Color(255, 153, 51));
+    jSeparator3.setForeground(new java.awt.Color(255, 153, 51));
+    jPanel2.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 940, 10));
+
+    jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8_search_50px.png"))); // NOI18N
+    jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 310, -1, -1));
+
+    txt_category.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+            txt_categoryKeyReleased(evt);
+        }
+    });
+    jPanel2.add(txt_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 300, 160, 40));
+
+    lb_total.setBackground(new java.awt.Color(255, 255, 255));
+    lb_total.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    lb_total.setForeground(new java.awt.Color(255, 153, 51));
+    lb_total.setText("...");
+    jPanel2.add(lb_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 580, 170, 50));
+
+    jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jLabel5.setForeground(new java.awt.Color(255, 153, 51));
+    jLabel5.setText("VNĐ");
+    jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 580, 50, 50));
+
+    jLabel11.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel11.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jLabel11.setForeground(new java.awt.Color(255, 153, 51));
+    jLabel11.setText("Thành tiền:");
+    jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 580, 130, 50));
+
+    jLabel25.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel25.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jLabel25.setForeground(new java.awt.Color(255, 153, 51));
+    jLabel25.setText("Loại SP:");
+    jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 310, 100, 30));
 
     jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     jPanel1.add(txt_productID2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 220, 40));
@@ -774,72 +915,25 @@ public class SaleGUI extends javax.swing.JFrame {
         addCart();
     }//GEN-LAST:event_btn_addActionPerformed
 
-    private void btn_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delActionPerformed
-
-    }//GEN-LAST:event_btn_delActionPerformed
-
-    private void btn_restoreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_restoreMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_restoreMouseClicked
-
-    private void btn_restoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_restoreActionPerformed
-
-    }//GEN-LAST:event_btn_restoreActionPerformed
-
     private void tbl_productMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_productMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tbl_productMouseClicked
-
-    private void btn_del1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del1ActionPerformed
-
-    }//GEN-LAST:event_btn_del1ActionPerformed
 
     private void btn_RefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_RefreshMouseClicked
         //        showTable(category);
     }//GEN-LAST:event_btn_RefreshMouseClicked
 
     private void btn_RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RefreshActionPerformed
-        //        try {
-            //            // TODO add your handling code here:
-            //            cateBUS.listCategory();
-            //            category = cateBUS.getList();
-            //            showTable(category);
-            //        } catch (ClassNotFoundException ex) {
-            //            Logger.getLogger(CategoryManagement.class.getName()).log(Level.SEVERE, null, ex);
-            //        }
+        editQty();
     }//GEN-LAST:event_btn_RefreshActionPerformed
 
-    private void categoryCBBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCBBActionPerformed
+    private void customerJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerJComboBoxActionPerformed
 
-    }//GEN-LAST:event_categoryCBBActionPerformed
-
-    private void categoryCBB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCBB1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_categoryCBB1ActionPerformed
-
-    private void btn_del2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_del2ActionPerformed
-
-    private void btn_del3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_del3ActionPerformed
+    }//GEN-LAST:event_customerJComboBoxActionPerformed
 
     private void tbl_cartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_cartMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tbl_cartMouseClicked
-
-    private void btn_add1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_add1MouseClicked
-
-    private void btn_add1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_add1ActionPerformed
-
-    private void btn_del4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_del4ActionPerformed
 
     private void btn_restore1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_restore1MouseClicked
         // TODO add your handling code here:
@@ -847,6 +941,7 @@ public class SaleGUI extends javax.swing.JFrame {
 
     private void btn_restore1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_restore1ActionPerformed
         // TODO add your handling code here:
+        pay();
     }//GEN-LAST:event_btn_restore1ActionPerformed
 
     private void tbl_cart2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_cart2MouseClicked
@@ -857,29 +952,14 @@ public class SaleGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryCBB2ActionPerformed
 
-    private void btn_del5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_del5ActionPerformed
-
-    private void btn_Refresh1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_Refresh1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_Refresh1MouseClicked
-
-    private void btn_Refresh1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Refresh1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_Refresh1ActionPerformed
-
-    private void categoryCBB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCBB3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_categoryCBB3ActionPerformed
-
     private void btn_del6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del6ActionPerformed
         // TODO add your handling code here:
+       del("Item");
     }//GEN-LAST:event_btn_del6ActionPerformed
 
-    private void btn_del7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_del7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_del7ActionPerformed
+    private void btn_delAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delAllActionPerformed
+       del("All");
+    }//GEN-LAST:event_btn_delAllActionPerformed
 
     private void tbl_cart3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_cart3MouseClicked
         // TODO add your handling code here:
@@ -889,13 +969,48 @@ public class SaleGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryCBB4ActionPerformed
 
-    private void categoryCBB5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCBB5ActionPerformed
+    private void discountJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountJComboBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_categoryCBB5ActionPerformed
+    }//GEN-LAST:event_discountJComboBoxActionPerformed
 
-    private void txt_productID1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_productID1ActionPerformed
+    private void txt_productIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_productIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_productID1ActionPerformed
+    }//GEN-LAST:event_txt_productIDActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            // TODO add your handling code here:
+            CustomerManagement customerManagement = new CustomerManagement();
+            customerManagement.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SaleGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txt_productNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_productNameKeyReleased
+        // TODO add your handling code here:
+        search();
+    }//GEN-LAST:event_txt_productNameKeyReleased
+
+    private void txt_categoryKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_categoryKeyReleased
+        // TODO add your handling code here:
+        search();
+    }//GEN-LAST:event_txt_categoryKeyReleased
+
+    private void txt_supplierKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_supplierKeyReleased
+        // TODO add your handling code here:
+        search();
+    }//GEN-LAST:event_txt_supplierKeyReleased
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        refeshData();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void discountJComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_discountJComboBoxMouseClicked
+        // TODO add your handling code here:
+        getTotal();
+    }//GEN-LAST:event_discountJComboBoxMouseClicked
 
     /**
      * @param args the command line arguments
@@ -939,45 +1054,31 @@ public class SaleGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btn_Refresh;
-    private javax.swing.JToggleButton btn_Refresh1;
     private javax.swing.JToggleButton btn_add;
-    private javax.swing.JToggleButton btn_add1;
-    private javax.swing.JToggleButton btn_del;
-    private javax.swing.JToggleButton btn_del1;
-    private javax.swing.JToggleButton btn_del2;
-    private javax.swing.JToggleButton btn_del3;
-    private javax.swing.JToggleButton btn_del4;
-    private javax.swing.JToggleButton btn_del5;
     private javax.swing.JToggleButton btn_del6;
-    private javax.swing.JToggleButton btn_del7;
-    private javax.swing.JToggleButton btn_restore;
+    private javax.swing.JToggleButton btn_delAll;
     private javax.swing.JToggleButton btn_restore1;
-    private javax.swing.JComboBox<String> categoryCBB;
-    private javax.swing.JComboBox<String> categoryCBB1;
     private javax.swing.JComboBox<String> categoryCBB2;
-    private javax.swing.JComboBox<String> categoryCBB3;
     private javax.swing.JComboBox<String> categoryCBB4;
-    private javax.swing.JComboBox<String> categoryCBB5;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> customerJComboBox;
+    private javax.swing.JComboBox<String> discountJComboBox;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -993,13 +1094,15 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel lb_total;
-    private javax.swing.JLabel lb_total1;
     private javax.swing.JTable tbl_cart;
     private javax.swing.JTable tbl_cart2;
     private javax.swing.JTable tbl_cart3;
     private javax.swing.JTable tbl_product;
     private javax.swing.JTextField txt_Qty;
-    private javax.swing.JTextField txt_productID1;
+    private javax.swing.JTextField txt_category;
+    private javax.swing.JTextField txt_productID;
     private javax.swing.JTextField txt_productID2;
+    private javax.swing.JTextField txt_productName;
+    private javax.swing.JTextField txt_supplier;
     // End of variables declaration//GEN-END:variables
 }
