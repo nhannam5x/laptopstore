@@ -131,6 +131,27 @@ public class ThongKeDT extends javax.swing.JFrame {
         lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
         lb_total.setText("Total Revenue: " +String.valueOf(total));
     }
+//    private void filter(ArrayList<Bill> billls) throws ParseException{
+//        ArrayList<Bill> arrFilter = new ArrayList<>();
+//        float total = 0;
+////        Date start = jDateChooseFrom.getDate(); 
+////        Date end = jDateChooseTo.getDate();
+////        
+//        for(Bill b : billls){
+//            if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
+//                arrFilter.add(b);
+//            }
+//        }  
+//        
+//        showTable(arrFilter);
+//        
+//        for(int i = 0; i < tbl_revenue.getRowCount(); i++){
+//            total += (float) tbl_revenue.getValueAt(i, 3);
+//        }
+//        
+//        lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
+//        lb_total.setText("Total Revenue: " +String.valueOf(total));
+//    }
 
     
     /**
@@ -147,8 +168,6 @@ public class ThongKeDT extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_revenue = new javax.swing.JTable();
         btn_search = new javax.swing.JToggleButton();
-        jDateChooseFrom = new com.toedter.calendar.JDateChooser();
-        jDateChooseTo = new com.toedter.calendar.JDateChooser();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -258,13 +277,9 @@ public class ThongKeDT extends javax.swing.JFrame {
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(84, 84, 84)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(jDateChooseFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(33, 33, 33)
+                    .addGap(379, 379, 379)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(jDateChooseTo, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(82, 82, 82))
+                    .addGap(423, 423, 423))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(23, 23, 23)
@@ -303,14 +318,11 @@ public class ThongKeDT extends javax.swing.JFrame {
             .addGap(18, 52, Short.MAX_VALUE)
             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jDateChooseTo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateChooseFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(27, 27, 27)
@@ -349,11 +361,11 @@ public class ThongKeDT extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_searchMouseClicked
 
     private void btn_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_searchActionPerformed
-         try {
-             filter((ArrayList<Bill>) billBUS.getList());
-         } catch (ParseException ex) {
-             Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
-         }
+//         try {
+//             filter((ArrayList<Bill>) billBUS.getList());
+//         } catch (ParseException ex) {
+//             Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
+//         }
 
         
     }//GEN-LAST:event_btn_searchActionPerformed
@@ -429,8 +441,6 @@ public class ThongKeDT extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btn_refresh;
     private javax.swing.JToggleButton btn_search;
-    private com.toedter.calendar.JDateChooser jDateChooseFrom;
-    private com.toedter.calendar.JDateChooser jDateChooseTo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
