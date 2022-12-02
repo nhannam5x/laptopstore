@@ -89,7 +89,7 @@ public class BilldetailBUS {
 
     
     
-    public ArrayList<Billdetail> getList() throws ClassNotFoundException {
+    public ArrayList<Billdetail> getList() {
         
         return bdt;
     }

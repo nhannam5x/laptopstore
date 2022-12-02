@@ -25,11 +25,14 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.ComparisonType;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 
 /**
@@ -57,6 +60,9 @@ public class ThongKeDT extends javax.swing.JFrame {
         staffBUS.listStaff();
         customerBUS.listCustomer();
         discountBUS.listDiscount();
+        Date date = new Date();
+        jDateChooseFrom.setDate(date);
+        jDateChooseTo.setDate(date);
         showTable(billls);
     }
     
@@ -104,11 +110,17 @@ public class ThongKeDT extends javax.swing.JFrame {
         Date start = jDateChooseFrom.getDate(); 
         Date end = jDateChooseTo.getDate();
         
+        if(end.before(start)){
+             JOptionPane.showMessageDialog(new JFrame(), "Ngày kết thúc phải lớn hơn ngày bắt đầu ", "Dialog",JOptionPane.ERROR_MESSAGE);
+                return;
+        }
+        
         for(Bill b : billls){
             if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
                 arrFilter.add(b);
             }
         }  
+       
         
         showTable(arrFilter);
         
@@ -219,10 +231,10 @@ public class ThongKeDT extends javax.swing.JFrame {
     lb_total.setForeground(new java.awt.Color(255, 102, 0));
     lb_total.setText("Total Revenue: ");
 
-    btn_refresh.setBackground(new java.awt.Color(102, 255, 102));
+    btn_refresh.setBackground(new java.awt.Color(102, 255, 255));
     btn_refresh.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
     btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
-    btn_refresh.setText("Search");
+    btn_refresh.setText("Refresh");
     btn_refresh.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             btn_refreshMouseClicked(evt);
@@ -255,15 +267,8 @@ public class ThongKeDT extends javax.swing.JFrame {
                     .addGap(82, 82, 82))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(527, 527, 527)
-                            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(36, 36, 36)
-                            .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(23, 23, 23)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1270, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
             .addContainerGap())
         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -272,10 +277,17 @@ public class ThongKeDT extends javax.swing.JFrame {
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lb_total, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(51, 51, 51)
-            .addComponent(lb_count, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(148, 148, 148))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(lb_total, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(51, 51, 51)
+                    .addComponent(lb_count, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(148, 148, 148))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(30, 30, 30)
+                    .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(44, 44, 44))))
     );
     jPanel1Layout.setVerticalGroup(
         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

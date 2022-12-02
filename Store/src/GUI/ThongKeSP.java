@@ -5,6 +5,10 @@
 package GUI;
 import DTO.Product;
 import BUS.ProductBUS;
+import DTO.Bill;
+import BUS.BillBUS;
+import BUS.BilldetailBUS;
+import DTO.Billdetail;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,22 +38,33 @@ public class ThongKeSP extends javax.swing.JFrame {
     /**
      * Creates new form ThongKeSP
      */
-    public ThongKeSP() {
-        
+    ProductBUS productBUS = new ProductBUS();
+    BillBUS billBUS = new BillBUS();
+    BilldetailBUS billdetailBUS = new BilldetailBUS();
+    ArrayList<Product> productls = productBUS.getList();
+    ArrayList<Bill> billls = billBUS.getList();
+    ArrayList<Billdetail> billdetaills = billdetailBUS.getList();
+    public ThongKeSP() throws ClassNotFoundException {
         initComponents();
+        productBUS.getList();
+        billBUS.getList();
+        billdetailBUS.getList();
+        
 //        list();
     }
 
-    public void showTable(ArrayList<Product> arrProduct) // Xuất ra Table từ ArrayList
+    public void showTable(ArrayList<Billdetail> billdetail) // Xuất ra Table từ ArrayList
     {
         DefaultTableModel defaultModel = (DefaultTableModel) tbl_product.getModel();
         Vector data;
+        int quantity =0;
         defaultModel.setRowCount(0);
-        for (Product p : arrProduct) {
+        for (Billdetail p : billdetail) {
             data = new Vector();
-            data.add(p.getProductID());
-            data.add(p.getProductName());
-            data.add(p.getQuantity());
+            data.add(billdetailBUS.getBillID(p.getProductID()));
+            data.add(productBUS.getProductByID(p.getProductID()).getProductName());
+            data.add(productBUS.getProductByID(p.getProductID()).getPrice());
+            data.add(billdetailBUS.getBillID(p.getQuantity()));
             defaultModel.addRow(data);
         }
         tbl_product.setModel(defaultModel);
@@ -397,7 +412,11 @@ public class ThongKeSP extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ThongKeSP().setVisible(true);
+                try {
+                    new ThongKeSP().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ThongKeSP.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

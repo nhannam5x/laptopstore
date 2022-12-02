@@ -34,6 +34,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 /**
  *
  * @author donha
@@ -59,6 +60,7 @@ public class ProductManagement extends javax.swing.JFrame {
         productBUS.listProduct();
         categoryBUS.listCategory();
         supplierBUS.listSupplier();
+        
         showTable(productls);
         ArrayList<Integer> categoryCombo = new ArrayList();
         
@@ -491,7 +493,7 @@ public class ProductManagement extends javax.swing.JFrame {
             btn_RefreshActionPerformed(evt);
         }
     });
-    jPanel1.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 610, 220, 90));
+    jPanel1.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 610, 230, 90));
 
     jLabel3.setBackground(new java.awt.Color(255, 255, 255));
     jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N

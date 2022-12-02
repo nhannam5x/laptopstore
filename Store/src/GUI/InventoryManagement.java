@@ -309,14 +309,43 @@ public class InventoryManagement extends javax.swing.JFrame {
         }
     }
     
+    private void importProduct(){
+        
+         if(!checkInventory()){
+                JOptionPane.showMessageDialog(new JFrame(), "Chưa có hàng để nhập", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            addBill();
+            for (int i = 0 ; i < tbl_Product.getRowCount();i++){
+                int productID = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 0).toString());
+                int inventoryQuantity = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 5).toString());
+                if(productBUS.getProductByID(productID) != null){
+                    int quantity = productBUS.getProductByID(productID).getQuantity() + inventoryQuantity;
+                    addInventorybilldetail(i);
+                    updateInventory(i, quantity);
+                    
+                } else {
+                    addInventory(i);
+                    addInventorybilldetail(i);
+                }
+            }
+            JOptionPane.showMessageDialog(new JFrame(), "Thêm thành công", "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+    }
+    
     private void addItem(){
+        if(txt_productID.getText().isEmpty() || txt_productName.getText().isEmpty() || txt_quantity.getText().isEmpty() || txt_price.getText().isEmpty()){
+            JOptionPane.showMessageDialog(new JFrame(), "Vui lòng điền thông tin đầy đủ", "Dialog",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         boolean flag = false;
         DefaultTableModel defaultModel = (DefaultTableModel) tbl_Product.getModel();
         int productID = Integer.parseInt(txt_productID.getText());
         String productName = txt_productName.getText();
         int categoryID = Integer.parseInt(jComboCategory.getSelectedItem().toString());
         int supplierID = Integer.parseInt(jComboSupplier.getSelectedItem().toString());     
-        int price = Integer.parseInt(txt_productID.getText());
+        float price = Float.parseFloat(txt_price.getText());
             
         for(int i = 0; i< tbl_Product.getRowCount(); i++){
             if(Integer.parseInt(tbl_Product.getModel().getValueAt(i, 0).toString()) == productID){
@@ -333,6 +362,8 @@ public class InventoryManagement extends javax.swing.JFrame {
             resetText();
         }
         
+        
+        
     }
     
     private void delItem(){
@@ -343,7 +374,12 @@ public class InventoryManagement extends javax.swing.JFrame {
            JOptionPane.ERROR_MESSAGE);
            return; 
         }
-        defaultModel.removeRow(row);
+        int id = (int) tbl_Product.getModel().getValueAt(row, 0);
+        int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa sản phẩm "+id+" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+        if(response == JOptionPane.YES_OPTION){
+            defaultModel.removeRow(row);
+            return;
+        }
         resetText();
     }
     
@@ -396,13 +432,18 @@ public class InventoryManagement extends javax.swing.JFrame {
         int supplierID = Integer.parseInt(jComboSupplier.getSelectedItem().toString());     
         float price = Float.parseFloat(txt_price.getText());
         int quantity = Integer.parseInt(txt_quantity.getText());
-        tbl_Product.getModel().setValueAt(productID, row, 0);
-        tbl_Product.getModel().setValueAt(productName, row, 1);
-        tbl_Product.getModel().setValueAt(categoryID, row, 2);
-        tbl_Product.getModel().setValueAt(supplierID, row, 3);
-        tbl_Product.getModel().setValueAt(price, row, 4);
-        tbl_Product.getModel().setValueAt(quantity, row, 5);
-        
+        int id = (int) tbl_Product.getModel().getValueAt(row, 0);
+        int response = JOptionPane.showConfirmDialog(this, "Bạn muốn sửa sản phẩm "+id+" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+        if(response == JOptionPane.YES_OPTION){
+            tbl_Product.getModel().setValueAt(productID, row, 0);
+            tbl_Product.getModel().setValueAt(productName, row, 1);
+            tbl_Product.getModel().setValueAt(productName, row, 1);
+            tbl_Product.getModel().setValueAt(categoryID, row, 2);
+            tbl_Product.getModel().setValueAt(supplierID, row, 3);
+            tbl_Product.getModel().setValueAt(price, row, 4);
+            tbl_Product.getModel().setValueAt(quantity, row, 5);
+            return;
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -518,7 +559,7 @@ public class InventoryManagement extends javax.swing.JFrame {
             btn_RefreshActionPerformed(evt);
         }
     });
-    jPanel1.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 610, 220, 90));
+    jPanel1.add(btn_Refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 610, 230, 90));
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
@@ -691,28 +732,7 @@ public class InventoryManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_add1MouseClicked
 
     private void btn_add1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add1ActionPerformed
-
-         if(!checkInventory()){
-                JOptionPane.showMessageDialog(new JFrame(), "Chưa có hàng để nhập", "Dialog",
-                JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            addBill();
-            for (int i = 0 ; i < tbl_Product.getRowCount();i++){
-                int productID = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 0).toString());
-                int inventoryQuantity = Integer.parseInt(tbl_Product.getModel().getValueAt(i, 5).toString());
-                if(productBUS.getProductByID(productID) != null){
-                    int quantity = productBUS.getProductByID(productID).getQuantity() + inventoryQuantity;
-                    addInventorybilldetail(i);
-                    updateInventory(i, quantity);
-                    
-                } else {
-                    addInventory(i);
-                    addInventorybilldetail(i);
-                }
-            }
-            JOptionPane.showMessageDialog(new JFrame(), "Thêm thành công", "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+        importProduct();
     }//GEN-LAST:event_btn_add1ActionPerformed
 
     private void txt_priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_priceActionPerformed

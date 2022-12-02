@@ -46,5 +46,31 @@ public class Discount {
     public int getStatus() {
         return status;
     }
+
+    public void setDiscountID(int discountID) {
+        this.discountID = discountID;
+    }
+
+    public void setDiscountValue(int discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public void setDateStart(String dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    
+    
     
 }

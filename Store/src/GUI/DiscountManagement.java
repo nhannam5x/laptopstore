@@ -50,6 +50,9 @@ public class DiscountManagement extends javax.swing.JFrame {
     public DiscountManagement() throws ClassNotFoundException {
         initComponents();
         discountBUS.listDiscount();
+        Date date = new Date();
+        jDateStart.setDate(date);
+        jDateEnd.setDate(date);
         showTable(discountls);
     }
     

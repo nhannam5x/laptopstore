@@ -35,6 +35,9 @@ public class AddDiscount extends javax.swing.JFrame {
    
     public AddDiscount() throws ClassNotFoundException {
         initComponents();
+        Date date = new Date();
+        jDateStart.setDate(date);
+        jDateEnd.setDate(date);
         discountBUS.listDiscount();
 
         
