@@ -258,16 +258,16 @@ public class SaleGUI extends javax.swing.JFrame {
     }
     
     private float getTotal(){
-        System.out.println("Chạy");
         float total = 0;
         for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
             total += (float) tbl_cart.getValueAt(row,2) * (int) tbl_cart.getValueAt(row,3);
         }
             if(!discountJComboBox.getSelectedItem().toString().equals("Không")){
                 lb_total.setText(String.valueOf(total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100));
+                discountValue.setText("% KM:"+ discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()+"%");
                 return total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100;
             }
-        
+            discountValue.setText("% KM: 0%");
             lb_total.setText(String.valueOf(total));
             return total;
     }
@@ -465,14 +465,12 @@ public class SaleGUI extends javax.swing.JFrame {
         btn_del6 = new javax.swing.JToggleButton();
         btn_delAll = new javax.swing.JToggleButton();
         jLabel23 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        tbl_cart3 = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
         discountJComboBox = new javax.swing.JComboBox<>();
         jButton6 = new javax.swing.JButton();
         txt_Qty = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        discountValue = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btn_Refresh = new javax.swing.JToggleButton();
         btn_add = new javax.swing.JToggleButton();
@@ -487,6 +485,7 @@ public class SaleGUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         txt_productID2 = new javax.swing.JTextField();
         categoryCBB4 = new javax.swing.JComboBox<>();
         jButton5 = new javax.swing.JButton();
@@ -533,7 +532,7 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel3.setForeground(new java.awt.Color(255, 153, 51));
     jLabel3.setText("Sản phẩm");
-    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 90, 40));
+    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 160, 40));
 
     customerJComboBox.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -554,7 +553,7 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(255, 153, 51));
     jLabel6.setText("Giỏ hàng");
-    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, 90, 40));
+    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, 130, 40));
 
     tbl_cart.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     tbl_cart.setForeground(new java.awt.Color(255, 153, 51));
@@ -701,42 +700,17 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel23.setText("Giỏ hàng");
     jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 350, 90, 40));
 
-    tbl_cart3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    tbl_cart3.setForeground(new java.awt.Color(255, 153, 51));
-    tbl_cart3.setModel(new javax.swing.table.DefaultTableModel(
-        new Object [][] {
-
-        },
-        new String [] {
-            "ProductID", "CategoryID", "Name", "Amount","Price"
-        }
-    )
-    {
-        public boolean isCellEditable(int row, int column){
-            return false;
-        }
-    }
-
-    );
-    tbl_cart3.setRowHeight(40);
-    tbl_cart3.setRowMargin(2);
-    tbl_cart3.setSelectionBackground(new java.awt.Color(153, 255, 153));
-    tbl_cart3.setSelectionForeground(new java.awt.Color(0, 0, 0));
-    tbl_cart3.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            tbl_cart3MouseClicked(evt);
-        }
-    });
-    jScrollPane5.setViewportView(tbl_cart3);
-
-    jPanel2.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 940, 320));
-
     jLabel8.setBackground(new java.awt.Color(255, 255, 255));
     jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel8.setForeground(new java.awt.Color(255, 153, 51));
     jLabel8.setText("Nhà CC:");
     jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 350, 100, 30));
 
+    discountJComboBox.addItemListener(new java.awt.event.ItemListener() {
+        public void itemStateChanged(java.awt.event.ItemEvent evt) {
+            discountJComboBoxItemStateChanged(evt);
+        }
+    });
     discountJComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             discountJComboBoxMouseClicked(evt);
@@ -759,11 +733,11 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel24.setText("Tên SP:");
     jPanel2.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 270, 100, 30));
 
-    jLabel9.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel9.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel9.setText("Mã KM:");
-    jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 90, 80, 30));
+    discountValue.setBackground(new java.awt.Color(255, 255, 255));
+    discountValue.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    discountValue.setForeground(new java.awt.Color(255, 153, 51));
+    discountValue.setText("% KM:");
+    jPanel2.add(discountValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 210, 150, 30));
 
     jLabel10.setBackground(new java.awt.Color(255, 255, 255));
     jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -870,6 +844,12 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel25.setText("Loại SP:");
     jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 310, 100, 30));
 
+    jLabel12.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel12.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jLabel12.setForeground(new java.awt.Color(255, 153, 51));
+    jLabel12.setText("Mã KM:");
+    jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 90, 80, 30));
+
     jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     jPanel1.add(txt_productID2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 220, 40));
 
@@ -961,10 +941,6 @@ public class SaleGUI extends javax.swing.JFrame {
        del("All");
     }//GEN-LAST:event_btn_delAllActionPerformed
 
-    private void tbl_cart3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_cart3MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbl_cart3MouseClicked
-
     private void categoryCBB4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryCBB4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryCBB4ActionPerformed
@@ -1009,8 +985,13 @@ public class SaleGUI extends javax.swing.JFrame {
 
     private void discountJComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_discountJComboBoxMouseClicked
         // TODO add your handling code here:
-        getTotal();
+        
     }//GEN-LAST:event_discountJComboBoxMouseClicked
+
+    private void discountJComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_discountJComboBoxItemStateChanged
+        // TODO add your handling code here:
+        getTotal();
+    }//GEN-LAST:event_discountJComboBoxItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -1062,6 +1043,7 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> categoryCBB4;
     private javax.swing.JComboBox<String> customerJComboBox;
     private javax.swing.JComboBox<String> discountJComboBox;
+    private javax.swing.JLabel discountValue;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -1070,6 +1052,7 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -1084,19 +1067,16 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel lb_total;
     private javax.swing.JTable tbl_cart;
     private javax.swing.JTable tbl_cart2;
-    private javax.swing.JTable tbl_cart3;
     private javax.swing.JTable tbl_product;
     private javax.swing.JTextField txt_Qty;
     private javax.swing.JTextField txt_category;
