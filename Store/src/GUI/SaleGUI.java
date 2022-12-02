@@ -533,7 +533,7 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel3.setForeground(new java.awt.Color(255, 153, 51));
     jLabel3.setText("Sản phẩm");
-    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 90, 40));
+    jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 100, 40));
 
     customerJComboBox.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {

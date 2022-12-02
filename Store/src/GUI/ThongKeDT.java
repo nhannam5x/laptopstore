@@ -61,8 +61,8 @@ public class ThongKeDT extends javax.swing.JFrame {
         customerBUS.listCustomer();
         discountBUS.listDiscount();
         Date date = new Date();
-        jDateChooseFrom.setDate(date);
-        jDateChooseTo.setDate(date);
+//        jDateChooseFrom.setDate(date);
+//        jDateChooseTo.setDate(date);
         showTable(billls);
     }
     
@@ -105,31 +105,31 @@ public class ThongKeDT extends javax.swing.JFrame {
     }
      
     private void filter(ArrayList<Bill> billls) throws ParseException{
-        ArrayList<Bill> arrFilter = new ArrayList<>();
-        float total = 0;
-        Date start = jDateChooseFrom.getDate(); 
-        Date end = jDateChooseTo.getDate();
-        
-        if(end.before(start)){
-             JOptionPane.showMessageDialog(new JFrame(), "Ngày kết thúc phải lớn hơn ngày bắt đầu ", "Dialog",JOptionPane.ERROR_MESSAGE);
-                return;
-        }
-        
-        for(Bill b : billls){
-            if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
-                arrFilter.add(b);
-            }
-        }  
-       
-        
-        showTable(arrFilter);
-        
-        for(int i = 0; i < tbl_revenue.getRowCount(); i++){
-            total += (float) tbl_revenue.getValueAt(i, 3);
-        }
-        
-        lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
-        lb_total.setText("Total Revenue: " +String.valueOf(total));
+//        ArrayList<Bill> arrFilter = new ArrayList<>();
+//        float total = 0;
+//        Date start = jDateChooseFrom.getDate(); 
+//        Date end = jDateChooseTo.getDate();
+//        
+//        if(end.before(start)){
+//             JOptionPane.showMessageDialog(new JFrame(), "Ngày kết thúc phải lớn hơn ngày bắt đầu ", "Dialog",JOptionPane.ERROR_MESSAGE);
+//                return;
+//        }
+//        
+//        for(Bill b : billls){
+//            if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
+//                arrFilter.add(b);
+//            }
+//        }  
+//       
+//        
+//        showTable(arrFilter);
+//        
+//        for(int i = 0; i < tbl_revenue.getRowCount(); i++){
+//            total += (float) tbl_revenue.getValueAt(i, 3);
+//        }
+//        
+//        lb_count.setText("Count: " +String.valueOf(tbl_revenue.getRowCount()));
+//        lb_total.setText("Total Revenue: " +String.valueOf(total));
     }
 //    private void filter(ArrayList<Bill> billls) throws ParseException{
 //        ArrayList<Bill> arrFilter = new ArrayList<>();
