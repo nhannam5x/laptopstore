@@ -5,6 +5,10 @@
  */
 package GUI;
 
+import BUS.StaffBUS;
+import DTO.Staff;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,9 +21,14 @@ public class StoreMenu extends javax.swing.JFrame {
     /**
      * Creates new form CourseraMenu
      */
-    public StoreMenu() {
+    int staffID;
+    public StoreMenu(int staffID) {
         initComponents();
+        this.staffID = staffID;
+        jLabelStaffID.setText("StaffID: "+ staffID);
         
+  
+            
 //        AutoCompleteDecorator.decorate(jComboBox1);
     }
 
@@ -313,7 +322,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            SaleGUI customerManagement = new SaleGUI();
+            SaleGUI customerManagement = new SaleGUI(staffID);
             
             jTabbedPane.add("Sale", customerManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -325,7 +334,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            CustomerManagement customerManagement = new CustomerManagement();
+            CustomerManagement customerManagement = new CustomerManagement(staffID);
             
             jTabbedPane.add("Customer Management", customerManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -337,7 +346,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            ProductManagement productManagement = new ProductManagement();
+            ProductManagement productManagement = new ProductManagement(staffID);
             
             jTabbedPane.add("Product Management", productManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -350,7 +359,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            StaffManagement staffManagement = new StaffManagement();
+            StaffManagement staffManagement = new StaffManagement(staffID);
             
             jTabbedPane.add("Staff Management", staffManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -362,7 +371,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            BillManagement billManagement = new BillManagement();
+            BillManagement billManagement = new BillManagement(staffID);
             
             jTabbedPane.add("Bill Management", billManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -376,7 +385,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            InventoryManagement inventoryManagement = new InventoryManagement();
+            InventoryManagement inventoryManagement = new InventoryManagement(staffID);
             
             jTabbedPane.add("Inventory Management", inventoryManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -389,7 +398,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            CategoryManagement categoryManagement = new CategoryManagement();
+            CategoryManagement categoryManagement = new CategoryManagement(staffID);
             
             jTabbedPane.add("Category Management", categoryManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -405,7 +414,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            SupplierManagement supplierManagement = new SupplierManagement();
+            SupplierManagement supplierManagement = new SupplierManagement(staffID);
             
             jTabbedPane.add("Supplier Management", supplierManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -418,7 +427,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            DiscountManagement discountManagement = new DiscountManagement();
+            DiscountManagement discountManagement = new DiscountManagement(staffID);
             
             jTabbedPane.add("Discount Management", discountManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -431,7 +440,7 @@ public class StoreMenu extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             jTabbedPane.removeAll();
-            InventorybillManagement inventorybillManagement = new InventorybillManagement();
+            InventorybillManagement inventorybillManagement = new InventorybillManagement(staffID);
             
             jTabbedPane.add("Inventory bill Management", inventorybillManagement.getContentPane());
         } catch (ClassNotFoundException ex) {
@@ -441,43 +450,54 @@ public class StoreMenu extends javax.swing.JFrame {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            jTabbedPane.removeAll();
+            ThongKeCuaHang inventorybillManagement = new ThongKeCuaHang(staffID);
+            
+            jTabbedPane.add("Thong ke cua hang", inventorybillManagement.getContentPane());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton11ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows Vista".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StoreMenu().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Windows Vista".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(StoreMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new StoreMenu(staffID).setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

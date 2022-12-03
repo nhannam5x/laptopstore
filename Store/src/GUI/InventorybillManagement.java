@@ -36,9 +36,12 @@ public class InventorybillManagement extends javax.swing.JFrame {
     ArrayList<Product> product = productBUS.getList();
     ArrayList<Staff> staff = staffBUS.getList();
     ArrayList<Supplier> supplier = supplierBUS.getList();
+    int staffID;
     
-    public InventorybillManagement() throws ClassNotFoundException {
+    public InventorybillManagement(int staffID) throws ClassNotFoundException {
         initComponents();
+        this.staffID = staffID;
+        jlb_staffIDT.setText("Staff ID: " +staffID);
         inventorybillBUS.listInventorybill();
         productBUS.listProduct();
         staffBUS.listStaff();
@@ -133,6 +136,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
         jlb_totalPrice = new javax.swing.JLabel();
         jlb_bill1 = new javax.swing.JLabel();
         btn_exportExcel = new javax.swing.JButton();
+        jlb_staffIDT = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -325,6 +329,11 @@ public class InventorybillManagement extends javax.swing.JFrame {
     });
     jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
 
+    jlb_staffIDT.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    jlb_staffIDT.setForeground(new java.awt.Color(255, 102, 0));
+    jlb_staffIDT.setText("Staff ID:");
+    jPanel1.add(jlb_staffIDT, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 40, 190, -1));
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -416,44 +425,44 @@ public class InventorybillManagement extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Window Vista".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new InventorybillManagement().setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(InventorybillManagement.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Window Vista".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(InventorybillManagement.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                try {
+//                    new InventorybillManagement().setVisible(true);
+//                } catch (ClassNotFoundException ex) {
+//                    Logger.getLogger(InventorybillManagement.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btn_Check;
@@ -474,6 +483,7 @@ public class InventorybillManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_date1;
     private javax.swing.JLabel jlb_staff;
     private javax.swing.JLabel jlb_staffID;
+    private javax.swing.JLabel jlb_staffIDT;
     private javax.swing.JLabel jlb_totalPrice;
     private javax.swing.JLabel jlb_totalPrice1;
     private javax.swing.JTable tbl_Inventorybill;

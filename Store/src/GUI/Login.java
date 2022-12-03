@@ -292,7 +292,11 @@ public class Login extends javax.swing.JFrame {
             
             if(i == 1){
                 dispose();
-                StoreMenu s = new StoreMenu();
+                int staffID = 0;
+                for(Account a: account){
+                    staffID = a.getStaffID();
+                }
+                StoreMenu s = new StoreMenu(staffID);
                 s.setVisible(true);
                 this.dispose();
             }else if(i == -1){
