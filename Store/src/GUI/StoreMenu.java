@@ -25,8 +25,15 @@ public class StoreMenu extends javax.swing.JFrame {
     public StoreMenu(int staffID) {
         initComponents();
         this.staffID = staffID;
-        jLabelStaffID.setText("StaffID: "+ staffID);
-        
+        StaffBUS staffBUS = new StaffBUS();
+        try {
+            staffBUS.listStaff();
+            jLabelStaffID.setText("StaffID: "+ staffID);
+            jLabelStaffName.setText("StaffName: "+ staffBUS.getStaffID(staffID).getLastName().toString() + " " + staffBUS.getStaffID(staffID).getFirstName().toString());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(StoreMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
   
             
 //        AutoCompleteDecorator.decorate(jComboBox1);

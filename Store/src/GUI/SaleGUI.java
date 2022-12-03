@@ -260,16 +260,17 @@ public class SaleGUI extends javax.swing.JFrame {
     }
     
     private float getTotal(){
-        System.out.println("Chạy");
+        System.out.println("GUI.SaleGUI.getTotal()");
         float total = 0;
         for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
             total += (float) tbl_cart.getValueAt(row,2) * (int) tbl_cart.getValueAt(row,3);
         }
             if(!discountJComboBox.getSelectedItem().toString().equals("Không")){
+                lb_km.setText("% KM: " + String.valueOf(discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue())+"%");
                 lb_total.setText(String.valueOf(total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100));
                 return total - total * discountBUS.getDiscountID(Integer.parseInt(discountJComboBox.getSelectedItem().toString())).getDiscountValue()/100;
             }
-        
+            lb_km.setText("% KM: " + 0 +"%");
             lb_total.setText(String.valueOf(total));
             return total;
     }
@@ -294,7 +295,7 @@ public class SaleGUI extends javax.swing.JFrame {
     private void addBill(){
        
         int billID = 0;
-        int staffID = 1;
+        int staffID = this.staffID;
         int customerID = 0;
         if (!customerJComboBox.getSelectedItem().toString().equals("Khách Hàng")){
             customerID = Integer.parseInt(customerJComboBox.getSelectedItem().toString());
@@ -326,6 +327,11 @@ public class SaleGUI extends javax.swing.JFrame {
     }
     
     private void pay(){
+        int customerID = 0;
+        if (!customerJComboBox.getSelectedItem().toString().equals("Khách Hàng")){
+            customerID = Integer.parseInt(customerJComboBox.getSelectedItem().toString());
+        }
+        
         DefaultTableModel ModelCart = (DefaultTableModel) tbl_cart.getModel();
         if(!checkCart()){
             JOptionPane.showMessageDialog(new JFrame(), "Chưa có hàng trong giỏ", "Dialog",
@@ -339,6 +345,8 @@ public class SaleGUI extends javax.swing.JFrame {
                 updateProduct(i, quantity);
         }
         
+        PDF pdf = new PDF();
+        pdf.export(getBillID(), this.staffID, customerID);
         for (int row = tbl_cart.getRowCount() -1; row >=0 ; row--) {
             ModelCart.removeRow(row);
         }
@@ -405,33 +413,6 @@ public class SaleGUI extends javax.swing.JFrame {
         }
     }
 
-
-//    private float getTotal(){ //tính tổng tiền bill
-//        float total = 0;
-//        for (product c: Cart){
-//            total += (float)c.getPrice() * (float)c.getAmount();
-//        }
-//        return total;
-//    }
-    
-//    private void Pay()
-//    {
-//        int customerID = Integer.parseInt(txt_customerID.getText());   
-//        String date = dateFormat.format(LocalDateTime.now()); // Lấy ngày hiện tại trên local
-//        float total = getTotal();  
-//        
-//        bill b = new bill(customerID,date,total);
-//        bBUS.add(b);
-//        bBUS.list();
-//        
-//        int billID = bBUS.getList().size(); //lấy số billID vừa thêm
-//        for (product c: Cart){      //với mỗi sản phẩm trong giỏ add 1 billdetail
-//            billdetail bd = new billdetail(billID,c.getProductID(),c.getAmount(),c.getPrice());
-//            bdBUS.add(bd);      
-//        }
-//        Cart.clear();
-//    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -459,7 +440,7 @@ public class SaleGUI extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         tbl_cart2 = new javax.swing.JTable();
         jLabel15 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        lb_km = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         categoryCBB2 = new javax.swing.JComboBox<>();
         txt_productID = new javax.swing.JTextField();
@@ -489,6 +470,8 @@ public class SaleGUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
         txt_productID2 = new javax.swing.JTextField();
         categoryCBB4 = new javax.swing.JComboBox<>();
         jButton5 = new javax.swing.JButton();
@@ -646,11 +629,11 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel15.setText("Sản phẩm");
     jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 0, 90, 40));
 
-    jLabel17.setBackground(new java.awt.Color(255, 255, 255));
-    jLabel17.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-    jLabel17.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel17.setText("Số lượng:");
-    jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 170, 100, 30));
+    lb_km.setBackground(new java.awt.Color(255, 255, 255));
+    lb_km.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+    lb_km.setForeground(new java.awt.Color(255, 153, 51));
+    lb_km.setText("% KM:");
+    jPanel2.add(lb_km, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 210, 160, 30));
 
     jLabel18.setBackground(new java.awt.Color(255, 255, 255));
     jLabel18.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -739,9 +722,20 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel8.setText("Nhà CC:");
     jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 350, 100, 30));
 
+    discountJComboBox.addItemListener(new java.awt.event.ItemListener() {
+        public void itemStateChanged(java.awt.event.ItemEvent evt) {
+            discountJComboBoxItemStateChanged(evt);
+        }
+    });
     discountJComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             discountJComboBoxMouseClicked(evt);
+        }
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            discountJComboBoxMouseExited(evt);
+        }
+        public void mousePressed(java.awt.event.MouseEvent evt) {
+            discountJComboBoxMousePressed(evt);
         }
     });
     discountJComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -818,7 +812,7 @@ public class SaleGUI extends javax.swing.JFrame {
             jButton7ActionPerformed(evt);
         }
     });
-    jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 200, 160, 40));
+    jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 200, 110, 40));
 
     txt_supplier.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -871,6 +865,23 @@ public class SaleGUI extends javax.swing.JFrame {
     jLabel25.setForeground(new java.awt.Color(255, 153, 51));
     jLabel25.setText("Loại SP:");
     jPanel2.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 310, 100, 30));
+
+    jLabel19.setBackground(new java.awt.Color(255, 255, 255));
+    jLabel19.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jLabel19.setForeground(new java.awt.Color(255, 153, 51));
+    jLabel19.setText("Số lượng:");
+    jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 170, 100, 30));
+
+    jButton8.setBackground(new java.awt.Color(0, 51, 204));
+    jButton8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+    jButton8.setForeground(new java.awt.Color(255, 255, 255));
+    jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/icons8_available_updates_30px.png"))); // NOI18N
+    jButton8.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton8ActionPerformed(evt);
+        }
+    });
+    jPanel2.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 200, 110, 40));
 
     jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     jPanel1.add(txt_productID2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 120, 220, 40));
@@ -973,6 +984,7 @@ public class SaleGUI extends javax.swing.JFrame {
 
     private void discountJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountJComboBoxActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_discountJComboBoxActionPerformed
 
     private void txt_productIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_productIDActionPerformed
@@ -1011,8 +1023,27 @@ public class SaleGUI extends javax.swing.JFrame {
 
     private void discountJComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_discountJComboBoxMouseClicked
         // TODO add your handling code here:
-        getTotal();
+        
     }//GEN-LAST:event_discountJComboBoxMouseClicked
+
+    private void discountJComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_discountJComboBoxItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_discountJComboBoxItemStateChanged
+
+    private void discountJComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_discountJComboBoxMousePressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_discountJComboBoxMousePressed
+
+    private void discountJComboBoxMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_discountJComboBoxMouseExited
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_discountJComboBoxMouseExited
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        getTotal();
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1069,14 +1100,15 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
@@ -1095,6 +1127,7 @@ public class SaleGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JLabel lb_km;
     private javax.swing.JLabel lb_total;
     private javax.swing.JTable tbl_cart;
     private javax.swing.JTable tbl_cart2;
