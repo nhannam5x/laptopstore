@@ -13,12 +13,28 @@ import BUS.SupplierBUS;
 import BUS.CategoryBUS;
 import DTO.Product;
 import BUS.ProductBUS;
+import DTO.Billdetail;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author donha
@@ -37,6 +53,14 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
     ArrayList<Inventorybill> bill = inventorybillBUS.getList();
     ArrayList<Product> product = productBUS.getList();
     int inventorybillID;
+    public static final int COLUMN_INDEX_billID      = 0;
+    public static final int COLUMN_INDEX_productID      = 1;
+    public static final int COLUMN_INDEX_productName      = 2;
+    public static final int COLUMN_INDEX_categoryID      = 3;
+    public static final int COLUMN_INDEX_supplierID      = 4;
+    public static final int COLUMN_INDEX_price      = 5;
+    public static final int COLUMN_INDEX_quantity      = 6;
+    private static CellStyle cellStyleFormatNumber = null;
     
     public InventorybilldetailManagement(int inventorybillID) throws ClassNotFoundException {
         initComponents();
@@ -104,6 +128,161 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
         showTable(inventorybilldetailBUS.search(productID, quantity));
     }
     
+    public void writeExcel(List<Inventorybilldetail> inventorybilldetail, String excelFilePath) throws IOException {
+        // Create Workbook
+        Workbook workbook = getWorkbook(excelFilePath);
+ 
+        // Create sheet
+        Sheet sheet = workbook.createSheet("Bill Detail"); // Create sheet with sheet name
+ 
+        int rowIndex = 0;
+         
+        // Write header
+        writeHeader(sheet, rowIndex);
+ 
+        // Write data
+        rowIndex++;
+        for (Inventorybilldetail sgl : inventorybilldetail) {
+            // Create row
+            Row row = sheet.createRow(rowIndex);
+            // Write data on row
+            writeBook(sgl, row);
+            rowIndex++;
+        }
+         
+        // Auto resize column witdth
+        int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
+        autosizeColumn(sheet, numberOfColumn);
+ 
+        // Create file excel
+        createOutputFile(workbook, excelFilePath);
+        System.out.println("Done!!!");
+    }
+
+    // Create workbook
+    private static Workbook getWorkbook(String excelFilePath) throws IOException {
+        Workbook workbook = null;
+ 
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook();
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+ 
+        return workbook;
+    }
+ 
+    // Write header with format
+    private static void writeHeader(Sheet sheet, int rowIndex) {
+        // create CellStyle
+        CellStyle cellStyle = createStyleForHeader(sheet);
+         
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+         
+        // Create cells
+        Cell cell = row.createCell(COLUMN_INDEX_billID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Bill ID");
+        
+        cell = row.createCell(COLUMN_INDEX_productID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Product ID");
+        
+        cell = row.createCell(COLUMN_INDEX_productName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Product Name");
+        
+        cell = row.createCell(COLUMN_INDEX_categoryID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Category ID");
+        
+        cell = row.createCell(COLUMN_INDEX_supplierID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Supplier ID");
+ 
+        cell = row.createCell(COLUMN_INDEX_price);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Price");
+ 
+        cell = row.createCell(COLUMN_INDEX_quantity);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Quantity");
+        
+    }
+ 
+    // Write data
+    private void writeBook(Inventorybilldetail inventorybilldetail, Row row) {
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short)BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+             
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+         
+        Cell cell = row.createCell(COLUMN_INDEX_billID);
+        cell.setCellValue(inventorybilldetail.getInventorybillID());
+        
+        cell = row.createCell(COLUMN_INDEX_productID);
+        cell.setCellValue(inventorybilldetail.getProductID());
+        
+        cell = row.createCell(COLUMN_INDEX_productName);
+        cell.setCellValue(productBUS.getProductByID(inventorybilldetail.getProductID()).getProductName());
+        
+        cell = row.createCell(COLUMN_INDEX_categoryID);
+        cell.setCellValue(inventorybilldetail.getCategoryID());
+        
+        cell = row.createCell(COLUMN_INDEX_supplierID);
+        cell.setCellValue(inventorybilldetail.getSupplierID());
+        
+        cell = row.createCell(COLUMN_INDEX_price);
+        cell.setCellValue(productBUS.getProductByID(inventorybilldetail.getProductID()).getPrice());
+        
+        cell = row.createCell(COLUMN_INDEX_quantity);
+        cell.setCellValue(inventorybilldetail.getQuantity());
+
+       
+    }
+ 
+    // Create CellStyle for header
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman"); 
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.BLACK.getIndex()); // text color
+ 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+     
+    // Auto resize column width
+    private static void autosizeColumn(Sheet sheet, int lastColumn) {
+        for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+            sheet.autoSizeColumn(columnIndex);
+        }
+    }
+     
+    // Create output file
+    private static void createOutputFile(Workbook workbook, String excelFilePath) throws IOException {
+        try (OutputStream os = new FileOutputStream(excelFilePath)) {
+            workbook.write(os);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,7 +342,7 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "billID", "productID", "productName", "categoryID", "supplierID", "price", "quantity"
+                "Bill ID", "Product ID", "Product Name", "Category ID", "Supplier ID", "Price", "Quantity"
             }
         )
         {
@@ -381,14 +560,14 @@ public class InventorybilldetailManagement extends javax.swing.JFrame {
 
     private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
         // TODO add your handling code here:
-        //        try {
-            //            // TODO add your handling code here:
-            //            String date = java.time.LocalDate.now().toString();
-            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
-            //            writeExcel(this.productls,excelFilePath);
-            //        } catch (IOException ex) {
-            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-            //        }
+        try {
+            String date = java.time.LocalDate.now().toString();
+            final String excelFilePath = "C:/Users/donha/Desktop/Inventory_Bill_Detail_Excel_"+date+".xlsx";
+            writeExcel(this.billdls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

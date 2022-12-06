@@ -86,7 +86,7 @@ public class SaleGUI extends javax.swing.JFrame {
             if(d.getQuantity() > 0){
                 try { 
                     Date start = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDateStart());
-                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(java.time.LocalDate.now().toString());
+                    Date date = new SimpleDateFormat("dd-MM-yyyy").parse(java.time.LocalDate.now().toString());
                     Date end = new SimpleDateFormat("dd-MM-yyyy").parse(d.getDateEnd());
                     if(start.before(date) && end.after(date)){
                          discountJComboBox.addItem(String.valueOf(d.getDiscountID()));
@@ -290,7 +290,13 @@ public class SaleGUI extends javax.swing.JFrame {
         showTableProduct(productBUS.search("", productName,category,supplier));
     }
     
-
+    private int getTotalQuantity(){
+        int total = 0;
+        for(int i=0; i< tbl_cart.getRowCount(); i++){
+            total += Integer.parseInt(tbl_cart.getModel().getValueAt(i, 3).toString());
+        }
+        return total;
+    }
     
     private void addBill(){
        
@@ -309,9 +315,13 @@ public class SaleGUI extends javax.swing.JFrame {
         if(!(discountID == 0)){
             totalPrice = totalPrice - (totalPrice*discountBUS.getDiscountID(discountID).getDiscountValue()/100);
         }
-        String date = java.time.LocalDate.now().toString();
+        int totalQuantity = getTotalQuantity();
+        String date;
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        date = java.time.LocalDate.now().format(myFormatObj);
+        System.out.println(date);
         int status = 1;
-        Bill b = new Bill(billID,staffID,customerID,discountID,totalPrice, date, status);
+        Bill b = new Bill(billID,staffID,customerID,discountID, totalQuantity,totalPrice, date, status);
         try {
             billBUS.AddBill(b);
             billBUS.listBill();
@@ -324,6 +334,7 @@ public class SaleGUI extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InventoryManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
     
     private void pay(){
@@ -355,7 +366,7 @@ public class SaleGUI extends javax.swing.JFrame {
         customerJComboBox.setSelectedItem("Khách Hàng");
         discountJComboBox.setSelectedItem("Không");
         JOptionPane.showMessageDialog(new JFrame(), "Thanh toán thành công", "Dialog",
-        JOptionPane.ERROR_MESSAGE);
+        JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void updateProduct(int row, int quantity){

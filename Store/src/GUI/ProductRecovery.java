@@ -158,7 +158,7 @@ public class ProductRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "productID", "productName", "categoryID", "supplierID","price","quantity"
+                "Product ID", "Product Name", "Category ID", "Supplier ID","Price","Quantity"
             }
         )
         {

@@ -89,11 +89,12 @@ public class CategoryRecovery extends javax.swing.JFrame {
                 if(response == JOptionPane.YES_OPTION){
                     categoryBUS.SetCategory(c);
                     JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+                    showTable();
                     return;
                 }
             
             } else {
-                JOptionPane.showMessageDialog(new JFrame(), "Mã loại không có trong dữ liêu", "Dialog",
+                JOptionPane.showMessageDialog(new JFrame(), "Mã loại không có trong dữ liệu", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
             }
             showTable();
@@ -144,7 +145,7 @@ public class CategoryRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "CategoryID", "Category Name"
+                "Category ID", "Category Name"
             }
         )
         {

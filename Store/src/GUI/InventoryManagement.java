@@ -19,6 +19,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -266,9 +268,11 @@ public class InventoryManagement extends javax.swing.JFrame {
     private void addBill(){
        
         int billID = 0;
-        int staffID = 1;
+        int staffID = this.staffID;
         float totalPrice = getTotalPrice();
-        String date = java.time.LocalDate.now().toString();
+        LocalDate today = java.time.LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String date = today.format(dateTimeFormatter);
         int status = 1;
         Inventorybill b = new Inventorybill(billID,staffID,totalPrice, date, status);
         try {
@@ -332,7 +336,7 @@ public class InventoryManagement extends javax.swing.JFrame {
                 }
             }
             JOptionPane.showMessageDialog(new JFrame(), "Thêm thành công", "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+            JOptionPane.PLAIN_MESSAGE);
     }
     
     private void addItem(){
@@ -500,7 +504,7 @@ public class InventoryManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "productID", "productName", "categoryID", "supplierID", "price", "quantity"
+                "Product ID", "Product Name", "Category ID", "Supplier ID", "Price", "Quantity"
             }
         )
         {
@@ -631,13 +635,13 @@ public class InventoryManagement extends javax.swing.JFrame {
 
     jlb_category.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_category.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_category.setText("CategoryID:");
-    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 440, 120, 52));
+    jlb_category.setText("Category ID:");
+    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 440, 120, 52));
 
     jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplier.setText("SupplierID:");
-    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 440, 110, 52));
+    jlb_supplier.setText("Supplier ID:");
+    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 440, 120, 52));
 
     jPanel1.add(jComboCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 440, 170, 50));
 

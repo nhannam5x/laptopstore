@@ -38,51 +38,70 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
     public ThongKeCuaHang(int staffID) throws ClassNotFoundException, SQLException {
         initComponents();
         this.staffID = staffID;
-        jlb_staffID.setText("Staff ID: " +staffID);
         showStoreStatistic();
     }
     
     public void showStoreStatistic() throws ClassNotFoundException, SQLException // Xuất ra Table từ ArrayList
     {
         int product = 0, bill = 0, inventorybill = 0;
-        String sqlproduct = "SELECT * FROM product WHERE status=1 ";
-        ResultSet rs1 = mySQL.executeQuery(sqlproduct);
-        while(rs1.next()){
-                product++;
+        try{
+            String sqlproduct = "SELECT * FROM product WHERE status=1 ";
+            ResultSet rs1 = mySQL.executeQuery(sqlproduct);
+            while(rs1.next()){
+                    product++;
+            } jlb_product.setText(String.valueOf(product));
+        } catch(Exception e) {
+            jlb_product.setText(String.valueOf("..."));
         }
         
-        String sqlbill = "SELECT * FROM bill WHERE status=1";
-        ResultSet rs2 = mySQL.executeQuery(sqlbill);
-        while(rs2.next()){
-                bill++;
+        try{
+            String sqlbill = "SELECT * FROM bill WHERE status=1";
+            ResultSet rs2 = mySQL.executeQuery(sqlbill);
+            while(rs2.next()){
+                    bill++;
+            } jlb_bill.setText(String.valueOf(bill));
+        } catch(Exception e) {
+            jlb_bill.setText(String.valueOf("..."));
         }
         
-        String sqlinventorybill = "SELECT * FROM inventorybill WHERE status=1";
-        ResultSet rs3 = mySQL.executeQuery(sqlinventorybill);
-        while(rs3.next()){
-                inventorybill++;
+        try{
+            String sqlinventorybill = "SELECT * FROM inventorybill WHERE status=1";
+            ResultSet rs3 = mySQL.executeQuery(sqlinventorybill);
+            while(rs3.next()){
+                    inventorybill++;
+            } jlb_inventorybill.setText(String.valueOf(inventorybill));
+        } catch(Exception e) {
+            jlb_inventorybill.setText(String.valueOf("..."));
         }
         
-        String sqlrevenue="SELECT Sum(totalPrice) as sumprice FROM bill WHERE status = 1";
-        ResultSet rs4 = mySQL.executeQuery(sqlrevenue);
-        if(rs4.next()){
-            String sum1 = String.valueOf(Float.parseFloat(rs4.getString("sumprice")) + (Float.parseFloat(rs4.getString("sumprice")) * 10)/100);
-            jlb_profit.setText(sum1);
+        try{
+            String sqlrevenue="SELECT Sum(totalPrice) as sumprice FROM bill WHERE status = 1";
+            ResultSet rs4 = mySQL.executeQuery(sqlrevenue);
+            if(rs4.next()){
+                String sum1 = String.valueOf(Float.parseFloat(rs4.getString("sumprice")) + (Float.parseFloat(rs4.getString("sumprice")) * 10)/100);
+                jlb_profit.setText(sum1);
+            }
+        } catch(Exception e) {
+            jlb_profit.setText(String.valueOf("..."));
         }
         
-        String sqlbuy="SELECT Sum(totalPrice) as sumprice FROM inventorybill WHERE status = 1";
-        ResultSet rs5 = mySQL.executeQuery(sqlbuy);
-        if(rs5.next()){
-            String sum2 = String.valueOf(Float.parseFloat(rs5.getString("sumprice")));
-            jlb_buy.setText(sum2);
+        try{
+            String sqlbuy="SELECT Sum(totalPrice) as sumprice FROM inventorybill WHERE status = 1";
+            ResultSet rs5 = mySQL.executeQuery(sqlbuy);
+            if(rs5.next()){
+                String sum2 = String.valueOf(Float.parseFloat(rs5.getString("sumprice")));
+                jlb_buy.setText(sum2);
+            }
+        } catch(Exception e) {
+            jlb_buy.setText(String.valueOf("..."));
         }
-        jlb_product.setText(String.valueOf(product));
-        jlb_bill.setText(String.valueOf(bill));
-        jlb_inventorybill.setText(String.valueOf(inventorybill));
+            
+            
+        
     }
 
-    public void list() // Chép ArrayList lên table
-    {
+//    public void list() // Chép ArrayList lên table
+//    {
 //        if (billBUS.getList() == null) {
 //            try {
 //                billBUS.listBill();
@@ -93,7 +112,7 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 //        ArrayList<Bill> billls = (ArrayList<Bill>) billBUS.getList();
 ////        model.setRowCount(0);
 //        showTable(billls);
-    }
+//    }
      
 //    private void filter(ArrayList<Bill> billls) throws ParseException{
 //        ArrayList<Bill> arrFilter = new ArrayList<>();
@@ -148,12 +167,14 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jlb_staffID = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jlb_buy = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -198,6 +219,11 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
         );
 
         jPanel5.setBackground(new java.awt.Color(204, 0, 0));
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
+        });
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/product64.png"))); // NOI18N
 
@@ -345,30 +371,22 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Store Satistics");
-
-        jlb_staffID.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jlb_staffID.setForeground(new java.awt.Color(255, 255, 255));
-        jlb_staffID.setText("Staff ID:");
+        jLabel1.setText("Store Statistics");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(553, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(213, 213, 213)
-                .addComponent(jlb_staffID, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(179, 179, 179))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(517, 517, 517))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jlb_staffID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
@@ -420,17 +438,52 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
                 .addGap(38, 38, 38))
         );
 
+        jButton1.setBackground(new java.awt.Color(0, 153, 153));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Doanh thu");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(0, 153, 153));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("SP bán chạy");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setBackground(new java.awt.Color(0, 153, 153));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("KH Mua Nhiều");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(195, 195, 195)
+                .addGap(29, 29, 29)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(68, 68, 68)
+                        .addGap(50, 50, 50)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -438,24 +491,35 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(199, 199, 199))
+                .addGap(203, 203, 203))
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(46, 46, 46)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(76, 76, 76)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(82, 82, 82)))
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -474,13 +538,44 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 
     private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
         // TODO add your handling code here:
+
+    }//GEN-LAST:event_jPanel7MouseClicked
+
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
         try {
            ThongKeDT s = new ThongKeDT(staffID);
            s.setVisible(true);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SupplierManagement.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ThongKeDT.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jPanel7MouseClicked
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        try {
+           ThongKeSP s1 = new ThongKeSP(staffID);
+           s1.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ThongKeSP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        try {
+           ThongKeKH s2 = new ThongKeKH(staffID);
+           s2.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ThongKeKH.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -555,6 +650,9 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -581,6 +679,5 @@ public class ThongKeCuaHang extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_inventorybill;
     private javax.swing.JLabel jlb_product;
     private javax.swing.JLabel jlb_profit;
-    private javax.swing.JLabel jlb_staffID;
     // End of variables declaration//GEN-END:variables
 }

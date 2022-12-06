@@ -105,7 +105,7 @@ public class StaffRecovery extends javax.swing.JFrame {
                 return;
             }
         } else {
-           JOptionPane.showMessageDialog(new JFrame(), "Mã sản phẩm không có trong dữ liêu", "Dialog",
+           JOptionPane.showMessageDialog(new JFrame(), "Mã nhân viên không có trong dữ liêu", "Dialog",
            JOptionPane.ERROR_MESSAGE);
         }
                 showTable();
@@ -156,7 +156,7 @@ public class StaffRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "staffID", "firstName", "lastName", "email", "phone"
+                "Staff ID", "First Name", "Last Name", "Email", "Phone"
             }
         )
         {

@@ -96,6 +96,7 @@ public class CustomerRecovery extends javax.swing.JFrame {
             if(response == JOptionPane.YES_OPTION){
                customerBUS.SetCustomer(c);
                JOptionPane.showMessageDialog(rootPane, "Khôi phục thành công");
+               showTable();
                return;
            }
         } else {
@@ -150,7 +151,7 @@ public class CustomerRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "CustomerID", "First Name", "Last Name", "Email", "Phone"
+                "Customer ID", "First Name", "Last Name", "Email", "Phone"
             }
         )
         {

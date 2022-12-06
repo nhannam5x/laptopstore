@@ -44,6 +44,18 @@ public class AccountBUS {
         return null;
     }
     
+    public  Account getByAccountName(String account_name)
+    {
+        for(Account ac : acc )
+        {
+            if(ac.getAccountName().equals(account_name))
+            {
+                return ac;
+            }
+        }
+        return null;
+    }
+    
     public void listAccount() throws ClassNotFoundException
     {
         AccountDAO accDAO = new AccountDAO();
@@ -84,11 +96,39 @@ public class AccountBUS {
         return false;
     }
 
-    
+    public boolean CheckStaff(int staffID)
+    {
+        for(Account ac : acc)
+        {
+            if(ac.getStaffID() == staffID)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     
     public ArrayList<Account> getList() {
         
         return acc;
+    }
+    
+     public ArrayList<Account> search(String accountID, String accountName, String staffID)
+    {
+        ArrayList<Account> search = new ArrayList<>();
+        accountID = accountID.isEmpty()?accountID = "": accountID;
+        accountName = accountName.isEmpty()?accountName = "": accountName;
+        staffID = staffID.isEmpty()?staffID = "": staffID;
+        for(Account a : acc)
+        {
+            if((String.valueOf(a.getAccountID())).toLowerCase().contains(accountID.toLowerCase()) && 
+               (String.valueOf(a.getAccountName())).toLowerCase().contains(accountName.toLowerCase()) &&
+               (String.valueOf(a.getStaffID())).toLowerCase().contains(staffID.toLowerCase()))
+            {
+                search.add(a);
+            }
+        }
+        return search;
     }
 }
 

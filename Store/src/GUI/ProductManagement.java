@@ -210,27 +210,27 @@ public class ProductManagement extends javax.swing.JFrame {
         showTable(productBUS.search(productID, productName, categoryID, supplierID));
     }
     
-        public static void writeExcel(List<Product> product, String excelFilePath) throws IOException {
+    public static void writeExcel(List<Product> product, String excelFilePath) throws IOException {
         // Create Workbook
-        Workbook workbook = getWorkbook(excelFilePath);
+    Workbook workbook = getWorkbook(excelFilePath);
  
         // Create sheet
-        Sheet sheet = workbook.createSheet("Product"); // Create sheet with sheet name
+    Sheet sheet = workbook.createSheet("Product"); // Create sheet with sheet name
  
-        int rowIndex = 0;
+    int rowIndex = 0;
          
         // Write header
-        writeHeader(sheet, rowIndex);
+    writeHeader(sheet, rowIndex);
  
         // Write data
+    rowIndex++;
+    for (Product sgl : product) {
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+        // Write data on row
+        writeBook(sgl, row);
         rowIndex++;
-        for (Product sgl : product) {
-            // Create row
-            Row row = sheet.createRow(rowIndex);
-            // Write data on row
-            writeBook(sgl, row);
-            rowIndex++;
-        }
+    }
          
         // Auto resize column witdth
         int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
@@ -419,7 +419,7 @@ public class ProductManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "productID", "productName", "categoryID", "supplierID", "price", "quantity"
+                "Product ID", "Product Name", "Category ID", "Supplier ID", "Price", "Quantity"
             }
         )
         {
@@ -519,13 +519,13 @@ public class ProductManagement extends javax.swing.JFrame {
 
     jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("ProductID:");
+    jLabel5.setText("Product ID:");
     jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 440, 138, 52));
 
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel6.setText("SupplierID:");
-    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 520, 110, 52));
+    jLabel6.setText("Supplier ID:");
+    jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 520, 120, 52));
 
     txt_sSupplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_sSupplierID.setForeground(new java.awt.Color(255, 153, 51));
@@ -566,7 +566,7 @@ public class ProductManagement extends javax.swing.JFrame {
 
     jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel10.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel10.setText("CategoryID:");
+    jLabel10.setText("Category ID:");
     jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 520, 130, 52));
 
     txt_sCategoryID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -657,13 +657,13 @@ public class ProductManagement extends javax.swing.JFrame {
 
     jlb_category.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_category.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_category.setText("CategoryID:");
-    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 270, 120, 52));
+    jlb_category.setText("Category ID:");
+    jPanel1.add(jlb_category, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 270, 120, 52));
 
     jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplier.setText("SupplierID:");
-    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 110, 52));
+    jlb_supplier.setText("Supplier ID:");
+    jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 120, 52));
 
     jPanel1.add(jComboCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 270, 70, 50));
 
@@ -757,12 +757,7 @@ public class ProductManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_add1MouseClicked
 
     private void btn_add1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add1ActionPerformed
-//        try {
-//           AddProduct p = new AddProduct();
-//            p.setVisible(true);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
 
     }//GEN-LAST:event_btn_add1ActionPerformed
 
@@ -801,8 +796,10 @@ public class ProductManagement extends javax.swing.JFrame {
             String date = java.time.LocalDate.now().toString();
             final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
             writeExcel(this.productls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
         } catch (IOException ex) {
-            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 

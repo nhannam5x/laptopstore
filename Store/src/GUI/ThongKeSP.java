@@ -48,112 +48,104 @@ public class ThongKeSP extends javax.swing.JFrame {
     public ThongKeSP(int staffID) throws ClassNotFoundException {
         initComponents();
         this.staffID = staffID;
-        jlb_staffID.setText("Staff ID: " +staffID);
         productBUS.getList();
         billBUS.getList();
         billdetailBUS.getList();
-        
+        billBUS.listBill();
+        billdetailBUS.listBilldetail();
+        productBUS.listProduct();
+        Date intdate = new Date();
+        jDateChooseFrom.setDate(intdate);
+        jDateChooserTo.setDate(intdate);
 //        list();
     }
 
-    public void showTable(ArrayList<Billdetail> billdetail) // Xuất ra Table từ ArrayList
+    public void showTable(ArrayList<Product> product) // Xuất ra Table từ ArrayList
     {
         DefaultTableModel defaultModel = (DefaultTableModel) tbl_product.getModel();
         Vector data;
-        int quantity =0;
         defaultModel.setRowCount(0);
-        for (Billdetail p : billdetail) {
-            data = new Vector();
-            data.add(billdetailBUS.getBillID(p.getProductID()));
-            data.add(productBUS.getProductByID(p.getProductID()).getProductName());
-            data.add(productBUS.getProductByID(p.getProductID()).getPrice());
-            data.add(billdetailBUS.getBillID(p.getQuantity()));
-            defaultModel.addRow(data);
+        for (Product p : product) {
+            if(p.getQuantity() >0){
+                data = new Vector();
+                data.add(p.getProductID());
+                data.add(p.getProductName());
+                data.add(p.getQuantity());
+                defaultModel.addRow(data);
+            }
         }
         tbl_product.setModel(defaultModel);
     }
     
-//    public void list() // Chép ArrayList lên table
-//    {
-//        if (bBUS.getList() == null) {
-//            bBUS.list();
-//        }
-//        
-//        if (bdBUS.getList() == null) {
-//            bdBUS.list();
-//        }
-//        
-//        if (pBUS.getList() == null) {
-//            pBUS.list();
-//        }
-//    }
-//    
-//    private boolean checkItemCart(ArrayList<product> cart,int id){
-//        for(product c : cart){
-//            if(c.getProductID() == id){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    
-//    private int getItemCart(ArrayList<product> cart,int id){
-//        int i = 0;
-//        for(product c : cart){
-//            if(c.getProductID() == id){
-//                return i;
-//            }else{
-//                i++;
-//            }
-//        }
-//        return i;
-//    }
-//     
-//    private void filter(ArrayList<bill> arrBill) throws ParseException{
-//        ArrayList<billdetail> arrBilldetail = (ArrayList<billdetail>) bdBUS.getList();
-//        ArrayList<product> product = (ArrayList<product>) pBUS.getList();
-//        ArrayList<billdetail> arrbilldetailFilter = new ArrayList<>();
-//        ArrayList<product> arrProdutFilter = new ArrayList<>();
-//        
-//        Date start = jDateChooseFrom.getDate(); 
-//        Date end = jDateChooserTo.getDate();
-//        
-//        for(bill b : arrBill){      //lọc hóa đơn bán theo ngày
-//            if(start.before(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b.getDate())) && end.after(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b.getDate())) ){
-//                for(billdetail bd : arrBilldetail) 
-//                    if(b.getBillID() == bd.getBillID()){
-//                        arrbilldetailFilter.add(bd);
-//                    }
-//            }
-//        }    
-//        
-//        for(product p : product){   //dựa theo mảng product đếm số lượng sản phẩm 
-//            int qty = 0;
-//            for(billdetail a : arrbilldetailFilter){
-//                if(p.getProductID() == a.getProductID()){
-//                    qty += a.getQuantity();
-//                }
-//            }
-//            if(checkItemCart(arrProdutFilter,p.getProductID())){
-//                product pro = p;
-//                pro.setAmount(qty);
-//                arrProdutFilter.set(getItemCart(arrProdutFilter,p.getProductID()), pro);
-//            }else{
-//                product pro = p;
-//                pro.setAmount(qty);
-//                arrProdutFilter.add(pro);
-//            }
-//        }
-//        Collections.sort(arrProdutFilter, new Comparator<product>(){        //sắp xếp mảng product theo số lượng giảm dần
-//            @Override
-//            public int compare(product p1, product p2){
-//                return (int) (p2.getAmount() - p1.getAmount());
-//            }
-//        });
-//        outModel(arrProdutFilter);
-//        lb_count.setText(String.valueOf(tbl_product.getRowCount()));
-//    }
-//
+    
+    private boolean checkItemCart(ArrayList<Product> cart,int id){
+        for(Product c : cart){
+            if(c.getProductID() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private int getItemCart(ArrayList<Product> cart,int id){
+        int i = 0;
+        for(Product c : cart){
+            if(c.getProductID() == id){
+                return i;
+            }else{
+                i++;
+            }
+        }
+        return i;
+    }
+     
+    private void filter(ArrayList<Bill> arrBill) throws ParseException{
+        ArrayList<Billdetail> arrBilldetail = (ArrayList<Billdetail>) billdetailBUS.getList();
+        ArrayList<Product> product = (ArrayList<Product>) productBUS.getList();
+        ArrayList<Billdetail> arrbilldetailFilter = new ArrayList<>();
+        ArrayList<Product> arrProdutFilter = new ArrayList<>();
+        
+        Date start = jDateChooseFrom.getDate(); 
+        Date end = jDateChooserTo.getDate();
+        
+        for(Bill b : arrBill){      //lọc hóa đơn bán theo ngày
+            if(start.before(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) && end.after(new SimpleDateFormat("dd-MM-yyyy").parse(b.getDate())) ){
+                for(Billdetail bd : arrBilldetail) 
+                    if(b.getBillID() == bd.getBillID()){
+                        arrbilldetailFilter.add(bd);
+                    }
+            }
+        }    
+        
+        for(Product p : product){   //dựa theo mảng product đếm số lượng sản phẩm 
+            int qty = 0;
+            for(Billdetail a : arrbilldetailFilter){
+                System.out.println(a.getProductID());
+                if(p.getProductID() == a.getProductID()){
+                    qty += a.getQuantity();
+                    System.out.println(a.getQuantity());
+                }
+            }
+            if(checkItemCart(arrProdutFilter,p.getProductID())){
+                Product pro = p;
+                pro.setQuantity(qty);
+                arrProdutFilter.set(getItemCart(arrProdutFilter,p.getProductID()), pro);
+            }else{
+                Product pro = p;
+                pro.setQuantity(qty);
+                arrProdutFilter.add(pro);
+            }
+        }
+        Collections.sort(arrProdutFilter, new Comparator<Product>(){        //sắp xếp mảng product theo số lượng giảm dần
+            @Override
+            public int compare(Product p1, Product p2){
+                return (int) (p2.getQuantity() - p1.getQuantity());
+            }
+        });
+        showTable(arrProdutFilter);
+        lb_count.setText("Count: " + String.valueOf(tbl_product.getRowCount()));
+    }
+
 //    
 //    /**
 //     * This method is called from within the constructor to initialize the form.
@@ -176,18 +168,15 @@ public class ThongKeSP extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        lb_total = new javax.swing.JLabel();
         lb_count = new javax.swing.JLabel();
-        btn_refresh = new javax.swing.JToggleButton();
-        jlb_staffID = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel1.setText("Product Satistics");
+        jLabel1.setText("Product Statistics");
 
         tbl_product.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         tbl_product.setForeground(new java.awt.Color(255, 153, 51));
@@ -196,7 +185,7 @@ public class ThongKeSP extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Product ID","Product Name","Price","Quantity"
+                "Product ID","Product Name","Quantity"
             }
         )
         {
@@ -246,32 +235,9 @@ public class ThongKeSP extends javax.swing.JFrame {
 
     jSeparator2.setForeground(new java.awt.Color(255, 153, 51));
 
-    lb_total.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
-    lb_total.setForeground(new java.awt.Color(255, 102, 0));
-    lb_total.setText("Total Revenue: ");
-
     lb_count.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
     lb_count.setForeground(new java.awt.Color(255, 102, 0));
     lb_count.setText("Count: ");
-
-    btn_refresh.setBackground(new java.awt.Color(102, 255, 102));
-    btn_refresh.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-    btn_refresh.setForeground(new java.awt.Color(255, 255, 255));
-    btn_refresh.setText("Làm mới");
-    btn_refresh.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            btn_refreshMouseClicked(evt);
-        }
-    });
-    btn_refresh.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btn_refreshActionPerformed(evt);
-        }
-    });
-
-    jlb_staffID.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    jlb_staffID.setForeground(new java.awt.Color(255, 102, 0));
-    jlb_staffID.setText("Staff ID:");
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
@@ -297,43 +263,28 @@ public class ThongKeSP extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(527, 527, 527)
-                            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(140, 140, 140)
-                            .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(23, 23, 23)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1270, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(99, 99, 99)
-                    .addComponent(lb_total, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lb_count, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(93, 93, 93)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(477, 477, 477)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(277, 277, 277)
+                            .addComponent(lb_count, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(0, 0, Short.MAX_VALUE)))
             .addContainerGap())
-        .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(477, 477, 477)
-            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(118, 118, 118)
-            .addComponent(jlb_staffID, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(28, 28, 28)
-                    .addComponent(jLabel1))
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(36, 36, 36)
-                    .addComponent(jlb_staffID, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(28, 28, 28)
+            .addComponent(jLabel1)
             .addGap(26, 26, 26)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(25, 25, 25)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lb_total)
-                .addComponent(lb_count))
+            .addComponent(lb_count)
             .addGap(18, 18, Short.MAX_VALUE)
             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -348,9 +299,7 @@ public class ThongKeSP extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(27, 27, 27)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(btn_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(29, 29, 29))
     );
 
@@ -380,21 +329,12 @@ public class ThongKeSP extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_searchMouseClicked
 
     private void btn_searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_searchActionPerformed
-//        try {
-//            filter((ArrayList<bill>) bBUS.getList());
-//        } catch (ParseException ex) {
-//            Logger.getLogger(ThongKeSP.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            filter((ArrayList<Bill>) billBUS.getList());
+        } catch (ParseException ex) {
+            Logger.getLogger(ThongKeSP.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_searchActionPerformed
-
-    private void btn_refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_refreshMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_refreshMouseClicked
-
-    private void btn_refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refreshActionPerformed
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_btn_refreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -437,7 +377,6 @@ public class ThongKeSP extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btn_refresh;
     private javax.swing.JToggleButton btn_search;
     private com.toedter.calendar.JDateChooser jDateChooseFrom;
     private com.toedter.calendar.JDateChooser jDateChooserTo;
@@ -449,9 +388,7 @@ public class ThongKeSP extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JLabel jlb_staffID;
     private javax.swing.JLabel lb_count;
-    private javax.swing.JLabel lb_total;
     private javax.swing.JTable tbl_product;
     // End of variables declaration//GEN-END:variables
 }

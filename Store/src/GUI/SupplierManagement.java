@@ -7,12 +7,27 @@ package GUI;
 
 import DTO.Supplier;
 import BUS.SupplierBUS;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author donha
@@ -25,6 +40,10 @@ public class SupplierManagement extends javax.swing.JFrame {
     SupplierBUS supplierBUS = new SupplierBUS();
     ArrayList<Supplier> supplierls = supplierBUS.getList();
     int staffID;
+    public static final int COLUMN_INDEX_supplierID      = 0;
+    public static final int COLUMN_INDEX_supplierName      = 1;
+    public static final int COLUMN_INDEX_address      = 2;
+    private static CellStyle cellStyleFormatNumber = null;
     
     public SupplierManagement(int staffID) throws ClassNotFoundException {
         initComponents();
@@ -71,13 +90,13 @@ public class SupplierManagement extends javax.swing.JFrame {
            return; 
          }
            supplierID = Integer.parseInt(jlb_supplierID.getText());
-           if(txt_supplierName.getText().equals("") || txt_supplierName.getText().equals("Name")){
+           if(txt_supplierName.getText().isEmpty() || txt_supplierName.getText().isBlank() || txt_supplierName.getText().equals("Name")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }supplierName = txt_supplierName.getText();
             
-            if(txt_address.getText().equals("") || txt_address.getText().equals("Address")){
+            if(txt_address.getText().isBlank() || txt_address.getText().isEmpty() || txt_address.getText().equals("Address")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập địa chỉ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
@@ -142,7 +161,7 @@ public class SupplierManagement extends javax.swing.JFrame {
             supplierBUS.listSupplier();
             supplierls = supplierBUS.getList(); 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CategoryManagement.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SupplierManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
         showTable(supplierls);
     }
@@ -152,6 +171,131 @@ public class SupplierManagement extends javax.swing.JFrame {
         String supplierName = txt_sSupplierName.getText();
         String address = txt_sAddress.getText();
         showTable(supplierBUS.search(supplierID, supplierName, address));
+    }
+    
+    public static void writeExcel(List<Supplier> supplier, String excelFilePath) throws IOException {
+        // Create Workbook
+    Workbook workbook = getWorkbook(excelFilePath);
+ 
+        // Create sheet
+    Sheet sheet = workbook.createSheet("Supplier"); // Create sheet with sheet name
+ 
+    int rowIndex = 0;
+         
+        // Write header
+    writeHeader(sheet, rowIndex);
+ 
+        // Write data
+    rowIndex++;
+    for (Supplier sgl : supplier) {
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+        // Write data on row
+        writeBook(sgl, row);
+        rowIndex++;
+    }
+         
+        // Auto resize column witdth
+        int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
+        autosizeColumn(sheet, numberOfColumn);
+ 
+        // Create file excel
+        createOutputFile(workbook, excelFilePath);
+        System.out.println("Done!!!");
+    }
+
+    // Create workbook
+    private static Workbook getWorkbook(String excelFilePath) throws IOException {
+        Workbook workbook = null;
+ 
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook();
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+ 
+        return workbook;
+    }
+ 
+    // Write header with format
+    private static void writeHeader(Sheet sheet, int rowIndex) {
+        // create CellStyle
+        CellStyle cellStyle = createStyleForHeader(sheet);
+         
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+         
+        // Create cells
+        Cell cell = row.createCell(COLUMN_INDEX_supplierID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Supplier ID");
+        
+        cell = row.createCell(COLUMN_INDEX_supplierName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Supplier Name");
+        
+        cell = row.createCell(COLUMN_INDEX_address);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Address");
+        
+    }
+ 
+    // Write data
+    private static void writeBook(Supplier supplier, Row row) {
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short)BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+             
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+         
+        Cell cell = row.createCell(COLUMN_INDEX_supplierID);
+        cell.setCellValue(supplier.getSupplierID());
+        
+        cell = row.createCell(COLUMN_INDEX_supplierName);
+        cell.setCellValue(supplier.getSupplierName());
+        
+        cell = row.createCell(COLUMN_INDEX_address);
+        cell.setCellValue(supplier.getAddress());
+    }
+ 
+    // Create CellStyle for header
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman"); 
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.BLACK.getIndex()); // text color
+ 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+     
+    // Auto resize column width
+    private static void autosizeColumn(Sheet sheet, int lastColumn) {
+        for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+            sheet.autoSizeColumn(columnIndex);
+        }
+    }
+     
+    // Create output file
+    private static void createOutputFile(Workbook workbook, String excelFilePath) throws IOException {
+        try (OutputStream os = new FileOutputStream(excelFilePath)) {
+            workbook.write(os);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,7 +351,7 @@ public class SupplierManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "supplierID", "supplierName", "address"
+                "Supplier ID", "Supplier Name", "Address"
             }
         )
         {
@@ -307,8 +451,8 @@ public class SupplierManagement extends javax.swing.JFrame {
 
     jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("SupplierID:");
-    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 460, 110, 52));
+    jLabel5.setText("Supplier ID:");
+    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 460, 120, 52));
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
     jSeparator1.setForeground(new java.awt.Color(255, 153, 51));
@@ -407,7 +551,7 @@ public class SupplierManagement extends javax.swing.JFrame {
 
     jlb_supplier.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_supplier.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_supplier.setText("SupplierID:");
+    jlb_supplier.setText("Supplier ID:");
     jPanel1.add(jlb_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 300, 138, 52));
 
     btn_exportExcel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -519,14 +663,14 @@ public class SupplierManagement extends javax.swing.JFrame {
 
     private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
         // TODO add your handling code here:
-//        try {
-//            // TODO add your handling code here:
-//            String date = java.time.LocalDate.now().toString();
-//            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
-//            writeExcel(this.productls,excelFilePath);
-//        } catch (IOException ex) {
-//            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            String date = java.time.LocalDate.now().toString();
+            final String excelFilePath = "C:/Users/donha/Desktop/Supplier_Excel_"+date+".xlsx";
+            writeExcel(this.supplierls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     /**

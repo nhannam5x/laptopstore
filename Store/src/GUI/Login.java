@@ -8,6 +8,8 @@ package GUI;
 import BUS.AccountBUS;
 import DTO.Account;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,15 +18,49 @@ import javax.swing.JOptionPane;
  */
 
 public class Login extends javax.swing.JFrame {
-    public AccountBUS AccountBUS = new AccountBUS();
+     AccountBUS AccountBUS = new AccountBUS();
      ArrayList<Account> account = AccountBUS.getList();
 
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login() throws ClassNotFoundException {
         
         initComponents();
+        AccountBUS.listAccount();
+
+    }
+    
+    private void singin(){
+        String username = usernameTxt.getText();
+        char[] password = passwordTxt.getPassword();
+        
+        if(username.equals("")){
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập tài khoản");
+        }else if(String.valueOf(password).equals("")){
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập mật khẩu");
+        }else{
+            int i = 0;
+            
+            for(Account a : account){ 
+                if(a.getAccountName().equals(username) && a.getPassword().equals(String.valueOf(password))){
+                    if(a.getStatus() != -1 && a.getStatus() != 0){
+                        i = 1;
+                    }else {
+                        i = -1;
+                    }
+                }
+            }
+            switch (i) {
+                case 1 -> {
+                    StoreMenu s = new StoreMenu(AccountBUS.getByAccountName(username).getStaffID());
+                    s.setVisible(true);
+                    this.dispose();
+                }
+                case -1 -> JOptionPane.showMessageDialog(null, "Tài khoản này không sử dụng được");
+                default -> JOptionPane.showMessageDialog(null, "Bạn nhập sai tài khoản hoặc mật khẩu");
+            }
+        }
     }
 
     /**
@@ -259,53 +295,12 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        
-        
-        
-       
+        singin();
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String username = usernameTxt.getText();
-        char[] password = passwordTxt.getPassword();
-            
-       
-        
-        
-        if(username.equals("")){
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập tài khoản");
-        }else if(String.valueOf(password).equals("")){
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mật khẩu");
-        }else{
-            int i = 0;
-            
-            for(Account a : account){ 
-                if(a.getAccountName().equals(username) && a.getPassword().equals(String.valueOf(password))){
-                    if(a.getStatus() != -1){
-                        i = 1;
-                    }else {
-                        i = -1;
-                    }
-                }
-            }
-            
-            if(i == 1){
-                dispose();
-                int staffID = 0;
-                for(Account a: account){
-                    staffID = a.getStaffID();
-                }
-                StoreMenu s = new StoreMenu(staffID);
-                s.setVisible(true);
-                this.dispose();
-            }else if(i == -1){
-                JOptionPane.showMessageDialog(null, "Tài khoản này không sử dụng được");
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Bạn nhập sai tài khoản hoặc mật khẩu");
-            }
-        }
+
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -345,7 +340,11 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                try {
+                    new Login().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

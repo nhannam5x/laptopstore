@@ -42,7 +42,7 @@ import static GUI.RemoveVN.removeAccent;
 
 
 public class PDF {
-	public static String PDF_PATH = "C:\\Users\\Admin\\Desktop\\Bill.pdf";
+	public static String PDF_PATH = "C:/Users/donha/Desktop/Bill.pdf";
         
         NumberFormat nf = NumberFormat.getNumberInstance();
         BillBUS BillBUS = new BillBUS();

@@ -70,13 +70,13 @@ public class AddSupplier extends javax.swing.JFrame {
             }
             else supplierID = Integer.parseInt(txt_supplierID.getText());
             
-            if(txt_supplierName.getText().equals("") || txt_supplierName.getText().equals("SupplierName")){
+            if(txt_supplierName.getText().isEmpty() || txt_supplierName.getText().isBlank() || txt_supplierName.getText().equals("SupplierName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }supplierName = txt_supplierName.getText();
             
-            if(txt_address.getText().equals("") || txt_address.getText().equals("Address")){
+            if(txt_address.getText().isBlank() || txt_address.getText().isEmpty() || txt_address.getText().equals("Address")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập địa chỉ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
@@ -138,7 +138,7 @@ public class AddSupplier extends javax.swing.JFrame {
         txt_supplierID.setBackground(new java.awt.Color(255, 153, 51));
         txt_supplierID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_supplierID.setForeground(new java.awt.Color(255, 255, 255));
-        txt_supplierID.setText("SupplierID");
+        txt_supplierID.setText("Supplier ID");
         txt_supplierID.setBorder(null);
         txt_supplierID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -175,7 +175,7 @@ public class AddSupplier extends javax.swing.JFrame {
         txt_supplierName.setBackground(new java.awt.Color(255, 153, 51));
         txt_supplierName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_supplierName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_supplierName.setText("SupplierName");
+        txt_supplierName.setText("Supplier Name");
         txt_supplierName.setBorder(null);
         txt_supplierName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

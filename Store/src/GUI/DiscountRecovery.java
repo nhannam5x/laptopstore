@@ -151,7 +151,7 @@ public class DiscountRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "DiscountID", "Discount Value", "Date Start", "Date End", "Quantity"
+                "Discount ID", "Discount Value", "Date Start", "Date End", "Quantity"
             }
         )
         {

@@ -152,7 +152,7 @@ public class SupplierRecovery extends javax.swing.JFrame {
 
             },
             new String [] {
-                "supplierID", "supplierName", "address"
+                "Supplier ID", "Supplier Name", "Address"
             }
         )
         {

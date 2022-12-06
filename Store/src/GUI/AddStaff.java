@@ -68,9 +68,9 @@ public class AddStaff extends javax.swing.JFrame {
     } 
         
     public void refeshText(){
-        txt_staffID.setText("StaffID");
-        txt_firstName.setText("FirstName");
-        txt_lastName.setText("LastName");
+        txt_staffID.setText("Staff ID");
+        txt_firstName.setText("First Name");
+        txt_lastName.setText("Last Name");
         txt_email.setText("Email");
         txt_phone.setText("Phone");
     }
@@ -89,13 +89,13 @@ public class AddStaff extends javax.swing.JFrame {
             }
             else staffID = Integer.parseInt(txt_staffID.getText());
             
-            if(txt_firstName.getText().equals("") || txt_firstName.getText().equals("FirstName")){
+            if(txt_firstName.getText().isEmpty() || txt_firstName.getText().isBlank() || txt_firstName.getText().equals("FirstName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }firstName = txt_firstName.getText();
             
-            if(txt_lastName.getText().equals("") || txt_lastName.getText().equals("LastName")){
+            if(txt_lastName.getText().isBlank() || txt_lastName.getText().isEmpty() || txt_lastName.getText().equals("LastName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập họ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
@@ -193,7 +193,7 @@ public class AddStaff extends javax.swing.JFrame {
         txt_staffID.setBackground(new java.awt.Color(255, 153, 51));
         txt_staffID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_staffID.setForeground(new java.awt.Color(255, 255, 255));
-        txt_staffID.setText("StaffID");
+        txt_staffID.setText("Staff ID");
         txt_staffID.setBorder(null);
         txt_staffID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -209,7 +209,7 @@ public class AddStaff extends javax.swing.JFrame {
         txt_lastName.setBackground(new java.awt.Color(255, 153, 51));
         txt_lastName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_lastName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_lastName.setText("LastName");
+        txt_lastName.setText("Last Name");
         txt_lastName.setBorder(null);
         txt_lastName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -247,7 +247,7 @@ public class AddStaff extends javax.swing.JFrame {
         txt_firstName.setBackground(new java.awt.Color(255, 153, 51));
         txt_firstName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_firstName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_firstName.setText("FirstName");
+        txt_firstName.setText("First Name");
         txt_firstName.setBorder(null);
         txt_firstName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -329,13 +329,18 @@ public class AddStaff extends javax.swing.JFrame {
                                 .addComponent(jSeparator2)
                                 .addComponent(txt_phone))
                             .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_email)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_firstName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                            .addComponent(jSeparator4))
-                        .addContainerGap(201, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(84, 84, 84)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txt_firstName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -10,16 +10,16 @@ package DTO;
  * @author DELL XPS 15
  */
 public class Bill {
-    private int billID, staffID, customerID, discountID;
+    private int billID, staffID, customerID, discountID, totalQuantity, status;
     private float totalPrice;
     private String date;
-    private int status;
 
-    public Bill(int billID, int staffID, int customerID, int discountID, float totalPrice, String date, int status) {
+    public Bill(int billID, int staffID, int customerID, int discountID, int totalQuantity, float totalPrice, String date, int status) {
         this.billID = billID;
         this.staffID = staffID;
         this.customerID = customerID;
         this.discountID = discountID;
+        this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.date = date;
         this.status = status;
@@ -42,6 +42,15 @@ public class Bill {
         return discountID;
     }
 
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    
     public float getTotalPrice() {
         return totalPrice;
     }

@@ -50,8 +50,8 @@ public class AddCategory extends javax.swing.JFrame {
     }
     
     public void refeshText(){
-        txt_categoryID.setText("ProductID");
-        txt_categoryName.setText("productName");
+        txt_categoryID.setText("Category ID");
+        txt_categoryName.setText("Category Name");
 
     }
 
@@ -70,8 +70,8 @@ public class AddCategory extends javax.swing.JFrame {
             }
             else categoryID = Integer.parseInt(txt_categoryID.getText());
             
-            if(txt_categoryName.getText().equals("")||txt_categoryName.getText().equals("CategoryName")){
-                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên loại ", "Dialog",
+            if(txt_categoryName.getText().isBlank() || txt_categoryName.getText().isEmpty() || txt_categoryName.getText().matches("CategoryName")){
+                JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập lại tên loại ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }categoryName = txt_categoryName.getText();
@@ -126,7 +126,7 @@ public class AddCategory extends javax.swing.JFrame {
         txt_categoryID.setBackground(new java.awt.Color(255, 153, 51));
         txt_categoryID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_categoryID.setForeground(new java.awt.Color(255, 255, 255));
-        txt_categoryID.setText("CategoryID");
+        txt_categoryID.setText("Category ID");
         txt_categoryID.setBorder(null);
         txt_categoryID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -163,7 +163,7 @@ public class AddCategory extends javax.swing.JFrame {
         txt_categoryName.setBackground(new java.awt.Color(255, 153, 51));
         txt_categoryName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_categoryName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_categoryName.setText("CategoryName");
+        txt_categoryName.setText("Category Name");
         txt_categoryName.setBorder(null);
         txt_categoryName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

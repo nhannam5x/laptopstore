@@ -9,11 +9,15 @@ import DTO.Discount;
 import BUS.DiscountBUS;
 import DTO.Category;
 import DTO.Customer;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +51,12 @@ public class DiscountManagement extends javax.swing.JFrame {
     DiscountBUS discountBUS = new DiscountBUS();
     ArrayList<Discount> discountls = discountBUS.getList();
     int staffID;
+    public static final int COLUMN_INDEX_discountID      = 0;
+    public static final int COLUMN_INDEX_discountValue      = 1;
+    public static final int COLUMN_INDEX_dateStart      = 2;
+    public static final int COLUMN_INDEX_dateEnd      = 3;
+    public static final int COLUMN_INDEX_quantity      = 4;
+    private static CellStyle cellStyleFormatNumber = null;
     
     public DiscountManagement(int staffID) throws ClassNotFoundException {
         initComponents();
@@ -225,6 +235,146 @@ public class DiscountManagement extends javax.swing.JFrame {
         String dateEnd = txt_sDateEnd.getText();
         showTable(discountBUS.search(discountID, dateStart, dateEnd));
     }
+    
+    public static void writeExcel(List<Discount> discount, String excelFilePath) throws IOException {
+        // Create Workbook
+    Workbook workbook = getWorkbook(excelFilePath);
+ 
+        // Create sheet
+    Sheet sheet = workbook.createSheet("Category"); // Create sheet with sheet name
+ 
+    int rowIndex = 0;
+         
+        // Write header
+    writeHeader(sheet, rowIndex);
+ 
+        // Write data
+    rowIndex++;
+    for (Discount sgl : discount) {
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+        // Write data on row
+        writeBook(sgl, row);
+        rowIndex++;
+    }
+         
+        // Auto resize column witdth
+        int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
+        autosizeColumn(sheet, numberOfColumn);
+ 
+        // Create file excel
+        createOutputFile(workbook, excelFilePath);
+        System.out.println("Done!!!");
+    }
+
+    // Create workbook
+    private static Workbook getWorkbook(String excelFilePath) throws IOException {
+        Workbook workbook = null;
+ 
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook();
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+ 
+        return workbook;
+    }
+ 
+    // Write header with format
+    private static void writeHeader(Sheet sheet, int rowIndex) {
+        // create CellStyle
+        CellStyle cellStyle = createStyleForHeader(sheet);
+         
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+         
+        // Create cells
+        Cell cell = row.createCell(COLUMN_INDEX_discountID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Discount ID");
+        
+        cell = row.createCell(COLUMN_INDEX_discountValue);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Discount Value");
+        
+        cell = row.createCell(COLUMN_INDEX_dateStart);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Date Start");
+        
+        cell = row.createCell(COLUMN_INDEX_dateEnd);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Date End");
+        
+        cell = row.createCell(COLUMN_INDEX_quantity);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Quantity");
+        
+    }
+ 
+    // Write data
+    private static void writeBook(Discount discount, Row row) {
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short)BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+             
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+         
+        Cell cell = row.createCell(COLUMN_INDEX_discountID);
+        cell.setCellValue(discount.getDiscountID());
+        
+        cell = row.createCell(COLUMN_INDEX_discountValue);
+        cell.setCellValue(discount.getDiscountValue());
+        
+        cell = row.createCell(COLUMN_INDEX_dateStart);
+        cell.setCellValue(discount.getDateStart());
+        
+        cell = row.createCell(COLUMN_INDEX_dateEnd);
+        cell.setCellValue(discount.getDateEnd());
+        
+        cell = row.createCell(COLUMN_INDEX_quantity);
+        cell.setCellValue(discount.getQuantity());
+    }
+ 
+    // Create CellStyle for header
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman"); 
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.BLACK.getIndex()); // text color
+ 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+     
+    // Auto resize column width
+    private static void autosizeColumn(Sheet sheet, int lastColumn) {
+        for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+            sheet.autoSizeColumn(columnIndex);
+        }
+    }
+     
+    // Create output file
+    private static void createOutputFile(Workbook workbook, String excelFilePath) throws IOException {
+        try (OutputStream os = new FileOutputStream(excelFilePath)) {
+            workbook.write(os);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -283,7 +433,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "discountID", "discountValue", "dateStart", "dateEnd", "quantity"
+                "Discount ID", "Discount Value", "Date Start", "Date End", "Quantity"
             }
         )
         {
@@ -383,7 +533,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("DiscountID:");
+    jLabel5.setText("Discount ID:");
     jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 460, 138, 52));
 
     jSeparator1.setBackground(new java.awt.Color(255, 153, 51));
@@ -392,7 +542,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel9.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel9.setText("DateStart:");
+    jLabel9.setText("Date Start:");
     jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 460, 110, 52));
 
     txt_sDateStart.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -414,7 +564,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel10.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel10.setText("DateEnd:");
+    jLabel10.setText("Date End:");
     jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 460, 100, 52));
 
     txt_sDateEnd.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -434,11 +584,11 @@ public class DiscountManagement extends javax.swing.JFrame {
     jlb_discountID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_discountID.setForeground(new java.awt.Color(255, 153, 51));
     jlb_discountID.setText("...");
-    jPanel1.add(jlb_discountID, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 270, 138, 52));
+    jPanel1.add(jlb_discountID, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 270, 138, 52));
 
     jlb_discountValue.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_discountValue.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_discountValue.setText("DiscountValue:");
+    jlb_discountValue.setText("Discount Value:");
     jPanel1.add(jlb_discountValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 270, 150, 52));
 
     txt_discountValue.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -452,12 +602,12 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jlb_dateStart.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_dateStart.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_dateStart.setText("DateStart:");
+    jlb_dateStart.setText("Date Start:");
     jPanel1.add(jlb_dateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, 110, 52));
 
     jlb_dateEnd.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_dateEnd.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_dateEnd.setText("DateEnd:");
+    jlb_dateEnd.setText("Date End:");
     jPanel1.add(jlb_dateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 350, 140, 52));
 
     jSeparator2.setBackground(new java.awt.Color(255, 153, 51));
@@ -496,7 +646,7 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     jlb_discount.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_discount.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_discount.setText("DiscountID:");
+    jlb_discount.setText("Discount ID:");
     jPanel1.add(jlb_discount, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 138, 52));
     jPanel1.add(jDateStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 350, 320, 50));
     jPanel1.add(jDateEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 320, 50));
@@ -625,14 +775,16 @@ public class DiscountManagement extends javax.swing.JFrame {
 
     private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
         // TODO add your handling code here:
-        //        try {
-            //            // TODO add your handling code here:
-            //            String date = java.time.LocalDate.now().toString();
-            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
-            //            writeExcel(this.productls,excelFilePath);
-            //        } catch (IOException ex) {
-            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-            //        }
+        try {
+            // TODO add your handling code here:
+            String date = java.time.LocalDate.now().toString();
+            final String excelFilePath = "C:/Users/donha/Desktop/Discount_Excel_"+date+".xlsx";
+            writeExcel(this.discountls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     /**

@@ -7,7 +7,12 @@ package GUI;
 
 import DTO.Staff;
 import BUS.StaffBUS;
+import DTO.Staff;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
@@ -15,6 +20,17 @@ import javax.mail.internet.InternetAddress;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author donha
@@ -27,6 +43,12 @@ public class StaffManagement extends javax.swing.JFrame {
     StaffBUS staffBUS = new StaffBUS();
     ArrayList<Staff> staffls = staffBUS.getList();
     int staffID;
+    public static final int COLUMN_INDEX_staffID     = 0;
+    public static final int COLUMN_INDEX_firstName     = 1;
+    public static final int COLUMN_INDEX_lastName     = 2;
+    public static final int COLUMN_INDEX_email   = 3;
+    public static final int COLUMN_INDEX_phone      = 4;
+    private static CellStyle cellStyleFormatNumber = null;
     
     public StaffManagement(int staffID) throws ClassNotFoundException {
         initComponents();
@@ -53,7 +75,7 @@ public class StaffManagement extends javax.swing.JFrame {
         }
     }
     
-    private void showCustomerValue(ArrayList<Staff> staffls)
+    private void showStaffValue(ArrayList<Staff> staffls)
     {
         
         int row = tbl_Staff.getSelectedRow();
@@ -95,13 +117,13 @@ public class StaffManagement extends javax.swing.JFrame {
            
            staffID = Integer.parseInt(jlb_staffID.getText());
            
-           if(txt_firstName.getText().equals("") || txt_firstName.getText().equals("FirstName")){
+           if(txt_firstName.getText().isEmpty() || txt_firstName.getText().isBlank() || txt_firstName.getText().equals("FirstName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }firstName = txt_firstName.getText();
             
-            if(txt_lastName.getText().equals("") || txt_lastName.getText().equals("LastName")){
+            if(txt_lastName.getText().isBlank() || txt_lastName.getText().isEmpty() || txt_lastName.getText().equals("LastName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập họ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
@@ -140,7 +162,7 @@ public class StaffManagement extends javax.swing.JFrame {
     try {    
       if(row < 0)
       {
-        JOptionPane.showMessageDialog(new JFrame(), "Chọn sản phẩm cần xoá", "Dialog",
+        JOptionPane.showMessageDialog(new JFrame(), "Chọn nhân viên cần xoá", "Dialog",
         JOptionPane.ERROR_MESSAGE);
         return; 
       }
@@ -152,7 +174,7 @@ public class StaffManagement extends javax.swing.JFrame {
       String phone = tbl_Staff.getModel().getValueAt(row, 4).toString();
       int status = 0;
       Staff s = new Staff(staffID, firstName, lastName, email, phone, status);
-      int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa sản phẩm "+ staffID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
+      int response = JOptionPane.showConfirmDialog(this, "Bạn muốn xóa nhân viên "+ staffID +" không?", "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE); 
       if(response == JOptionPane.YES_OPTION){
         staffBUS.SetStaff(s);
         refresh();
@@ -180,7 +202,7 @@ public class StaffManagement extends javax.swing.JFrame {
             staffBUS.listStaff();
             staffls = staffBUS.getList(); 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CustomerManagement.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StaffManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
         showTable(staffls);
     }
@@ -192,6 +214,146 @@ public class StaffManagement extends javax.swing.JFrame {
         String email = txt_sEmail.getText();
         String phone = txt_sPhone.getText();
         showTable(staffBUS.search(staffID, firstName, lastName, email, phone));
+    }
+    
+    public static void writeExcel(List<Staff> staff, String excelFilePath) throws IOException {
+        // Create Workbook
+    Workbook workbook = getWorkbook(excelFilePath);
+ 
+        // Create sheet
+    Sheet sheet = workbook.createSheet("Staff"); // Create sheet with sheet name
+ 
+    int rowIndex = 0;
+         
+        // Write header
+    writeHeader(sheet, rowIndex);
+ 
+        // Write data
+    rowIndex++;
+    for (Staff sgl : staff) {
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+        // Write data on row
+        writeBook(sgl, row);
+        rowIndex++;
+    }
+         
+        // Auto resize column witdth
+        int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
+        autosizeColumn(sheet, numberOfColumn);
+ 
+        // Create file excel
+        createOutputFile(workbook, excelFilePath);
+        System.out.println("Done!!!");
+    }
+
+    // Create workbook
+    private static Workbook getWorkbook(String excelFilePath) throws IOException {
+        Workbook workbook = null;
+ 
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook();
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+ 
+        return workbook;
+    }
+ 
+    // Write header with format
+    private static void writeHeader(Sheet sheet, int rowIndex) {
+        // create CellStyle
+        CellStyle cellStyle = createStyleForHeader(sheet);
+         
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+         
+        // Create cells
+        Cell cell = row.createCell(COLUMN_INDEX_staffID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Staff ID");
+        
+        cell = row.createCell(COLUMN_INDEX_firstName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("First Name");
+        
+        cell = row.createCell(COLUMN_INDEX_lastName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Last Name");
+ 
+        cell = row.createCell(COLUMN_INDEX_email);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Email");
+ 
+        cell = row.createCell(COLUMN_INDEX_phone);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Phone");
+        
+    }
+ 
+    // Write data
+    private static void writeBook(Staff staff, Row row) {
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short)BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+             
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+         
+        Cell cell = row.createCell(COLUMN_INDEX_staffID);
+        cell.setCellValue(staff.getStaffID());
+        
+        cell = row.createCell(COLUMN_INDEX_firstName);
+        cell.setCellValue(staff.getFirstName());
+        
+        cell = row.createCell(COLUMN_INDEX_lastName);
+        cell.setCellValue(staff.getLastName());
+        
+        cell = row.createCell(COLUMN_INDEX_email);
+        cell.setCellValue(staff.getEmail());
+ 
+        cell = row.createCell(COLUMN_INDEX_phone);
+        cell.setCellValue(staff.getPhone());
+       
+    }
+ 
+    // Create CellStyle for header
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman"); 
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.BLACK.getIndex()); // text color
+ 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+     
+    // Auto resize column width
+    private static void autosizeColumn(Sheet sheet, int lastColumn) {
+        for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+            sheet.autoSizeColumn(columnIndex);
+        }
+    }
+     
+    // Create output file
+    private static void createOutputFile(Workbook workbook, String excelFilePath) throws IOException {
+        try (OutputStream os = new FileOutputStream(excelFilePath)) {
+            workbook.write(os);
+        }
     }
     
     /**
@@ -256,7 +418,7 @@ public class StaffManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "staffID", "firstName", "lastName", "email", "phone"
+                "Staff ID", "First Name", "Last Name", "Email", "Phone"
             }
         )
         {
@@ -356,7 +518,7 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("StaffID:");
+    jLabel5.setText("Staff ID:");
     jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 90, 52));
 
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -384,7 +546,7 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel9.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel9.setText("FirstName:");
+    jLabel9.setText("First Name:");
     jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 440, 110, 52));
 
     txt_sFirstName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -403,8 +565,8 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel10.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel10.setText("LastName:");
-    jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 440, 110, 52));
+    jLabel10.setText("Last Name:");
+    jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 440, 110, 52));
 
     txt_sLastName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_sLastName.setForeground(new java.awt.Color(255, 153, 51));
@@ -427,8 +589,8 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jlb_firstName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_firstName.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_firstName.setText("FirstName:");
-    jPanel1.add(jlb_firstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 270, 110, 52));
+    jlb_firstName.setText("First Name:");
+    jPanel1.add(jlb_firstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 270, 110, 52));
 
     txt_firstName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_firstName.setForeground(new java.awt.Color(255, 153, 51));
@@ -441,8 +603,8 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jlb_lastName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_lastName.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_lastName.setText("LastName:");
-    jPanel1.add(jlb_lastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 270, 110, 52));
+    jlb_lastName.setText("Last Name:");
+    jPanel1.add(jlb_lastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 270, 110, 52));
 
     txt_lastName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_lastName.setForeground(new java.awt.Color(255, 153, 51));
@@ -503,7 +665,7 @@ public class StaffManagement extends javax.swing.JFrame {
 
     jlb_staff.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_staff.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_staff.setText("StaffID:");
+    jlb_staff.setText("Staff ID:");
     jPanel1.add(jlb_staff, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 138, 52));
 
     txt_sPhone.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -552,7 +714,7 @@ public class StaffManagement extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tbl_StaffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_StaffMouseClicked
-        showCustomerValue(staffls);
+        showStaffValue(staffls);
     }//GEN-LAST:event_tbl_StaffMouseClicked
 
     private void btn_restoreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_restoreMouseClicked
@@ -662,14 +824,15 @@ public class StaffManagement extends javax.swing.JFrame {
 
     private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
         // TODO add your handling code here:
-//        try {
-//            // TODO add your handling code here:
-//            String date = java.time.LocalDate.now().toString();
-//            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
-//            writeExcel(this.productls,excelFilePath);
-//        } catch (IOException ex) {
-//            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            String date = java.time.LocalDate.now().toString();
+            final String excelFilePath = "C:/Users/donha/Desktop/Staff_Excel_"+date+".xlsx";
+            writeExcel(this.staffls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     /**

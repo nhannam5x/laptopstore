@@ -33,10 +33,11 @@ public class BillDAO {
                 int staffID = rs.getInt("staffID");
                 int customerID = rs.getInt("customerID");
                 int discountID = rs.getInt("discountID");
+                int totalQuantity = rs.getInt("totalQuantity");
                 float totalPrice = rs.getFloat("totalPrice");
                 String date = rs.getString("date");
                 int status = rs.getInt("status");
-                Bill b = new Bill(billID, staffID, customerID, discountID, totalPrice, date,status);
+                Bill b = new Bill(billID, staffID, customerID, discountID, totalQuantity, totalPrice, date,status);
                 Bill.add(b);
             }
             rs.close();
@@ -56,6 +57,7 @@ public class BillDAO {
             sql += "staffID='"+b.getStaffID()+"', ";
             sql += "customerID='"+b.getCustomerID()+"', ";
             sql += "discountID='"+b.getDiscountID()+"', ";
+            sql += "totalQuantity='"+b.getTotalQuantity()+"', ";
             sql += "totalPrice='"+b.getTotalPrice()+"', ";
             sql += "date='"+b.getDate()+"', ";
             sql += "status='"+b.getStatus()+"'";
@@ -71,6 +73,7 @@ public class BillDAO {
                 sql += "'"+b.getStaffID()+"',";
                 sql += "'"+b.getCustomerID()+"',";
                 sql += "'"+b.getDiscountID()+"',";
+                sql += "'"+b.getTotalQuantity()+"',";
                 sql += "'"+b.getTotalPrice()+"',";
                 sql += "'"+b.getDate()+"',";
                 sql += "'"+b.getStatus()+"')";

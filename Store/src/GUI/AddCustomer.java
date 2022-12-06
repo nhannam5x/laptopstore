@@ -68,9 +68,9 @@ public class AddCustomer extends javax.swing.JFrame {
     }
     
     public void refeshText(){
-        txt_customerID.setText("CustomerID");
-        txt_firstName.setText("FirstName");
-        txt_lastName.setText("LastName");
+        txt_customerID.setText("Customer ID");
+        txt_firstName.setText("First Name");
+        txt_lastName.setText("Last Name");
         txt_email.setText("Email");
         txt_phone.setText("Phone");
     }
@@ -89,13 +89,13 @@ public class AddCustomer extends javax.swing.JFrame {
             }
             else customerID = Integer.parseInt(txt_customerID.getText());
             
-            if(txt_firstName.getText().equals("") || txt_firstName.getText().equals("FirstName")){
+            if(txt_firstName.getText().isEmpty() || txt_firstName.getText().isBlank() || txt_firstName.getText().equals("FirstName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập tên ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
             }firstName = txt_firstName.getText();
             
-            if(txt_lastName.getText().equals("") || txt_lastName.getText().equals("LastName")){
+            if(txt_lastName.getText().isBlank() || txt_lastName.getText().isEmpty() || txt_lastName.getText().equals("LastName")){
                 JOptionPane.showMessageDialog(new JFrame(), "Vui lòng nhập họ ", "Dialog",
                 JOptionPane.ERROR_MESSAGE);
                 return;
@@ -173,7 +173,7 @@ public class AddCustomer extends javax.swing.JFrame {
         txt_customerID.setBackground(new java.awt.Color(255, 153, 51));
         txt_customerID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_customerID.setForeground(new java.awt.Color(255, 255, 255));
-        txt_customerID.setText("CustomerID");
+        txt_customerID.setText("Customer ID");
         txt_customerID.setBorder(null);
         txt_customerID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -189,7 +189,7 @@ public class AddCustomer extends javax.swing.JFrame {
         txt_lastName.setBackground(new java.awt.Color(255, 153, 51));
         txt_lastName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_lastName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_lastName.setText("LastName");
+        txt_lastName.setText("Last Name");
         txt_lastName.setBorder(null);
         txt_lastName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -229,7 +229,7 @@ public class AddCustomer extends javax.swing.JFrame {
         txt_firstName.setBackground(new java.awt.Color(255, 153, 51));
         txt_firstName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         txt_firstName.setForeground(new java.awt.Color(255, 255, 255));
-        txt_firstName.setText("FirstName");
+        txt_firstName.setText("First Name");
         txt_firstName.setBorder(null);
         txt_firstName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {

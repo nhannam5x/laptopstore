@@ -15,12 +15,27 @@ import DTO.Customer;
 import BUS.CustomerBUS;
 import DTO.Discount;
 import BUS.DiscountBUS;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.BuiltinFormats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author donha
@@ -40,12 +55,21 @@ public class BillManagement extends javax.swing.JFrame {
     ArrayList<Staff> staff = staffBUS.getList();
     ArrayList<Customer> customer = customerBUS.getList();
     ArrayList<Discount> discount = discountBUS.getList();
+    public static final int COLUMN_INDEX_billID     = 0;
+    public static final int COLUMN_INDEX_staffID     = 1;
+    public static final int COLUMN_INDEX_staffName     = 2;
+    public static final int COLUMN_INDEX_customerID   = 3;
+    public static final int COLUMN_INDEX_customerName      = 4;
+    public static final int COLUMN_INDEX_discount      = 5;
+    public static final int COLUMN_INDEX_totalQuantity      = 6;
+    public static final int COLUMN_INDEX_totalPrice      = 7;
+    public static final int COLUMN_INDEX_date      = 8;
+    private static CellStyle cellStyleFormatNumber = null;
     int staffID;
     
     public BillManagement(int staffID) throws ClassNotFoundException {
         initComponents();
         this.staffID = staffID;
-        jlb_staffIDT.setText("Staff ID: " +staffID);
         billBUS.listBill();
         productBUS.listProduct();
         staffBUS.listStaff();
@@ -68,10 +92,11 @@ public class BillManagement extends javax.swing.JFrame {
                 int customerID = customerBUS.getCustomerID(b.getCustomerID()).getCustomerID();
                 String customerName = customerBUS.getCustomerID(b.getCustomerID()).getFirstName() +" "+ customerBUS.getCustomerID(b.getCustomerID()).getLastName();
                 int discount = discountBUS.getDiscountID(b.getDiscountID()).getDiscountValue();
+                int totalQuantity = b.getTotalQuantity();
                 float totalPrice = b.getTotalPrice();
                 String date = b.getDate();
                 
-                defaultModel.addRow(new Object[]{billID, staffID, staffName, customerID, customerName, discount, totalPrice, date});
+                defaultModel.addRow(new Object[]{billID, staffID, staffName, customerID, customerName, discount, totalQuantity, totalPrice, date});
             }
         }
     }
@@ -116,6 +141,193 @@ public class BillManagement extends javax.swing.JFrame {
         String date = txt_sDate.getText();
         showTable(billBUS.search(billID, staffID, customerID, date));
     }
+    
+    public void writeExcel(List<Bill> bill, String excelFilePath) throws IOException {
+        // Create Workbook
+        Workbook workbook = getWorkbook(excelFilePath);
+ 
+        // Create sheet
+        Sheet sheet = workbook.createSheet("Bill"); // Create sheet with sheet name
+ 
+        int rowIndex = 0;
+         
+        // Write header
+        writeHeader(sheet, rowIndex);
+ 
+        // Write data
+        rowIndex++;
+        for (Bill sgl : bill) {
+            // Create row
+            Row row = sheet.createRow(rowIndex);
+            // Write data on row
+            writeBook(sgl, row);
+            rowIndex++;
+        }
+         
+        // Auto resize column witdth
+        int numberOfColumn = sheet.getRow(0).getPhysicalNumberOfCells();
+        autosizeColumn(sheet, numberOfColumn);
+ 
+        // Create file excel
+        createOutputFile(workbook, excelFilePath);
+        System.out.println("Done!!!");
+    }
+
+    // Create workbook
+    private static Workbook getWorkbook(String excelFilePath) throws IOException {
+        Workbook workbook = null;
+ 
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook();
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+ 
+        return workbook;
+    }
+ 
+    // Write header with format
+    private static void writeHeader(Sheet sheet, int rowIndex) {
+        // create CellStyle
+        CellStyle cellStyle = createStyleForHeader(sheet);
+         
+        // Create row
+        Row row = sheet.createRow(rowIndex);
+         
+        // Create cells
+        Cell cell = row.createCell(COLUMN_INDEX_billID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Bill ID");
+        
+        cell = row.createCell(COLUMN_INDEX_staffID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Staff ID");
+        
+        cell = row.createCell(COLUMN_INDEX_staffName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Staff Name");
+ 
+        cell = row.createCell(COLUMN_INDEX_customerID);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Customer ID");
+ 
+        cell = row.createCell(COLUMN_INDEX_customerName);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Customer Name");
+        
+        cell = row.createCell(COLUMN_INDEX_discount);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Discount");
+        
+        cell = row.createCell(COLUMN_INDEX_totalQuantity);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Total Quantity");
+        
+        cell = row.createCell(COLUMN_INDEX_totalPrice);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Total Price");
+        
+        cell = row.createCell(COLUMN_INDEX_date);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("Date");
+    }
+ 
+    // Write data
+    private void writeBook(Bill bill, Row row) {
+        if (cellStyleFormatNumber == null) {
+            // Format number
+            short format = (short)BuiltinFormats.getBuiltinFormat("#,##0");
+            // DataFormat df = workbook.createDataFormat();
+            // short format = df.getFormat("#,##0");
+             
+            //Create CellStyle
+            Workbook workbook = row.getSheet().getWorkbook();
+            cellStyleFormatNumber = workbook.createCellStyle();
+            cellStyleFormatNumber.setDataFormat(format);
+        }
+         
+        Cell cell = row.createCell(COLUMN_INDEX_billID);
+        cell.setCellValue(bill.getBillID());
+        
+        cell = row.createCell(COLUMN_INDEX_staffID);
+        cell.setCellValue(bill.getStaffID());
+        
+        cell = row.createCell(COLUMN_INDEX_staffName);
+        cell.setCellValue(staffBUS.getStaffID(bill.getStaffID()).getFirstName());
+        
+        cell = row.createCell(COLUMN_INDEX_customerID);
+        cell.setCellValue(bill.getCustomerID());
+        
+        cell = row.createCell(COLUMN_INDEX_customerName);
+        cell.setCellValue(customerBUS.getCustomerID(bill.getCustomerID()).getFirstName());
+        
+        cell = row.createCell(COLUMN_INDEX_discount);
+        cell.setCellValue(bill.getDiscountID());
+       
+        cell = row.createCell(COLUMN_INDEX_totalQuantity);
+        cell.setCellValue(bill.getTotalQuantity());
+        
+        cell = row.createCell(COLUMN_INDEX_totalPrice);
+        cell.setCellValue(bill.getTotalPrice());
+        
+        cell = row.createCell(COLUMN_INDEX_date);
+        cell.setCellValue(bill.getDate());
+       
+    }
+ 
+    // Create CellStyle for header
+    private static CellStyle createStyleForHeader(Sheet sheet) {
+        // Create font
+        org.apache.poi.ss.usermodel.Font font = sheet.getWorkbook().createFont();
+        font.setFontName("Times New Roman"); 
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 14); // font size
+        font.setColor(IndexedColors.BLACK.getIndex()); // text color
+ 
+        // Create CellStyle
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setFont(font);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        return cellStyle;
+    }
+     
+    // Auto resize column width
+    private static void autosizeColumn(Sheet sheet, int lastColumn) {
+        for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+            sheet.autoSizeColumn(columnIndex);
+        }
+    }
+     
+    // Create output file
+    private static void createOutputFile(Workbook workbook, String excelFilePath) throws IOException {
+        try (OutputStream os = new FileOutputStream(excelFilePath)) {
+            workbook.write(os);
+        }
+    }
+    
+    private void checkBill(){
+        int billID;
+        int row = tbl_Bill.getSelectedRow();    
+        try {    
+         if(row < 0)
+         {
+           JOptionPane.showMessageDialog(new JFrame(), "Chọn hóa đơn cần xem", "Dialog",
+           JOptionPane.ERROR_MESSAGE);
+           return; 
+         }
+           
+           billID = Integer.parseInt(jlb_billID.getText());    
+           BilldetailManagement bd = new BilldetailManagement(billID);
+            bd.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -155,7 +367,6 @@ public class BillManagement extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         txt_sCustomerID = new javax.swing.JTextField();
         btn_exportExcel = new javax.swing.JButton();
-        jlb_staffIDT = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -176,7 +387,7 @@ public class BillManagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "billID", "staffID", "staffName", "customer", "customerName", "discount", "totalPrice", "date"
+                "Bill ID", "Staff ID", "Staff Name", "customer ID", "Customer Name", "Discount", "Total Quantity", "Total Price", "Date"
             }
         )
         {
@@ -249,8 +460,8 @@ public class BillManagement extends javax.swing.JFrame {
 
     jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel5.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel5.setText("BillID:");
-    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 440, 138, 52));
+    jLabel5.setText("Bill ID:");
+    jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 440, 70, 52));
 
     jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel6.setForeground(new java.awt.Color(255, 153, 51));
@@ -277,7 +488,7 @@ public class BillManagement extends javax.swing.JFrame {
 
     jLabel10.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel10.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel10.setText("StaffID:");
+    jLabel10.setText("Staff ID:");
     jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 520, 80, 52));
 
     txt_sStaffID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -330,8 +541,8 @@ public class BillManagement extends javax.swing.JFrame {
 
     jlb_bill.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_bill.setForeground(new java.awt.Color(255, 153, 51));
-    jlb_bill.setText("BillID:");
-    jPanel1.add(jlb_bill, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 60, 52));
+    jlb_bill.setText("Bill ID:");
+    jPanel1.add(jlb_bill, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, 70, 52));
 
     jlb_discount.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jlb_discount.setForeground(new java.awt.Color(255, 153, 51));
@@ -360,8 +571,8 @@ public class BillManagement extends javax.swing.JFrame {
 
     jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     jLabel7.setForeground(new java.awt.Color(255, 153, 51));
-    jLabel7.setText("CustomerID:");
-    jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 440, 120, 52));
+    jLabel7.setText("Customer ID:");
+    jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 440, 130, 52));
 
     txt_sCustomerID.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
     txt_sCustomerID.setForeground(new java.awt.Color(255, 153, 51));
@@ -387,11 +598,6 @@ public class BillManagement extends javax.swing.JFrame {
     });
     jPanel1.add(btn_exportExcel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 31, 210, 60));
 
-    jlb_staffIDT.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-    jlb_staffIDT.setForeground(new java.awt.Color(255, 102, 0));
-    jlb_staffIDT.setText("Staff ID:");
-    jPanel1.add(jlb_staffIDT, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 30, 210, 30));
-
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -413,22 +619,7 @@ public class BillManagement extends javax.swing.JFrame {
     }//GEN-LAST:event_tbl_BillMouseClicked
 
     private void btn_CheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CheckActionPerformed
-        int billID;
-        int row = tbl_Bill.getSelectedRow();    
-        try {    
-         if(row < 0)
-         {
-           JOptionPane.showMessageDialog(new JFrame(), "Chọn hóa đơn cần xem", "Dialog",
-           JOptionPane.ERROR_MESSAGE);
-           return; 
-         }
-           
-           billID = Integer.parseInt(jlb_billID.getText());    
-           BilldetailManagement bd = new BilldetailManagement(billID);
-            bd.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        checkBill();
     }//GEN-LAST:event_btn_CheckActionPerformed
 
     private void btn_RefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_RefreshMouseClicked
@@ -479,14 +670,15 @@ public class BillManagement extends javax.swing.JFrame {
 
     private void btn_exportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exportExcelActionPerformed
         // TODO add your handling code here:
-        //        try {
-            //            // TODO add your handling code here:
-            //            String date = java.time.LocalDate.now().toString();
-            //            final String excelFilePath = "C:/Users/donha/Desktop/Product_Excel_"+date+".xlsx";
-            //            writeExcel(this.productls,excelFilePath);
-            //        } catch (IOException ex) {
-            //            Logger.getLogger(ProductManagement.class.getName()).log(Level.SEVERE, null, ex);
-            //        }
+        try {
+        // TODO add your handling code here:
+            String date = java.time.LocalDate.now().toString();
+            final String excelFilePath = "C:/Users/donha/Desktop/Bill_Excel_"+date+".xlsx";
+            writeExcel(this.billls,excelFilePath);
+            JOptionPane.showMessageDialog(rootPane, "Xuất thành công");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(new JFrame(), "Không xuất do Excel đang hiện diện", "Dialog",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_exportExcelActionPerformed
 
     /**
@@ -553,7 +745,6 @@ public class BillManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jlb_discountID;
     private javax.swing.JLabel jlb_staff;
     private javax.swing.JLabel jlb_staffID;
-    private javax.swing.JLabel jlb_staffIDT;
     private javax.swing.JLabel jlb_totalPrice;
     private javax.swing.JLabel jlb_totalPrice1;
     private javax.swing.JTable tbl_Bill;
